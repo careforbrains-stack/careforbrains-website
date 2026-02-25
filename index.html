@@ -393,19 +393,19 @@
   .cta-action:last-child { border-right: none; }
   .cta-action:hover { background: rgba(255,255,255,0.03); }
   .cta-action-num {
-    font-family: var(--serif); font-size: 0.9rem; font-style: italic;
+    font-family: var(--serif); font-size: 1rem; font-style: italic;
     color: var(--teal-light); opacity: 0.6; margin-bottom: 1.5rem;
   }
   .cta-action h3 {
-    font-family: var(--serif); font-size: 1.6rem;
-    font-weight: 500; margin-bottom: 0.6rem; letter-spacing: -0.5px;
+    font-family: var(--serif); font-size: 2rem;
+    font-weight: 500; margin-bottom: 0.8rem; letter-spacing: -0.5px;
   }
   .cta-action p {
-    font-size: 0.85rem; color: rgba(255,255,255,0.4);
-    line-height: 1.6; flex: 1;
+    font-size: 0.95rem; color: rgba(255,255,255,0.45);
+    line-height: 1.7; flex: 1;
   }
   .cta-action-link {
-    margin-top: 1.5rem; font-size: 0.82rem; font-weight: 700;
+    margin-top: 1.5rem; font-size: 0.9rem; font-weight: 700;
     color: var(--teal-light);
     transition: gap 0.3s;
     display: inline-flex; align-items: center; gap: 0.4rem;
@@ -419,29 +419,30 @@
     border-top: 1px solid rgba(255,255,255,0.06);
   }
   .cta-mega-btn {
-    display: inline-flex; align-items: center; gap: 0.7rem;
-    padding: 1.2rem 3rem;
+    display: inline-flex; align-items: center; gap: 1rem;
+    padding: 1.6rem 4rem;
     background: var(--gradient);
     color: white; font-family: var(--sans); font-weight: 800;
-    font-size: 1.05rem; border: none; border-radius: 16px;
+    font-size: 1.35rem; border: none; border-radius: 20px;
     cursor: pointer; text-decoration: none;
     transition: all 0.4s var(--ease-spring);
     position: relative;
+    letter-spacing: -0.3px;
   }
   .cta-mega-btn::before {
-    content: ''; position: absolute; inset: -3px;
-    background: var(--gradient); border-radius: 19px; z-index: -1;
-    filter: blur(18px); opacity: 0.35;
+    content: ''; position: absolute; inset: -5px;
+    background: var(--gradient); border-radius: 25px; z-index: -1;
+    filter: blur(24px); opacity: 0.45;
     transition: opacity 0.4s, filter 0.4s;
   }
   .cta-mega-btn:hover {
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 24px 60px rgba(20,144,176,0.3);
+    transform: translateY(-5px) scale(1.04);
+    box-shadow: 0 30px 70px rgba(20,144,176,0.4);
   }
-  .cta-mega-btn:hover::before { opacity: 0.6; filter: blur(30px); }
+  .cta-mega-btn:hover::before { opacity: 0.7; filter: blur(35px); }
   .cta-mega-btn .arrow {
     display: inline-block; transition: transform 0.35s var(--ease-spring);
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
   .cta-mega-btn:hover .arrow { transform: translateX(5px) translateY(-3px); }
   .cta-trust {
@@ -832,32 +833,32 @@
 <!-- CTA -->
 <div class="cta-wrap" id="involved">
   <div class="cta-content">
-    <div class="cta-top r">
+    <div class="cta-top">
       <div class="sec-tag"><span class="line"></span> / Get Involved · N. 04</div>
       <h2 class="sec-title">This is bigger than <em>one person.</em></h2>
       <p class="sec-desc">Every chapter started with someone who said "enough." Be that person for your community.</p>
     </div>
     <div class="cta-actions">
-      <a class="cta-action r" href="#">
+      <a class="cta-action" href="#">
         <div class="cta-action-num">/01</div>
         <h3>Start a Chapter</h3>
         <p>Bring CareForBrains to your school or community. We provide the playbook — you bring the passion.</p>
         <span class="cta-action-link">Start your chapter →</span>
       </a>
-      <a class="cta-action r r-d1" href="#">
+      <a class="cta-action" href="#">
         <div class="cta-action-num">/02</div>
         <h3>Volunteer</h3>
         <p>Lead workshops, organize events, create content, or mentor peers. 852 volunteers and counting.</p>
         <span class="cta-action-link">Apply now →</span>
       </a>
-      <a class="cta-action r r-d2" href="#">
+      <a class="cta-action" href="#">
         <div class="cta-action-num">/03</div>
         <h3>Donate</h3>
         <p>Fund the workshops, toolkits, and programs changing lives in 16 communities.</p>
         <span class="cta-action-link">Contribute →</span>
       </a>
     </div>
-    <div class="cta-bottom r r-d3">
+    <div class="cta-bottom">
       <a href="#" class="cta-mega-btn">Join CareForBrains Today <span class="arrow">↗</span></a>
       <div class="cta-trust">Trusted by 852 volunteers across 16 chapters</div>
     </div>
@@ -1142,7 +1143,6 @@ if (megaBtn) {
 document.querySelectorAll('.r, .r-scale, .r-left, .r-right').forEach(el => {
   if (el.closest('.hero') || el.classList.contains('sec-tag')) return;
   if (el.matches('.sec-title, .sec-desc, .stat-item, .pillar, .cta-action, .mission-card')) return;
-  if (el.closest('.cta-top')) return;
   const dir = el.classList.contains('r-left') ? -80 : el.classList.contains('r-right') ? 80 : 0;
   const scl = el.classList.contains('r-scale');
   gsap.set(el, { y: scl ? 0 : 60, x: dir, opacity: 0, scale: scl ? 0.85 : 1 });
