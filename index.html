@@ -9,22 +9,22 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   :root {
-    --bg: #FAFCFC;
-    --bg-alt: #F0F6F6;
-    --bg-dark: #0B1D1D;
-    --fg: #0B1D1D;
-    --fg-sec: #3D5A5A;
-    --fg-muted: #8A9E9E;
-    --teal: #1A9E8F;
-    --teal-deep: #0E7A6E;
-    --teal-light: #2BC4B2;
-    --teal-glow: rgba(26,158,143,0.15);
-    --teal-bg: #E6F5F3;
-    --blue: #1478A7;
-    --gradient: linear-gradient(135deg, #0E7A6E, #1A9E8F, #1478A7);
-    --rule: #D0DEDE;
+    --bg: #F8FAFC;
+    --bg-alt: #EDF2F8;
+    --bg-dark: #091A26;
+    --fg: #0B1A26;
+    --fg-sec: #3A5068;
+    --fg-muted: #7A8FA4;
+    --teal: #1490B0;
+    --teal-deep: #0C6B8E;
+    --teal-light: #38C0D4;
+    --teal-glow: rgba(20,144,176,0.12);
+    --teal-bg: #E4F1F7;
+    --blue: #1468B0;
+    --gradient: linear-gradient(135deg, #0C6B8E, #1490B0, #1468B0);
+    --rule: #CDDAE6;
     --card: #FFFFFF;
-    --card-border: #D8E6E4;
+    --card-border: #C8D8E6;
     --serif: 'Playfair Display', Georgia, serif;
     --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
     --max-w: 1180px;
@@ -169,7 +169,7 @@
   }
   .btn-teal:hover {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 14px 40px rgba(26,158,143,0.3);
+    box-shadow: 0 14px 40px rgba(20,144,176,0.3);
   }
   .btn-teal:hover::before { opacity: 1; }
   .btn-teal .arrow {
@@ -329,7 +329,7 @@
     height: 500px; position: relative;
   }
   #chapterMap { height: 100%; width: 100%; }
-  .ch-map-wrap .leaflet-container { background: #f0f5f3; }
+  .ch-map-wrap .leaflet-container { background: #EDF2F8; }
   .ch-map-legend {
     display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
   }
@@ -436,7 +436,7 @@
   }
   .cta-mega-btn:hover {
     transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 24px 60px rgba(26,158,143,0.3);
+    box-shadow: 0 24px 60px rgba(20,144,176,0.3);
   }
   .cta-mega-btn:hover::before { opacity: 0.6; filter: blur(30px); }
   .cta-mega-btn .arrow {
@@ -527,17 +527,17 @@
   }
   .aura-orb-1 {
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(26,158,143,0.15), rgba(26,158,143,0) 70%);
+    background: radial-gradient(circle, rgba(20,144,176,0.15), rgba(20,144,176,0) 70%);
     top: 10%; right: 5%;
   }
   .aura-orb-2 {
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(20,120,167,0.12), rgba(20,120,167,0) 70%);
+    background: radial-gradient(circle, rgba(20,104,176,0.12), rgba(20,104,176,0) 70%);
     top: 30%; right: -10%;
   }
   .aura-orb-3 {
     width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(43,196,178,0.1), rgba(43,196,178,0) 70%);
+    background: radial-gradient(circle, rgba(56,192,212,0.1), rgba(56,192,212,0) 70%);
     top: -5%; right: 20%;
   }
 
@@ -650,13 +650,13 @@
     <svg viewBox="-20 -20 360 360" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0E7A6E"/>
-          <stop offset="50%" stop-color="#1478A7"/>
-          <stop offset="100%" stop-color="#0E7A6E"/>
+          <stop offset="0%" stop-color="#0C6B8E"/>
+          <stop offset="50%" stop-color="#1468B0"/>
+          <stop offset="100%" stop-color="#0C6B8E"/>
         </linearGradient>
         <linearGradient id="brainGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#1478A7"><animate attributeName="stop-color" values="#1478A7;#0E7A6E;#1478A7" dur="4s" repeatCount="indefinite"/></stop>
-          <stop offset="100%" stop-color="#0E7A6E"><animate attributeName="stop-color" values="#0E7A6E;#1478A7;#0E7A6E" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="0%" stop-color="#1468B0"><animate attributeName="stop-color" values="#1468B0;#0C6B8E;#1468B0" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="100%" stop-color="#0C6B8E"><animate attributeName="stop-color" values="#0C6B8E;#1468B0;#0C6B8E" dur="4s" repeatCount="indefinite"/></stop>
         </linearGradient>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
@@ -675,41 +675,41 @@
         </filter>
       </defs>
       <g class="brain-float">
-        <ellipse class="glow-ring" cx="160" cy="155" rx="165" ry="165" fill="none" stroke="#0E7A6E" stroke-width="1"/>
+        <ellipse class="glow-ring" cx="160" cy="155" rx="165" ry="165" fill="none" stroke="#0C6B8E" stroke-width="1"/>
         <path class="brain-fill-path" fill="rgba(14,122,110,0.03)" d="M288.166,169.076l-21.125-42.639C263.163,55.652,222.663,0,158.212,0c-107.6,0-128.28,57.482-128.28,116.265c0,29.032,12.377,55.862,32.416,75.408L35.653,307.356c-0.707,3.065,0.022,6.286,1.98,8.748c1.958,2.462,4.932,3.896,8.078,3.896h42.762l31.056-126.776c2.323-10.436-0.622-21.354-7.894-29.191c-12.011-12.944-17.797-29.461-15.981-47.52c4.36-43.351,35.774-65.027,65.027-65.027c21.259,0,63.36,9.75,63.36,42.935c0,10.183-5.087,12.756-21.502,14.699c-7.087,0.839-13.126,5.553-15.651,12.228c-1.434,3.791-3.27,4.759-6.622,4.759c-3.495,0-8.638-1.051-16.696-1.051c-4.433,0-16.889,16.042-18.226,22.282c-3.289,15.351,4.832,29.587,3.044,37.828c-6.767,31.2-22.757,94.035-31.345,134.834h17.857c5.453,0,10.184-3.764,11.41-9.076l6.523-28.268h52.743c24.023,0,44.657-18.759,49.013-44.629c2.517-14.977,5.24-31.967,7.522-48.066h15.502c4.53,0,8.703-2.694,10.896-7.035C290.704,178.584,290.572,173.281,288.166,169.076z"/>
         <path class="draw-outline" stroke="url(#brainGrad)" filter="url(#glow)" d="M288.166,169.076l-21.125-42.639C263.163,55.652,222.663,0,158.212,0c-107.6,0-128.28,57.482-128.28,116.265c0,29.032,12.377,55.862,32.416,75.408L35.653,307.356c-0.707,3.065,0.022,6.286,1.98,8.748c1.958,2.462,4.932,3.896,8.078,3.896h42.762l31.056-126.776c2.323-10.436-0.622-21.354-7.894-29.191c-12.011-12.944-17.797-29.461-15.981-47.52c4.36-43.351,35.774-65.027,65.027-65.027c21.259,0,63.36,9.75,63.36,42.935c0,10.183-5.087,12.756-21.502,14.699c-7.087,0.839-13.126,5.553-15.651,12.228c-1.434,3.791-3.27,4.759-6.622,4.759c-3.495,0-8.638-1.051-16.696-1.051c-4.433,0-16.889,16.042-18.226,22.282c-3.289,15.351,4.832,29.587,3.044,37.828c-6.767,31.2-22.757,94.035-31.345,134.834h17.857c5.453,0,10.184-3.764,11.41-9.076l6.523-28.268h52.743c24.023,0,44.657-18.759,49.013-44.629c2.517-14.977,5.24-31.967,7.522-48.066h15.502c4.53,0,8.703-2.694,10.896-7.035C290.704,178.584,290.572,173.281,288.166,169.076z"/>
         <path class="draw-detail" stroke="url(#brainGrad2)" filter="url(#glow)" d="M262.112,174.961h-13.024l-1.828,12.895c-1.969,13.891-4.48,29.934-7.463,47.681c-3.133,18.611-17.525,32.119-34.221,32.119h-52.743h-8.47c1.977-8.32,3.967-16.618,5.881-24.599c5.049-21.059,9.819-40.95,12.804-54.711c1.457-6.719-0.027-13.36-1.462-19.781c-1.333-5.962-2.71-12.122-1.662-17.649c1.045-2.483,4.966-7.837,7.726-10.753c2.278,0.119,4.264,0.319,6.094,0.503c2.254,0.227,4.383,0.441,6.523,0.441c9.793,0,17.128-5.133,20.653-14.452c0.547-1.445,1.843-2.456,3.383-2.638c12.141-1.437,34.739-4.111,34.739-29.595c0-20.211-11.366-37.02-32.004-47.33c-19.697-9.84-40.461-10.604-46.356-10.604c-35.806,0-74.766,26.973-79.952,78.526c-2.21,21.972,4.861,43.005,19.91,59.224c3.883,4.185,5.477,10.006,4.277,15.596L76.704,305H51.591l25.374-109.954l1.897-8.22l-6.039-5.891c-17.985-17.542-27.889-40.509-27.889-64.67c0-31.544,6.6-54.576,20.178-70.413c8.223-9.592,18.973-16.749,32.864-21.882C114.083,18.018,134.35,15,158.212,15c26.139,0,48.799,10.784,65.531,31.186c16.501,20.121,26.559,48.913,28.321,81.072l0.168,3.077l1.368,2.761l20.741,41.864H262.112z"/>
         <path class="draw-accent" stroke="url(#brainGrad2)" filter="url(#glowSoft)" d="M86.509,42.07c-1.502,0-3.019,0.45-4.338,1.387c-1.111,0.79-27.221,19.75-26.02,54.851c0.14,4.053,3.468,7.243,7.491,7.243c0.087,0,0.174-0.001,0.262-0.004c4.14-0.143,7.381-3.613,7.239-7.753C70.226,70.999,89.956,56.34,90.879,55.671c3.359-2.403,4.143-7.073,1.75-10.443C91.167,43.169,88.856,42.07,86.509,42.07z"/>
-        <circle class="brain-dot" cx="105.635" cy="39.323" r="7.5" fill="#0E7A6E" filter="url(#glow)"/>
+        <circle class="brain-dot" cx="105.635" cy="39.323" r="7.5" fill="#0C6B8E" filter="url(#glow)"/>
         <!-- Synapse connection lines -->
         <g style="opacity:0; animation: fadeIn 0.8s ease 2.5s forwards;">
-          <line class="synapse-line" x1="120" y1="75" x2="185" y2="95" stroke="#1478A7" style="animation-delay:2.6s"/>
-          <line class="synapse-line" x1="185" y1="95" x2="220" y2="65" stroke="#0E7A6E" style="animation-delay:2.8s"/>
-          <line class="synapse-line" x1="185" y1="95" x2="160" y2="140" stroke="#1478A7" style="animation-delay:3.0s"/>
-          <line class="synapse-line" x1="120" y1="75" x2="80" y2="130" stroke="#0E7A6E" style="animation-delay:2.7s"/>
-          <line class="synapse-line" x1="80" y1="130" x2="130" y2="170" stroke="#1478A7" style="animation-delay:3.1s"/>
-          <line class="synapse-line" x1="160" y1="140" x2="130" y2="170" stroke="#0E7A6E" style="animation-delay:3.2s"/>
-          <line class="synapse-line" x1="160" y1="140" x2="210" y2="155" stroke="#1478A7" style="animation-delay:2.9s"/>
-          <line class="synapse-line" x1="220" y1="65" x2="210" y2="155" stroke="#0E7A6E" style="animation-delay:3.3s"/>
+          <line class="synapse-line" x1="120" y1="75" x2="185" y2="95" stroke="#1468B0" style="animation-delay:2.6s"/>
+          <line class="synapse-line" x1="185" y1="95" x2="220" y2="65" stroke="#0C6B8E" style="animation-delay:2.8s"/>
+          <line class="synapse-line" x1="185" y1="95" x2="160" y2="140" stroke="#1468B0" style="animation-delay:3.0s"/>
+          <line class="synapse-line" x1="120" y1="75" x2="80" y2="130" stroke="#0C6B8E" style="animation-delay:2.7s"/>
+          <line class="synapse-line" x1="80" y1="130" x2="130" y2="170" stroke="#1468B0" style="animation-delay:3.1s"/>
+          <line class="synapse-line" x1="160" y1="140" x2="130" y2="170" stroke="#0C6B8E" style="animation-delay:3.2s"/>
+          <line class="synapse-line" x1="160" y1="140" x2="210" y2="155" stroke="#1468B0" style="animation-delay:2.9s"/>
+          <line class="synapse-line" x1="220" y1="65" x2="210" y2="155" stroke="#0C6B8E" style="animation-delay:3.3s"/>
         </g>
         <!-- Synapse nodes -->
         <g filter="url(#glowNode)">
-          <circle class="hero-synapse" cx="120" cy="75" r="4" fill="#0E7A6E" style="animation-delay:2.6s"/>
-          <circle class="hero-synapse" cx="185" cy="95" r="4" fill="#1478A7" style="animation-delay:2.9s"/>
-          <circle class="hero-synapse" cx="220" cy="65" r="4" fill="#0E7A6E" style="animation-delay:3.2s"/>
-          <circle class="hero-synapse" cx="80" cy="130" r="4" fill="#1478A7" style="animation-delay:3.0s"/>
-          <circle class="hero-synapse" cx="160" cy="140" r="5" fill="#0E7A6E" style="animation-delay:2.7s"/>
-          <circle class="hero-synapse" cx="130" cy="170" r="4" fill="#1478A7" style="animation-delay:3.4s"/>
-          <circle class="hero-synapse" cx="210" cy="155" r="4" fill="#0E7A6E" style="animation-delay:3.1s"/>
+          <circle class="hero-synapse" cx="120" cy="75" r="4" fill="#0C6B8E" style="animation-delay:2.6s"/>
+          <circle class="hero-synapse" cx="185" cy="95" r="4" fill="#1468B0" style="animation-delay:2.9s"/>
+          <circle class="hero-synapse" cx="220" cy="65" r="4" fill="#0C6B8E" style="animation-delay:3.2s"/>
+          <circle class="hero-synapse" cx="80" cy="130" r="4" fill="#1468B0" style="animation-delay:3.0s"/>
+          <circle class="hero-synapse" cx="160" cy="140" r="5" fill="#0C6B8E" style="animation-delay:2.7s"/>
+          <circle class="hero-synapse" cx="130" cy="170" r="4" fill="#1468B0" style="animation-delay:3.4s"/>
+          <circle class="hero-synapse" cx="210" cy="155" r="4" fill="#0C6B8E" style="animation-delay:3.1s"/>
         </g>
         <!-- Traveling signals -->
-        <circle r="2.5" fill="#0E7A6E" class="traveling-pulse" filter="url(#glowNode)" style="animation-delay:3s">
+        <circle r="2.5" fill="#0C6B8E" class="traveling-pulse" filter="url(#glowNode)" style="animation-delay:3s">
           <animateMotion dur="3s" begin="3s" repeatCount="indefinite" path="M120,75 L185,95 L220,65"/>
         </circle>
-        <circle r="2.5" fill="#1478A7" class="traveling-pulse" filter="url(#glowNode)" style="animation-delay:3.5s">
+        <circle r="2.5" fill="#1468B0" class="traveling-pulse" filter="url(#glowNode)" style="animation-delay:3.5s">
           <animateMotion dur="3.5s" begin="3.5s" repeatCount="indefinite" path="M80,130 L120,75 L185,95 L160,140"/>
         </circle>
-        <circle r="2" fill="#0E7A6E" class="traveling-pulse" filter="url(#glowNode)" style="animation-delay:4s">
+        <circle r="2" fill="#0C6B8E" class="traveling-pulse" filter="url(#glowNode)" style="animation-delay:4s">
           <animateMotion dur="4s" begin="4s" repeatCount="indefinite" path="M210,155 L160,140 L130,170 L80,130"/>
         </circle>
       </g>
@@ -745,7 +745,7 @@
     <div class="sec-tag r"><span class="line"></span> / Mission · N. 01</div>
     <h2 class="sec-title r r-d1">Why we exist.</h2>
     <div class="mission-grid">
-      <div class="mission-text r-left">
+      <div class="mission-text">
         <p class="sec-desc">
           We believe every person deserves access to mental health education and support. Through our growing network of student-led chapters, we're building a future where asking for help is the norm — not the exception.
         </p>
@@ -768,7 +768,7 @@
           </div>
         </div>
       </div>
-      <div class="r-right">
+      <div>
         <div class="mission-card r-scale">
             <div class="big-quote">"Mental health is a human right, not a privilege."</div>
             <div class="attr">— CareForBrains</div>
@@ -1212,7 +1212,7 @@ if (heroVisual) {
     maxZoom: 19
   }).addTo(map);
 
-  const colors = { school: '#0A5E54', community: '#1478A7', both: '#5BBFB5' };
+  const colors = { school: '#0C6B8E', community: '#1468B0', both: '#38C0D4' };
 
   function pin(color) {
     return L.divIcon({
