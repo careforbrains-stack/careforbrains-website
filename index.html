@@ -1088,26 +1088,18 @@ if (heroVisual) {
   });
 }
 
-// ─── MARQUEE SPEED ON SCROLL ───
-const marquee = document.querySelector('.marquee-track');
-if (marquee) {
-  gsap.to(marquee, {
-    timeScale: 2,
-    scrollTrigger: { trigger: '.marquee-wrap', start: 'top bottom', end: 'bottom top', scrub: true,
-      onUpdate: self => {
-        const speed = 1 + self.progress * 1.5;
-        marquee.style.animationDuration = (30 / speed) + 's';
-      }
-    }
-  });
-}
 </script>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-window.addEventListener('load', function(){
+(function initMap(){
+  if (typeof L === 'undefined' || !L.map) {
+    // Leaflet not loaded yet, retry
+    setTimeout(initMap, 200);
+    return;
+  }
   const mapEl = document.getElementById('chapterMap');
-  if (!mapEl || typeof L === 'undefined') return;
+  if (!mapEl) return;
 
   const map = L.map(mapEl, {
     center: [37.5, -96],
@@ -1172,7 +1164,7 @@ window.addEventListener('load', function(){
 
   // Enable scroll zoom after first click
   map.once('click', function(){ map.scrollWheelZoom.enable(); });
-});
+})();
 </script>
 
 </body>
