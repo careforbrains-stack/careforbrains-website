@@ -239,6 +239,8 @@
   .r, .r-scale, .r-left, .r-right { opacity: 0; }
   .sec-tag { opacity: 0; }
   .cta-actions { perspective: 800px; }
+  .stats-row { perspective: 600px; }
+  .mission-card { opacity: 0; }
   .sec-title .tw { will-change: transform; }
 
   /* ─── MAGNETIC / TILT ─── */
@@ -1009,21 +1011,19 @@ gsap.to('.hero-aura', {
   scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
 });
 
-// ─── SECTION REVEALS — cinematic clip-path + parallax ───
+// ─── SCROLL ANIMATIONS — each section unique ───
 
 // Section tags: line draws in, text clips in
 document.querySelectorAll('.sec-tag').forEach(tag => {
   const line = tag.querySelector('.line');
   gsap.set(tag, { clipPath: 'inset(0 100% 0 0)', opacity: 1 });
   if (line) gsap.set(line, { scaleX: 0, transformOrigin: 'left' });
-  const tl = gsap.timeline({
-    scrollTrigger: { trigger: tag, start: 'top 85%' }
-  });
+  const tl = gsap.timeline({ scrollTrigger: { trigger: tag, start: 'top 85%' } });
   if (line) tl.to(line, { scaleX: 1, duration: 0.8, ease: 'power2.inOut' });
   tl.to(tag, { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power3.out' }, line ? '-=0.4' : 0);
 });
 
-// Section titles: split words, stagger up with clip
+// Section titles: split words, stagger up behind clip mask
 document.querySelectorAll('.sec-title').forEach(title => {
   if (title.closest('.hero')) return;
   const text = title.innerHTML;
@@ -1040,94 +1040,124 @@ document.querySelectorAll('.sec-title').forEach(title => {
   });
 });
 
-// Section descriptions: smooth fade + slide
-document.querySelectorAll('.sec-desc').forEach(desc => {
-  gsap.set(desc, { y: 40, opacity: 0, filter: 'blur(4px)' });
-  gsap.to(desc, {
-    y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: desc, start: 'top 88%' }
-  });
-});
-
-// Generic reveals with more punch
-document.querySelectorAll('.r, .r-scale, .r-left, .r-right').forEach(el => {
-  if (el.closest('.hero') || el.classList.contains('sec-tag')) return;
-  if (el.matches('.sec-title, .sec-desc, .stat-item, .pillar, .cta-action')) return;
-  const dir = el.classList.contains('r-left') ? -80 : el.classList.contains('r-right') ? 80 : 0;
-  const scl = el.classList.contains('r-scale');
-  gsap.set(el, { y: scl ? 0 : 70, x: dir, opacity: 0, scale: scl ? 0.85 : 1 });
-  gsap.to(el, {
-    y: 0, x: 0, opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out',
-    scrollTrigger: { trigger: el, start: 'top 88%' }
-  });
-});
-
-// ─── STATS — dramatic cascade with counter ───
-gsap.set('.stat-item', { y: 80, opacity: 0, scale: 0.9 });
-gsap.to('.stat-item', {
-  y: 0, opacity: 1, scale: 1, duration: 1.2, stagger: 0.2, ease: 'power4.out',
-  scrollTrigger: { trigger: '.stats-row', start: 'top 80%' }
-});
-
-// ─── PILLARS — stagger from left with clip ───
+// ─── MISSION — slide from left + scale-in pillars ───
+const missionText = document.querySelector('.mission-text');
+if (missionText) {
+  const desc = missionText.querySelector('.sec-desc');
+  if (desc) {
+    gsap.set(desc, { x: -80, opacity: 0 });
+    gsap.to(desc, {
+      x: 0, opacity: 1, duration: 1.3, ease: 'power3.out',
+      scrollTrigger: { trigger: desc, start: 'top 88%' }
+    });
+  }
+}
+// Pillars: scale from center, staggered
 document.querySelectorAll('.pillar').forEach((p, i) => {
-  gsap.set(p, { x: -60, opacity: 0 });
+  gsap.set(p, { scale: 0.7, opacity: 0, filter: 'blur(6px)' });
   gsap.to(p, {
-    x: 0, opacity: 1, duration: 1, ease: 'power3.out',
-    delay: i * 0.12,
+    scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'back.out(1.4)',
+    delay: i * 0.15,
     scrollTrigger: { trigger: '.pillars', start: 'top 82%' }
   });
 });
+// Mission quote card: clip-path circle reveal
+const missionCard = document.querySelector('.mission-card');
+if (missionCard) {
+  gsap.set(missionCard, { clipPath: 'circle(0% at 50% 50%)', opacity: 1 });
+  gsap.to(missionCard, {
+    clipPath: 'circle(75% at 50% 50%)', duration: 1.6, ease: 'power3.inOut',
+    scrollTrigger: { trigger: missionCard, start: 'top 85%' }
+  });
+}
 
-// ─── CTA ACTIONS — rise with rotation ───
+// ─── IMPACT — horizontal wipe for desc, flip-in stats ───
+const impactDesc = document.querySelector('#impact .sec-desc');
+if (impactDesc) {
+  gsap.set(impactDesc, { opacity: 0, filter: 'blur(8px)' });
+  gsap.to(impactDesc, {
+    opacity: 1, filter: 'blur(0px)', duration: 1.4, ease: 'power2.out',
+    scrollTrigger: { trigger: impactDesc, start: 'top 88%' }
+  });
+}
+// Stats: rotateX flip in from below
+document.querySelectorAll('.stat-item').forEach((s, i) => {
+  gsap.set(s, { rotateX: -45, opacity: 0, transformOrigin: 'bottom center' });
+  gsap.to(s, {
+    rotateX: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
+    delay: i * 0.2,
+    scrollTrigger: { trigger: '.stats-row', start: 'top 80%' }
+  });
+});
+
+// ─── CHAPTERS — desc slides from right, map expands ───
+const chapDesc = document.querySelector('#chapters .sec-desc');
+if (chapDesc) {
+  gsap.set(chapDesc, { x: 60, opacity: 0 });
+  gsap.to(chapDesc, {
+    x: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
+    scrollTrigger: { trigger: chapDesc, start: 'top 88%' }
+  });
+}
+// Map: clip-path inset reveal (expands from center)
+const mapEl = document.getElementById('chapterMap');
+if (mapEl) {
+  gsap.set(mapEl, { clipPath: 'inset(15% 15% 15% 15%)', opacity: 0 });
+  gsap.to(mapEl, {
+    clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 1.8, ease: 'power3.out',
+    scrollTrigger: { trigger: mapEl, start: 'top 85%' }
+  });
+}
+
+// ─── CTA — desc just fades, actions alternate left/right ───
+const ctaDesc = document.querySelector('#involved .sec-desc');
+if (ctaDesc) {
+  gsap.set(ctaDesc, { opacity: 0 });
+  gsap.to(ctaDesc, {
+    opacity: 1, duration: 1.6, ease: 'power2.out',
+    scrollTrigger: { trigger: ctaDesc, start: 'top 88%' }
+  });
+}
+// CTA actions: alternate slide direction
 document.querySelectorAll('.cta-action').forEach((a, i) => {
-  gsap.set(a, { y: 80, opacity: 0, rotateX: 8 });
+  const fromX = i % 2 === 0 ? -70 : 70;
+  gsap.set(a, { x: fromX, opacity: 0 });
   gsap.to(a, {
-    y: 0, opacity: 1, rotateX: 0, duration: 1.2, ease: 'power3.out',
+    x: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
     delay: i * 0.15,
     scrollTrigger: { trigger: '.cta-actions', start: 'top 82%' }
   });
 });
-
-// ─── CTA MEGA BUTTON — scale pop ───
+// Mega button: elastic scale pop
 const megaBtn = document.querySelector('.cta-mega-btn');
 if (megaBtn) {
-  gsap.set(megaBtn, { scale: 0.85, opacity: 0 });
+  gsap.set(megaBtn, { scale: 0.8, opacity: 0 });
   gsap.to(megaBtn, {
     scale: 1, opacity: 1, duration: 1.4, ease: 'elastic.out(1, 0.6)',
     scrollTrigger: { trigger: megaBtn, start: 'top 90%' }
   });
 }
 
-// ─── SECTION PARALLAX — subtle depth within sections ───
-document.querySelectorAll('.sec-title').forEach(title => {
-  gsap.to(title, {
-    y: -30, ease: 'none',
-    scrollTrigger: {
-      trigger: title.closest('.sec, .sec-alt, .cta-wrap'),
-      start: 'top bottom', end: 'bottom top', scrub: true
-    }
+// Generic reveals (fallback for anything not handled above)
+document.querySelectorAll('.r, .r-scale, .r-left, .r-right').forEach(el => {
+  if (el.closest('.hero') || el.classList.contains('sec-tag')) return;
+  if (el.matches('.sec-title, .sec-desc, .stat-item, .pillar, .cta-action, .mission-card')) return;
+  if (el.closest('.cta-top')) return;
+  const dir = el.classList.contains('r-left') ? -80 : el.classList.contains('r-right') ? 80 : 0;
+  const scl = el.classList.contains('r-scale');
+  gsap.set(el, { y: scl ? 0 : 60, x: dir, opacity: 0, scale: scl ? 0.85 : 1 });
+  gsap.to(el, {
+    y: 0, x: 0, opacity: 1, scale: 1, duration: 1.3, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 88%' }
   });
 });
 
-// ─── MARQUEE SPEED ON SCROLL — accelerate when scrolling ───
+// ─── MARQUEE — speeds up on scroll ───
 const marqueeTrack = document.querySelector('.marquee-track');
 if (marqueeTrack) {
   gsap.to(marqueeTrack, {
     x: '-=200', ease: 'none',
-    scrollTrigger: {
-      trigger: '.marquee-wrap', start: 'top bottom', end: 'bottom top', scrub: 0.5
-    }
-  });
-}
-
-// ─── MAP SECTION — fade in with scale ───
-const mapEl = document.getElementById('chapterMap');
-if (mapEl) {
-  gsap.set(mapEl, { opacity: 0, scale: 0.95 });
-  gsap.to(mapEl, {
-    opacity: 1, scale: 1, duration: 1.6, ease: 'power3.out',
-    scrollTrigger: { trigger: mapEl, start: 'top 85%' }
+    scrollTrigger: { trigger: '.marquee-wrap', start: 'top bottom', end: 'bottom top', scrub: 0.5 }
   });
 }
 
