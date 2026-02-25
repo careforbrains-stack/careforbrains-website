@@ -235,17 +235,7 @@
     line-height: 1.7; max-width: 520px;
   }
 
-  /* ─── REVEAL ─── */
-  .r { opacity: 0; transform: translateY(50px); transition: all 0.9s var(--ease-out-expo); }
-  .r.vis { opacity: 1; transform: translateY(0); }
-  .r-d1 { transition-delay: 0.1s; } .r-d2 { transition-delay: 0.2s; }
-  .r-d3 { transition-delay: 0.3s; } .r-d4 { transition-delay: 0.4s; }
-  .r-scale { opacity: 0; transform: scale(0.92); transition: all 0.8s var(--ease-out-expo); }
-  .r-scale.vis { opacity: 1; transform: scale(1); }
-  .r-left { opacity: 0; transform: translateX(-40px); transition: all 0.8s var(--ease-out-expo); }
-  .r-left.vis { opacity: 1; transform: translateX(0); }
-  .r-right { opacity: 0; transform: translateX(40px); transition: all 0.8s var(--ease-out-expo); }
-  .r-right.vis { opacity: 1; transform: translateX(0); }
+  /* ─── REVEAL (GSAP handles these) ─── */
 
   /* ─── MISSION ─── */
   .mission-grid {
@@ -517,47 +507,28 @@
   .glow-ring { opacity: 0; animation: ringPulse 5s ease-in-out 3s infinite; }
   @keyframes ringPulse { 0%, 100% { opacity: 0; } 50% { opacity: 0.1; } }
 
-  /* ─── FLOATING BLOBS ─── */
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    pointer-events: none;
-    z-index: 0;
-    will-change: transform;
+  /* ─── HERO AURA ORBS ─── */
+  .hero-aura {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
   }
-  .blob-1 {
-    width: 300px; height: 300px;
-    background: rgba(26,158,143,0.08);
-    top: 10%; right: -5%;
-    animation: blob-move-1 18s ease-in-out infinite;
+  .aura-orb {
+    position: absolute; border-radius: 50%; filter: blur(100px);
+    pointer-events: none; will-change: transform, opacity;
   }
-  .blob-2 {
-    width: 250px; height: 250px;
-    background: rgba(20,120,167,0.06);
-    bottom: 20%; left: -8%;
-    animation: blob-move-2 22s ease-in-out infinite;
+  .aura-orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(26,158,143,0.15), rgba(26,158,143,0) 70%);
+    top: 10%; right: 5%;
   }
-  .blob-3 {
-    width: 200px; height: 200px;
-    background: rgba(43,196,178,0.06);
-    top: 40%; left: 30%;
-    animation: blob-move-3 15s ease-in-out infinite;
+  .aura-orb-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(20,120,167,0.12), rgba(20,120,167,0) 70%);
+    top: 30%; right: -10%;
   }
-  @keyframes blob-move-1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(-40px, 30px) scale(1.1); }
-    50% { transform: translate(20px, -20px) scale(0.95); }
-    75% { transform: translate(-10px, -40px) scale(1.05); }
-  }
-  @keyframes blob-move-2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(50px, -30px) scale(1.15); }
-    66% { transform: translate(-30px, 40px) scale(0.9); }
-  }
-  @keyframes blob-move-3 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(30px, -50px); }
+  .aura-orb-3 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(43,196,178,0.1), rgba(43,196,178,0) 70%);
+    top: -5%; right: 20%;
   }
 
   /* ─── CONSTELLATION / NETWORK ─── */
@@ -638,10 +609,12 @@
 
 <!-- HERO -->
 <section class="hero">
-  <!-- Floating blobs -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+  <!-- Aura orbs -->
+  <div class="hero-aura">
+    <div class="aura-orb aura-orb-1"></div>
+    <div class="aura-orb aura-orb-2"></div>
+    <div class="aura-orb aura-orb-3"></div>
+  </div>
 
   <div class="hero-tag">
     <span class="dot"></span>
@@ -904,15 +877,7 @@
     });
   }
 
-  // Scroll reveals
-  const rObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('vis'); rObs.unobserve(e.target); }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.r, .r-scale, .r-left, .r-right').forEach(el => rObs.observe(el));
-
-  // Counter animation
+  // Counter animation (keep IO for this)
   const cObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -957,6 +922,116 @@
       borderBottom: '1px solid var(--rule)'
     });
   });
+</script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ─── HERO PARALLAX ───
+// Brain drifts up slower on scroll
+gsap.to('.hero-visual', {
+  y: -120,
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1.5
+  }
+});
+// Hero text fades and moves up faster
+gsap.to('.hero h1', {
+  y: -60, opacity: 0.3,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: '60% top', scrub: 1 }
+});
+gsap.to('.hero-sub', {
+  y: -40, opacity: 0,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: '50% top', scrub: 1 }
+});
+gsap.to('.hero-actions', {
+  y: -30, opacity: 0,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: '40% top', scrub: 1 }
+});
+
+// ─── AURA ORBS ───
+// Breathing animation
+gsap.to('.aura-orb-1', {
+  scale: 1.3, opacity: 0.7,
+  duration: 4, ease: 'sine.inOut', yoyo: true, repeat: -1
+});
+gsap.to('.aura-orb-2', {
+  scale: 1.2, x: -40, y: 30,
+  duration: 5, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1
+});
+gsap.to('.aura-orb-3', {
+  scale: 1.4, x: 30, y: -20,
+  duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2
+});
+// Orbs disperse on scroll
+gsap.to('.aura-orb-1', {
+  y: -200, scale: 2, opacity: 0,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+});
+gsap.to('.aura-orb-2', {
+  y: -150, x: 100, opacity: 0,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+});
+gsap.to('.aura-orb-3', {
+  y: -180, x: -80, opacity: 0,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+});
+
+// ─── SECTION REVEALS ───
+document.querySelectorAll('.r, .r-scale, .r-left, .r-right').forEach(el => {
+  const dir = el.classList.contains('r-left') ? -60 :
+              el.classList.contains('r-right') ? 60 : 0;
+  const scl = el.classList.contains('r-scale');
+  gsap.from(el, {
+    y: scl ? 0 : 50,
+    x: dir,
+    opacity: 0,
+    scale: scl ? 0.9 : 1,
+    duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 88%',
+      toggleActions: 'play none none none'
+    }
+  });
+});
+
+// ─── PARALLAX SECTIONS ───
+document.querySelectorAll('.sec-title').forEach(title => {
+  gsap.from(title, {
+    y: 40, opacity: 0,
+    duration: 1.2, ease: 'power3.out',
+    scrollTrigger: { trigger: title, start: 'top 85%' }
+  });
+});
+
+// ─── STATS ROW STAGGER ───
+gsap.from('.stat-item', {
+  y: 60, opacity: 0, duration: 0.8, stagger: 0.2,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.stats-row', start: 'top 80%' }
+});
+
+// ─── CTA SECTION ───
+gsap.from('.cta-action', {
+  y: 50, opacity: 0, duration: 0.8, stagger: 0.15,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.cta-actions', start: 'top 80%' }
+});
+
+// ─── PILLAR STAGGER ───
+gsap.from('.pillar', {
+  x: -40, opacity: 0, duration: 0.7, stagger: 0.12,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.pillars', start: 'top 80%' }
+});
 </script>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
