@@ -134,24 +134,19 @@
   .word-line { display: block; overflow: hidden; }
   .word {
     display: inline-block;
-    transform: translateY(110%);
-    opacity: 0;
   }
   .hero-sub {
     font-size: 1.15rem; color: var(--fg-sec); line-height: 1.7;
     max-width: 520px; margin-bottom: 2.5rem;
-    opacity: 0; transform: translateY(20px);
   }
   @keyframes fadeIn { to { opacity: 1; } }
   .hero-actions {
     display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 5rem;
-    opacity: 0; transform: translateY(20px);
   }
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
     font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
     letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2rem;
-    opacity: 0; transform: translateY(15px);
   }
   .btn-teal {
     display: inline-flex; align-items: center; gap: 0.5rem;
@@ -958,6 +953,12 @@ gsap.ticker.add(t => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
 
 // ─── CINEMATIC HERO ENTRANCE ───
+// GSAP owns all initial states — no CSS opacity:0 conflicts
+gsap.set('.hero-tag', { y: 15, opacity: 0 });
+gsap.set('.word', { yPercent: 110, opacity: 0 });
+gsap.set('.hero-sub', { y: 20, opacity: 0 });
+gsap.set('.hero-actions', { y: 20, opacity: 0 });
+
 const heroTL = gsap.timeline({ delay: 0.4, defaults: { ease: 'power4.out' } });
 
 // Tag slides up
@@ -965,7 +966,7 @@ heroTL.to('.hero-tag', { y: 0, opacity: 1, duration: 1 });
 
 // Words reveal one by one — the money shot
 heroTL.to('.word', {
-  y: 0, opacity: 1, duration: 1.2,
+  yPercent: 0, opacity: 1, duration: 1.2,
   stagger: { amount: 0.6, from: 'start' },
   ease: 'power4.out'
 }, '-=0.5');
