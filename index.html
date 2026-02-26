@@ -51,17 +51,6 @@
     background-size: 180px;
   }
 
-  /* Cursor glow */
-  .cursor-glow {
-    position: fixed; width: 500px; height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--teal-glow), transparent 70%);
-    pointer-events: none; z-index: 0;
-    transform: translate(-50%, -50%);
-    transition: left 0.15s linear, top 0.15s linear;
-    opacity: 0.45;
-  }
-
   /* ─── NAV ─── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -106,6 +95,43 @@
   .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
 
   /* ─── HERO ─── */
+  /* Custom cursor */
+  .cursor-glow {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid var(--teal);
+    pointer-events: none; mix-blend-mode: difference;
+    transition: width 0.3s, height 0.3s, margin 0.3s, opacity 0.3s;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  .cursor-glow.visible { opacity: 1; }
+  .cursor-glow.hovering {
+    width: 56px; height: 56px;
+    background: rgba(20,144,176,0.08);
+    border-color: var(--teal-light);
+  }
+  .cursor-dot {
+    position: fixed; top: 0; left: 0; z-index: 10000;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  .cursor-dot.visible { opacity: 1; }
+
+  @media (pointer: fine) {
+    * { cursor: none !important; }
+  }
+
+  /* Scroll progress bar */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; height: 2px; z-index: 10001;
+    background: var(--gradient);
+    width: 0%; will-change: width;
+  }
+
   .hero {
     min-height: 100vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center; text-align: center;
@@ -122,9 +148,9 @@
   }
   .hero-h1 {
     font-family: var(--serif); font-weight: 400;
-    font-size: clamp(3rem, 7vw, 5.5rem);
-    line-height: 1.05; letter-spacing: -2px;
-    max-width: 850px; margin: 0 auto 2rem;
+    font-size: clamp(3.5rem, 8.5vw, 7rem);
+    line-height: 1.02; letter-spacing: -3px;
+    max-width: 950px; margin: 0 auto 2.5rem;
   }
   .hero-h1 em {
     font-style: italic;
@@ -132,29 +158,54 @@
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .word-line { display: block; overflow: hidden; padding-bottom: 0.08em; }
+  .word-line { display: block; overflow: hidden; padding-bottom: 0.1em; }
   .word {
     display: inline-block;
   }
   .hero-sub {
-    font-size: 1.15rem; color: var(--fg-sec); line-height: 1.7;
-    max-width: 520px; margin: 0 auto 2.5rem;
+    font-size: 1.2rem; color: var(--fg-sec); line-height: 1.7;
+    max-width: 540px; margin: 0 auto 3rem;
   }
   @keyframes fadeIn { to { opacity: 1; } }
   .hero-actions {
-    display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 5rem;
+    display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem;
     justify-content: center;
   }
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2rem;
+    font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2.5rem;
   }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  }
+  .scroll-hint-text {
+    font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--fg-muted);
+  }
+  .scroll-hint-line {
+    width: 1px; height: 40px; background: var(--rule); position: relative;
+    overflow: hidden;
+  }
+  .scroll-hint-line::after {
+    content: ''; position: absolute; top: -100%; left: 0;
+    width: 100%; height: 100%; background: var(--teal);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0% { top: -100%; }
+    50% { top: 100%; }
+    100% { top: 100%; }
+  }
+
   .btn-teal {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.95rem 2rem; background: var(--gradient);
+    padding: 1.1rem 2.4rem; background: var(--gradient);
     color: white; font-family: var(--sans); font-weight: 700;
-    font-size: 0.9rem; border: none; border-radius: 12px;
+    font-size: 0.95rem; border: none; border-radius: 14px;
     cursor: pointer; text-decoration: none;
     transition: all 0.35s var(--ease-spring);
     position: relative; overflow: hidden;
@@ -175,9 +226,9 @@
   .btn-teal:hover .arrow { transform: translateX(3px) translateY(-2px); }
   .btn-ghost {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.95rem 2rem; background: transparent; color: var(--fg);
-    font-family: var(--sans); font-weight: 600; font-size: 0.9rem;
-    border: 1.5px solid var(--rule); border-radius: 12px;
+    padding: 1.1rem 2.4rem; background: transparent; color: var(--fg);
+    font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
+    border: 1.5px solid var(--rule); border-radius: 14px;
     cursor: pointer; text-decoration: none; transition: all 0.3s;
   }
   .btn-ghost:hover {
@@ -542,7 +593,7 @@
     .nav-links { display: none; }
     .hamburger { display: flex; }
     .hero { padding: 7rem 1.5rem 3rem; min-height: auto; }
-    .hero h1 { font-size: 2.6rem; letter-spacing: -1px; }
+    .hero h1 { font-size: 2.8rem; letter-spacing: -1.5px; }
     .sec, .sec-alt { padding: 4rem 1.5rem; }
     .cta-wrap { padding: 5rem 1.5rem; }
     .stats-row { grid-template-columns: 1fr; }
@@ -554,14 +605,13 @@
     .ch-header, .impact-header { flex-direction: column; align-items: flex-start; }
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
-    .cursor-glow { display: none; }
+    .cursor-glow, .cursor-dot { display: none; }
+    .scroll-hint { display: none; }
     .marquee-item { font-size: 0.9rem; }
   }
 </style>
 </head>
 <body>
-
-<div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- NAV -->
 <nav>
@@ -583,6 +633,12 @@
 </nav>
 
 <!-- HERO -->
+<!-- Custom Cursor -->
+<div class="cursor-glow"></div>
+<div class="cursor-dot"></div>
+<!-- Scroll Progress -->
+<div class="scroll-progress"></div>
+
 <section class="hero">
   <!-- Aura orbs -->
   <div class="hero-aura">
@@ -611,6 +667,10 @@
     <a href="#mission" class="btn-ghost">Our Story</a>
   </div>
   <!-- Animated Brain SVG (v4) -->
+  <div class="scroll-hint">
+    <span class="scroll-hint-text">Scroll</span>
+    <div class="scroll-hint-line"></div>
+  </div>
   <canvas id="particleNet" class="hero-visual"></canvas>
 </section>
 
@@ -779,15 +839,6 @@
 </footer>
 
 <script>
-  // Cursor glow
-  const glow = document.getElementById('cursorGlow');
-  if (window.matchMedia('(pointer: fine)').matches) {
-    document.addEventListener('mousemove', e => {
-      glow.style.left = e.clientX + 'px';
-      glow.style.top = e.clientY + 'px';
-    });
-  }
-
   // Counter animation (keep IO for this)
   const cObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1050,6 +1101,54 @@ if (marqueeTrack) {
   gsap.to(marqueeTrack, {
     x: '-=200', ease: 'none',
     scrollTrigger: { trigger: '.marquee-wrap', start: 'top bottom', end: 'bottom top', scrub: 0.5 }
+  });
+}
+
+// ─── CUSTOM CURSOR ───
+const cursorGlow = document.querySelector('.cursor-glow');
+const cursorDot = document.querySelector('.cursor-dot');
+if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
+  let cx = -100, cy = -100, tx = -100, ty = -100;
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX; ty = e.clientY;
+    cursorDot.style.left = tx + 'px';
+    cursorDot.style.top = ty + 'px';
+    if (!cursorGlow.classList.contains('visible')) {
+      cursorGlow.classList.add('visible');
+      cursorDot.classList.add('visible');
+    }
+  });
+  function updateCursor() {
+    cx += (tx - cx) * 0.15;
+    cy += (ty - cy) * 0.15;
+    cursorGlow.style.left = cx + 'px';
+    cursorGlow.style.top = cy + 'px';
+    requestAnimationFrame(updateCursor);
+  }
+  updateCursor();
+  document.querySelectorAll('a, button, .btn-teal, .btn-ghost, .cta-mega-btn, .cta-action').forEach(el => {
+    el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
+  });
+}
+
+// ─── SCROLL PROGRESS BAR ───
+const progressBar = document.querySelector('.scroll-progress');
+if (progressBar) {
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (window.scrollY / h * 100) + '%';
+  });
+}
+
+// ─── SCROLL HINT — fade on scroll ───
+const scrollHint = document.querySelector('.scroll-hint');
+if (scrollHint) {
+  gsap.set(scrollHint, { opacity: 0, y: 10 });
+  heroTL.to(scrollHint, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=1');
+  gsap.to(scrollHint, {
+    opacity: 0, y: -20, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: '5% top', end: '20% top', scrub: true }
   });
 }
 
