@@ -98,14 +98,17 @@
   .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 1.1rem 2.4rem; background: transparent; color: var(--fg); font-family: var(--sans); font-weight: 600; font-size: 0.95rem; border: 1.5px solid var(--rule); border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
   .btn-ghost:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
 
-  /* HOW IT WORKS - STEPS */
-  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 3rem; border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); }
-  .step-card { padding: 3rem 2.5rem; border-right: 1px solid var(--rule); position: relative; transition: background 0.4s; }
+  /* OFFER GRID */
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 3rem; border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); }
+  .step-card { padding: 2.5rem 2rem; border-right: 1px solid var(--rule); position: relative; transition: background 0.4s; }
   .step-card:last-child { border-right: none; }
   .step-card:hover { background: var(--teal-glow); }
-  .step-num { font-family: var(--serif); font-size: 3rem; font-weight: 400; line-height: 1; color: var(--teal-deep); margin-bottom: 1.5rem; letter-spacing: -2px; }
-  .step-card h3 { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.8rem; }
-  .step-card p { font-size: 0.9rem; color: var(--fg-sec); line-height: 1.7; }
+  .step-num { color: var(--teal-deep); margin-bottom: 1.5rem; display: flex; align-items: center; }
+  .step-card h3 { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.8rem; }
+  .step-card p { font-size: 0.88rem; color: var(--fg-sec); line-height: 1.7; }
+
+  /* TRACK HOURS BADGE */
+  .track-hours { display: inline-block; margin-top: 1.2rem; padding: 0.35rem 1rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal-deep); background: var(--teal-bg); border-radius: 100px; }
 
   /* PVSA */
   .pvsa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 3rem; }
@@ -118,19 +121,6 @@
   .pvsa-badge h3 { font-family: var(--serif); color: white; font-size: 1.6rem; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 0.6rem; }
   .pvsa-badge p { color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.6; }
 
-  /* HOURS TABLE */
-  .hours-table { margin-top: 3rem; border-top: 2px solid var(--fg); }
-  .hours-row { display: grid; grid-template-columns: 1fr 1.5fr 1fr; border-bottom: 1px solid var(--rule); }
-  .hours-row.header { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: var(--fg-muted); }
-  .hours-row.header .hours-cell { padding: 1.2rem 1.5rem; }
-  .hours-cell { padding: 1.5rem 1.5rem; font-size: 0.95rem; display: flex; align-items: center; }
-  .hours-cell:not(:last-child) { border-right: 1px solid var(--rule); }
-  .hours-row:not(.header):hover { background: var(--teal-glow); }
-  .hours-medal { display: inline-flex; align-items: center; gap: 0.6rem; }
-  .medal-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .medal-dot.bronze { background: #CD7F32; }
-  .medal-dot.silver { background: #A8A8A8; }
-  .medal-dot.gold { background: #FFD700; }
 
   /* BENEFITS */
   .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem; }
@@ -174,10 +164,9 @@
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .steps-grid { grid-template-columns: 1fr 1fr; }
-    .step-card:nth-child(2) { border-right: none; }
-    .step-card:last-child { grid-column: 1 / 3; border-top: 1px solid var(--rule); border-right: none; }
+    .step-card:nth-child(2), .step-card:nth-child(4) { border-right: none; }
     .pvsa-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .benefits-grid { grid-template-columns: 1fr; }
+    .benefits-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 640px) {
     .nav-links { display: none; }
@@ -187,12 +176,11 @@
     .cta-banner { padding: 4rem 1.5rem; }
     .steps-grid { grid-template-columns: 1fr; }
     .step-card { border-right: none !important; border-bottom: 1px solid var(--rule); }
-    .step-card:last-child { grid-column: 1; border-top: none; }
+    .step-card:last-child { border-bottom: none; }
+    .benefits-grid { grid-template-columns: 1fr; }
     .stats-row { grid-template-columns: 1fr; }
     .stat-item { border-right: none !important; border-bottom: 1px solid var(--rule); }
     .stat-item:last-child { border-bottom: none; }
-    .hours-row { grid-template-columns: 1fr 1fr; }
-    .hours-row .hours-cell:last-child { grid-column: 1 / 3; border-top: 1px solid var(--rule); }
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
@@ -226,11 +214,11 @@
 <section class="page-hero">
   <div class="page-hero-inner">
     <div class="page-tag r"><span class="dot"></span> Volunteer Program</div>
-    <h1 class="r">Make an impact, earn <em>recognition</em></h1>
-    <p class="page-hero-sub r">Join 852+ volunteers across the country. Earn PVSA-certified hours while making a real difference in mental health awareness.</p>
+    <h1 class="r">Volunteer with us — <em>all virtual</em></h1>
+    <p class="page-hero-sub r">Choose a track, earn 50+ PVSA-certified volunteer hours, and make a real difference in mental health awareness — all from home.</p>
     <div class="page-hero-actions r">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_placeholder/viewform" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
-      <a href="#curriculum" class="btn-ghost">See Curriculum</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKGWmk9Fy4JRAfWHYenDoXwejTGgSSiKnZrXsdYq7Q_SFDnw/viewform?usp=send_form" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
+      <a href="#tracks" class="btn-ghost">See Tracks</a>
     </div>
   </div>
 </section>
@@ -258,165 +246,117 @@
   </div>
 </section>
 
-<!-- PROGRAM CURRICULUM -->
-<div class="sec-alt" id="curriculum">
+<!-- VOLUNTEER TRACKS -->
+<div class="sec-alt" id="tracks">
   <div class="sec-inner">
-    <div class="sec-tag"><span class="line"></span> / Training Modules · N. 02</div>
-    <h2 class="sec-title">What you'll learn</h2>
-    <p class="sec-desc r" style="margin-bottom: 0;">Our volunteer program is a structured training course. Complete modules, build real skills, and earn hours along the way.</p>
-    <div class="steps-grid">
-      <div class="step-card r">
-        <div class="step-num">M1</div>
-        <h3>Mental Health Foundations</h3>
-        <p>Understanding mental health conditions, the science of well-being, stigma reduction, and the language of compassionate support.</p>
+    <div class="sec-tag"><span class="line"></span> / Volunteer Tracks · N. 02</div>
+    <h2 class="sec-title">Choose your track</h2>
+    <p class="sec-desc r" style="margin-bottom: 0;">Each track earns you <strong>50+ volunteer hours</strong>. All tracks are completely virtual — participate from anywhere.</p>
+    <div class="benefits-grid">
+      <div class="benefit-card r">
+        <div class="benefit-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46"/></svg>
+          </div>
+        <h3>Spread Awareness</h3>
+        <p>Raise awareness about mental health and positively impact the community, especially teens. Earn 50+ volunteer hours by participating.</p>
+        <span class="track-hours">50+ hours</span>
       </div>
-      <div class="step-card r">
-        <div class="step-num">M2</div>
-        <h3>Community Outreach</h3>
-        <p>Learn how to plan awareness campaigns, host workshops, create educational content, and engage your local community effectively.</p>
+      <div class="benefit-card r">
+        <div class="benefit-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+        </div>
+        <h3>Educational Outreach</h3>
+        <p>Engage in workshops and programs that educate and support others on mental health. Gain 50+ volunteer hours.</p>
+        <span class="track-hours">50+ hours</span>
       </div>
-      <div class="step-card r">
-        <div class="step-num">M3</div>
-        <h3>Leadership &amp; Advocacy</h3>
-        <p>Develop skills in event management, public speaking, team leadership, and advocating for mental health resources and policy.</p>
+      <div class="benefit-card r">
+        <div class="benefit-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+        </div>
+        <h3>Community Support</h3>
+        <p>Join initiatives that offer resources and support to those in need, earning 50+ volunteer hours.</p>
+        <span class="track-hours">50+ hours</span>
+      </div>
+      <div class="benefit-card r">
+        <div class="benefit-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/></svg>
+        </div>
+        <h3>Article Access &amp; Activities</h3>
+        <p>Read curated mental health articles, complete related activities, and share on social media to help spread awareness, earning 50+ volunteer hours.</p>
+        <span class="track-hours">50+ hours</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- VOLUNTEER ROLES -->
-<div class="sec" id="roles">
-  <div class="sec-tag"><span class="line"></span> / Roles · N. 03</div>
-  <h2 class="sec-title">Ways to contribute</h2>
-  <p class="sec-desc r" style="margin-bottom: 0;">Choose a track that matches your strengths. Every role earns PVSA hours.</p>
-  <div class="benefits-grid">
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/></svg>
+<!-- WHAT WE OFFER -->
+<section class="sec" id="offer">
+  <div class="sec-tag"><span class="line"></span> / What We Offer · N. 03</div>
+  <h2 class="sec-title">What you'll receive</h2>
+  <p class="sec-desc r" style="margin-bottom: 0;">Every volunteer receives official recognition and verification for their service.</p>
+  <div class="steps-grid offer-grid">
+    <div class="step-card r">
+      <div class="step-num">
+        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
       </div>
-      <h3>Content Creator</h3>
-      <p>Write blog posts, design social media graphics, produce educational materials, and create awareness content that reaches thousands.</p>
+      <h3>Certification of Authenticity</h3>
+      <p>Receive an official certificate verifying your volunteer service and hours with CareForBrains.</p>
     </div>
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46"/></svg>
+    <div class="step-card r">
+      <div class="step-num">
+        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
       </div>
-      <h3>Event Organizer</h3>
-      <p>Plan and run mental health workshops, awareness events, fundraisers, and community engagement activities at your chapter.</p>
+      <h3>Online Verification</h3>
+      <p>Your hours and service can be verified online by schools, colleges, and organizations at any time.</p>
     </div>
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+    <div class="step-card r">
+      <div class="step-num">
+        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
       </div>
-      <h3>Peer Educator</h3>
-      <p>Lead training sessions and workshops for other volunteers and community members. Teach mental health literacy and coping strategies.</p>
+      <h3>School Form Signing</h3>
+      <p>We sign school-required volunteer forms so your hours count toward school service requirements.</p>
     </div>
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+    <div class="step-card r">
+      <div class="step-num">
+        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
       </div>
-      <h3>Tech &amp; Research</h3>
-      <p>Help with web development, data analysis, research projects, and building digital tools that support the mission.</p>
+      <h3>PVSA Certified</h3>
+      <p>CareForBrains is a certified PVSA organization. Your first 50 hours are provided, with opportunities to earn more.</p>
     </div>
   </div>
-</div>
+</section>
 
 <!-- PVSA SECTION -->
-<section class="sec" id="pvsa">
-  <div class="sec-tag"><span class="line"></span> / Recognition · N. 04</div>
-  <h2 class="sec-title">PVSA certified hours</h2>
-  <div class="pvsa-grid">
-    <div class="pvsa-info">
-      <p class="sec-desc r">CareForBrains is a certified organization for the <strong>President's Volunteer Service Award</strong>. Every hour you volunteer with us counts toward earning a nationally recognized award signed by the President of the United States.</p>
-      <p class="sec-desc r">Whether you're looking to strengthen your college application, build leadership experience, or simply give back, PVSA certification ensures your service is officially recognized.</p>
-    </div>
-    <div class="pvsa-visual r">
-      <div class="pvsa-badge">
-        <div class="pvsa-badge-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
-        </div>
-        <h3>Presidential Recognition</h3>
-        <p>Official PVSA certification for all volunteer hours logged with CareForBrains.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOURS TABLE -->
-<div class="sec-alt" id="hours">
+<div class="sec-alt" id="pvsa">
   <div class="sec-inner">
-    <div class="sec-tag"><span class="line"></span> / Hour Requirements · N. 05</div>
-    <h2 class="sec-title">Award levels</h2>
-    <p class="sec-desc r" style="margin-bottom: 0;">Hours required vary by age group. Here's what you need for each PVSA level.</p>
-    <div class="hours-table r">
-      <div class="hours-row header">
-        <div class="hours-cell">Award Level</div>
-        <div class="hours-cell">Ages 11-15</div>
-        <div class="hours-cell">Ages 16-25</div>
+    <div class="sec-tag"><span class="line"></span> / Recognition · N. 04</div>
+    <h2 class="sec-title">PVSA certified hours</h2>
+    <div class="pvsa-grid">
+      <div class="pvsa-info">
+        <p class="sec-desc r">CareForBrains is a certified organization for the <strong>President's Volunteer Service Award</strong>. Your first 50 volunteer hours are provided through our program, with opportunities to earn even more.</p>
+        <p class="sec-desc r">Whether you're looking to strengthen your college application, build leadership experience, or simply give back — PVSA certification ensures your service is officially recognized at the highest level.</p>
+        <a href="https://www.presidentialserviceawards.gov" class="btn-ghost r" target="_blank" style="margin-top: 1.5rem;">Learn About PVSA ↗</a>
       </div>
-      <div class="hours-row">
-        <div class="hours-cell"><span class="hours-medal"><span class="medal-dot bronze"></span> Bronze</span></div>
-        <div class="hours-cell">50-74 hours</div>
-        <div class="hours-cell">100-174 hours</div>
-      </div>
-      <div class="hours-row">
-        <div class="hours-cell"><span class="hours-medal"><span class="medal-dot silver"></span> Silver</span></div>
-        <div class="hours-cell">75-99 hours</div>
-        <div class="hours-cell">175-249 hours</div>
-      </div>
-      <div class="hours-row">
-        <div class="hours-cell"><span class="hours-medal"><span class="medal-dot gold"></span> Gold</span></div>
-        <div class="hours-cell">100+ hours</div>
-        <div class="hours-cell">250+ hours</div>
+      <div class="pvsa-visual r">
+        <div class="pvsa-badge">
+          <div class="pvsa-badge-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+          </div>
+          <h3>Presidential Recognition</h3>
+          <p>First 50 hours provided. Earn more through continued participation.</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- BENEFITS -->
-<section class="sec" id="benefits">
-  <div class="sec-tag"><span class="line"></span> / Why Volunteer · N. 06</div>
-  <h2 class="sec-title">What you'll gain</h2>
-  <p class="sec-desc r" style="margin-bottom: 0;">Beyond making a difference, volunteering with CareForBrains opens doors.</p>
-  <div class="benefits-grid">
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
-      </div>
-      <h3>College applications</h3>
-      <p>PVSA is recognized by colleges nationwide. Show your commitment to community service with a presidential-level award on your resume.</p>
-    </div>
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
-      </div>
-      <h3>Leadership skills</h3>
-      <p>Develop real-world leadership experience by organizing events, managing teams, and driving community-level impact on mental health.</p>
-    </div>
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
-      </div>
-      <h3>Mental health knowledge</h3>
-      <p>Gain deep understanding of mental health topics through hands-on experience, training materials, and workshops with professionals.</p>
-    </div>
-    <div class="benefit-card r">
-      <div class="benefit-icon">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
-      </div>
-      <h3>Nationwide network</h3>
-      <p>Connect with a growing community of like-minded students and young leaders passionate about making mental health a priority.</p>
-    </div>
-  </div>
-</section>
 
 <!-- CTA -->
 <section class="cta-banner">
   <div class="cta-banner-inner r">
     <h2>Ready to <em>get started</em>?</h2>
-    <p>Apply today and start earning PVSA-certified volunteer hours while making a real difference in mental health awareness.</p>
+    <p>Apply today and start earning PVSA-certified volunteer hours — completely virtual, from anywhere.</p>
     <div class="cta-actions">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_placeholder/viewform" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKGWmk9Fy4JRAfWHYenDoXwejTGgSSiKnZrXsdYq7Q_SFDnw/viewform?usp=send_form" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
       <a href="chapters.html" class="btn-ghost">Find a Chapter</a>
     </div>
   </div>
@@ -510,16 +450,18 @@ document.querySelectorAll('.stat-item').forEach((item, i) => {
   gsap.to(item, { opacity: 1, rotateX: 0, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.stats-row', start: 'top 82%' } });
 });
 
-// Steps — stagger slide from right with scale
-document.querySelectorAll('.step-card').forEach((card, i) => {
-  gsap.set(card, { x: 60, opacity: 0, scale: 0.95 });
-  gsap.to(card, { x: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.steps-grid', start: 'top 82%' } });
+// Offer steps — stagger slide from right with scale
+document.querySelectorAll('.steps-grid').forEach(grid => {
+  grid.querySelectorAll('.step-card').forEach((card, i) => {
+    gsap.set(card, { x: 60, opacity: 0, scale: 0.95 });
+    gsap.to(card, { x: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out', delay: i * 0.12, scrollTrigger: { trigger: grid, start: 'top 82%' } });
+  });
 });
 
 // PVSA — info slides left, visual slides right
 const pvInfo = document.querySelector('.pvsa-info');
 if (pvInfo) {
-  document.querySelectorAll('.pvsa-info .sec-desc').forEach((d, i) => {
+  document.querySelectorAll('.pvsa-info .sec-desc, .pvsa-info .btn-ghost').forEach((d, i) => {
     gsap.set(d, { x: -50, opacity: 0 });
     gsap.to(d, { x: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: d, start: 'top 88%' } });
   });
@@ -528,13 +470,6 @@ const pvVis = document.querySelector('.pvsa-visual');
 if (pvVis) {
   gsap.set(pvVis, { x: 60, opacity: 0, scale: 0.9 });
   gsap.to(pvVis, { x: 0, opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: pvVis, start: 'top 85%' } });
-}
-
-// Hours table — clip-path reveal
-const hoursTable = document.querySelector('.hours-table');
-if (hoursTable) {
-  gsap.set(hoursTable, { clipPath: 'inset(0 0 100% 0)', opacity: 1 });
-  gsap.to(hoursTable, { clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: hoursTable, start: 'top 85%' } });
 }
 
 // Benefits — stagger scale-up per grid
@@ -557,7 +492,6 @@ document.querySelectorAll('.r').forEach(el => {
   if (el.closest('.page-hero')) return;
   if (el.matches('.sec-tag, .step-card, .stat-item, .pvsa-visual, .benefit-card, .cta-banner-inner')) return;
   if (el.closest('.pvsa-info')) return;
-  if (el.matches('.hours-table')) return;
   gsap.set(el, { y: 40, opacity: 0 });
   gsap.to(el, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
 });
