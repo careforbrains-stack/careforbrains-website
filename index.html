@@ -57,8 +57,14 @@
     background: rgba(250,252,252,0.8);
     backdrop-filter: blur(20px) saturate(1.5);
     border-bottom: 1px solid var(--rule);
-    transition: transform 0.4s ease;
+    transition: transform 0.4s ease, background 0.4s ease, border-color 0.4s ease;
   }
+  nav.nav-dark { background: rgba(11,26,40,0.5); border-bottom-color: rgba(255,255,255,0.06); }
+  nav.nav-dark .nav-logo span { color: white; }
+  nav.nav-dark .nav-links a { color: rgba(255,255,255,0.6); }
+  nav.nav-dark .nav-links a:hover { color: white; background: rgba(255,255,255,0.08); }
+  nav.nav-dark .nav-links a.active { color: var(--teal-light); }
+  nav.nav-dark .hamburger span { background: white; }
   .nav-inner {
     max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem;
     display: flex; align-items: center; justify-content: space-between;
@@ -183,10 +189,11 @@
     line-height: 1.02; letter-spacing: -3px;
     max-width: 950px; margin: 0 auto 2.5rem;
     position: relative; z-index: 3;
+    color: white;
   }
   .hero-h1 em {
     font-style: italic;
-    background: var(--gradient);
+    background: linear-gradient(135deg, #38C0D4, #5CE0F0, #1490B0);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
@@ -195,7 +202,7 @@
     display: inline-block;
   }
   .hero-sub {
-    font-size: 1.2rem; color: var(--fg-sec); line-height: 1.7;
+    font-size: 1.2rem; color: rgba(255,255,255,0.55); line-height: 1.7;
     max-width: 540px; margin: 0 auto 3rem;
     position: relative; z-index: 3;
   }
@@ -208,7 +215,7 @@
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
     font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2.5rem;
+    letter-spacing: 2.5px; color: var(--teal-light); margin-bottom: 2.5rem;
     position: relative; z-index: 3;
   }
 
@@ -220,10 +227,10 @@
   }
   .scroll-hint-text {
     font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 2px; color: var(--fg-muted);
+    letter-spacing: 2px; color: rgba(255,255,255,0.3);
   }
   .scroll-hint-line {
-    width: 1px; height: 40px; background: var(--rule); position: relative;
+    width: 1px; height: 40px; background: rgba(255,255,255,0.15); position: relative;
     overflow: hidden;
   }
   .scroll-hint-line::after {
@@ -269,6 +276,12 @@
   }
   .btn-ghost:hover {
     border-color: var(--teal); color: var(--teal); background: var(--teal-glow);
+  }
+  .hero-actions .btn-ghost {
+    color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15);
+  }
+  .hero-actions .btn-ghost:hover {
+    border-color: var(--teal-light); color: var(--teal-light); background: rgba(56,192,212,0.08);
   }
 
   /* ─── MARQUEE ─── */
@@ -572,100 +585,68 @@
   /* ─── HERO WRAPPER ─── */
   .hero-wrap {
     position: relative; overflow: hidden;
-    background: linear-gradient(160deg, #EAF4FB 0%, #F0F5FA 30%, #E8F0F8 50%, #F5F0F8 75%, #F0F5FA 100%);
-  }
-  /* Mesh gradient layer — soft colored washes */
-  .hero-mesh {
-    position: absolute; inset: -20%; width: 140%; height: 140%;
-    opacity: 0;
-    background:
-      radial-gradient(ellipse 45% 55% at 10% 75%, rgba(20,144,176,0.22) 0%, transparent 55%),
-      radial-gradient(ellipse 50% 45% at 85% 10%, rgba(20,104,176,0.18) 0%, transparent 55%),
-      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(56,192,212,0.14) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 50% at 75% 65%, rgba(160,120,210,0.10) 0%, transparent 55%),
-      radial-gradient(ellipse 35% 45% at 20% 25%, rgba(100,180,220,0.15) 0%, transparent 50%);
-    animation: meshFloat 20s ease-in-out infinite alternate;
-    will-change: transform;
-    z-index: 0;
-  }
-  @keyframes meshFloat {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    50% { transform: translate(2%, -1.5%) rotate(0.3deg) scale(1.03); }
-    100% { transform: translate(-1%, 1%) rotate(-0.2deg) scale(1.02); }
-  }
-  /* Second mesh layer for depth */
-  .hero-mesh-2 {
-    position: absolute; inset: -10%; width: 120%; height: 120%;
-    opacity: 0;
-    background:
-      radial-gradient(ellipse 55% 60% at 70% 20%, rgba(20,104,176,0.16) 0%, transparent 50%),
-      radial-gradient(ellipse 45% 55% at 15% 60%, rgba(56,192,212,0.12) 0%, transparent 45%),
-      radial-gradient(ellipse 40% 35% at 85% 80%, rgba(140,100,200,0.08) 0%, transparent 50%);
-    animation: meshFloat2 16s ease-in-out infinite alternate;
-    will-change: transform;
-    z-index: 0;
-  }
-  @keyframes meshFloat2 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-2%, 1.5%) scale(1.03); }
-    100% { transform: translate(1.5%, -1%) scale(1.01); }
-  }
-  /* Aurora wash — soft color bands that drift */
-  .hero-wrap::before {
-    content: ''; position: absolute; inset: -50%;
-    width: 200%; height: 200%;
-    background:
-      conic-gradient(from 0deg at 30% 40%,
-        rgba(20,144,176,0.06) 0deg,
-        rgba(56,192,212,0.10) 60deg,
-        rgba(140,110,200,0.06) 120deg,
-        rgba(20,104,176,0.08) 180deg,
-        rgba(56,192,212,0.05) 240deg,
-        rgba(20,144,176,0.06) 360deg
-      );
-    animation: auroraWash 25s linear infinite;
-    z-index: 0; pointer-events: none;
-    filter: blur(60px);
-  }
-  @keyframes auroraWash {
-    0% { transform: rotate(0deg) scale(1); }
-    100% { transform: rotate(360deg) scale(1); }
+    background: #0B1A28;
   }
   /* Bottom fade to page bg */
   .hero-wrap::after {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 150px;
+    height: 200px;
     background: linear-gradient(to bottom, transparent, var(--bg));
-    z-index: 2; pointer-events: none;
+    z-index: 5; pointer-events: none;
   }
 
-  /* ─── HERO AURA ORBS ─── */
+  /* ─── VIVID AURORA BLOBS ─── */
+  .hero-mesh, .hero-mesh-2 { display: none; }
   .hero-aura {
-    position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1;
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
   }
   .aura-orb {
-    position: absolute; border-radius: 50%; filter: blur(70px);
+    position: absolute; border-radius: 50%;
     pointer-events: none; will-change: transform;
   }
   .aura-orb-1 {
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(20,144,176,0.20), rgba(20,144,176,0) 65%);
-    top: -15%; left: -8%;
+    width: 55vmax; height: 55vmax;
+    background: #1490B0;
+    filter: blur(80px); opacity: 0.45;
+    top: -20%; left: -15%;
+    animation: blob1 18s ease-in-out infinite alternate;
   }
   .aura-orb-2 {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(20,104,176,0.16), rgba(20,104,176,0) 65%);
-    top: 5%; right: -12%;
+    width: 50vmax; height: 50vmax;
+    background: #38C0D4;
+    filter: blur(90px); opacity: 0.35;
+    top: 10%; right: -20%;
+    animation: blob2 22s ease-in-out infinite alternate;
   }
   .aura-orb-3 {
-    width: 550px; height: 550px;
-    background: radial-gradient(circle, rgba(56,192,212,0.14), rgba(56,192,212,0) 65%);
-    bottom: -5%; left: 20%;
+    width: 45vmax; height: 45vmax;
+    background: #1468B0;
+    filter: blur(85px); opacity: 0.4;
+    bottom: -15%; left: 15%;
+    animation: blob3 20s ease-in-out infinite alternate;
   }
   .aura-orb-4 {
-    width: 450px; height: 450px;
-    background: radial-gradient(circle, rgba(140,110,200,0.08), rgba(140,110,200,0) 65%);
-    top: 35%; right: 15%;
+    width: 40vmax; height: 40vmax;
+    background: #7B5EA7;
+    filter: blur(100px); opacity: 0.25;
+    top: 30%; left: 40%;
+    animation: blob4 24s ease-in-out infinite alternate;
+  }
+  @keyframes blob1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(15vw, 10vh) scale(1.2); }
+  }
+  @keyframes blob2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-12vw, 8vh) scale(1.15); }
+  }
+  @keyframes blob3 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(10vw, -12vh) scale(1.1); }
+  }
+  @keyframes blob4 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-8vw, -6vh) scale(1.25); }
   }
 
   /* ─── CONSTELLATION / NETWORK ─── */
@@ -987,14 +968,19 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
 
-  // Nav hide on scroll
+  // Nav hide on scroll + dark mode on hero
   let lastScroll = 0;
   const nav = document.querySelector('nav');
-  window.addEventListener('scroll', () => {
+  const heroWrapEl = document.querySelector('.hero-wrap');
+  function updateNav() {
     const curr = window.scrollY;
     nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
     lastScroll = curr;
-  });
+    const heroBottom = heroWrapEl.getBoundingClientRect().bottom;
+    if (heroBottom > 80) { nav.classList.add('nav-dark'); } else { nav.classList.remove('nav-dark'); }
+  }
+  window.addEventListener('scroll', updateNav);
+  updateNav();
 
   // Mobile nav
   document.getElementById('hamburger').addEventListener('click', () => {
@@ -1413,7 +1399,7 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .cta-mega-btn').forEach(btn =>
       // Draw particle
       ctx.beginPath();
       ctx.arc(p.x, p.y, drawR, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${p.hue}, 60%, ${p.lightness}%, ${0.3 + drawR / 5 * 0.25})`;
+      ctx.fillStyle = `hsla(${p.hue}, 70%, ${p.lightness + 15}%, ${0.5 + drawR / 5 * 0.3})`;
       ctx.fill();
 
       // Connect to nearby particles
@@ -1422,7 +1408,7 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .cta-mega-btn').forEach(btn =>
         const cdx = p.x - p2.x, cdy = p.y - p2.y;
         const cd = Math.sqrt(cdx * cdx + cdy * cdy);
         if (cd < CONNECT_DIST) {
-          const lineAlpha = (1 - cd / CONNECT_DIST) * 0.18;
+          const lineAlpha = (1 - cd / CONNECT_DIST) * 0.3;
           // Brighter lines near mouse
           const midX = (p.x + p2.x) / 2, midY = (p.y + p2.y) / 2;
           const mDist = Math.sqrt((midX - mouse.x) ** 2 + (midY - mouse.y) ** 2);
@@ -1430,7 +1416,7 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .cta-mega-btn').forEach(btn =>
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `hsla(200, 55%, 50%, ${lineAlpha + boost})`;
+          ctx.strokeStyle = `hsla(195, 70%, 60%, ${lineAlpha + boost})`;
           ctx.lineWidth = 0.7 + boost * 2.5;
           ctx.stroke();
         }
