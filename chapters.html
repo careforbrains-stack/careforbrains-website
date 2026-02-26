@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapters — CareForBrains</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --bg-alt: #EDF2F8;
+    --bg-dark: #091A26;
+    --fg: #0B1A26;
+    --fg-sec: #3A5068;
+    --fg-muted: #7A8FA4;
+    --teal: #1490B0;
+    --teal-deep: #0C6B8E;
+    --teal-light: #38C0D4;
+    --teal-glow: rgba(20,144,176,0.12);
+    --teal-bg: #E4F1F7;
+    --blue: #1468B0;
+    --gradient: linear-gradient(135deg, #0C6B8E, #1490B0, #1468B0);
+    --rule: #CDDAE6;
+    --card: #FFFFFF;
+    --card-border: #C8D8E6;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --max-w: 1180px;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans); background: var(--bg); color: var(--fg);
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none; opacity: 0.022;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px;
+  }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(250,252,252,0.8); backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--rule); transition: transform 0.4s ease; }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--fg); }
+  .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+  .nav-logo span { font-weight: 700; font-size: 1rem; letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 0.4rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--fg-sec); text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 0.5rem 0.9rem; border-radius: 8px; transition: all 0.25s; }
+  .nav-links a:hover { color: var(--fg); background: var(--teal-glow); }
+  .nav-links a.active { color: var(--teal); font-weight: 600; }
+  .nav-cta { background: var(--bg-dark) !important; color: white !important; font-weight: 600 !important; padding: 0.55rem 1.4rem !important; border-radius: 10px !important; transition: all 0.3s var(--ease-spring) !important; }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 25px rgba(11,29,29,0.2) !important; background: var(--teal-deep) !important; }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
+  .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
+
+  /* Cursor */
+  .cursor-glow { position: fixed; top: 0; left: 0; z-index: 9998; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(20,144,176,0.35); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; backdrop-filter: blur(1px); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+  .cursor-glow.visible { opacity: 1; }
+  .cursor-glow.hovering { width: 60px; height: 60px; background: rgba(20,144,176,0.06); border-color: rgba(20,144,176,0.5); }
+  .cursor-dot { position: fixed; top: 0; left: 0; z-index: 9998; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; }
+  .cursor-dot.visible { opacity: 1; }
+  @media (pointer: fine) { * { cursor: none !important; } }
+  .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; z-index: 10001; background: var(--gradient); width: 0%; }
+
+  /* PAGE HERO */
+  .page-hero { position: relative; overflow: hidden; padding: 10rem 2rem 6rem; text-align: center; background: #F0F5FA; }
+  .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 20% 80%, rgba(20,144,176,0.10) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(20,104,176,0.08) 0%, transparent 60%), radial-gradient(ellipse 35% 35% at 50% 50%, rgba(56,192,212,0.06) 0%, transparent 55%); animation: meshDrift 16s ease-in-out infinite alternate; z-index: 0; }
+  @keyframes meshDrift { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(1%, -1%) scale(1.02); } 100% { transform: translate(-1%, 0.5%) scale(1.01); } }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); z-index: 1; }
+  .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
+  .page-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2rem; }
+  .page-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulseDot 2s ease infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.8); } }
+  .page-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.08; letter-spacing: -2px; max-width: 700px; margin: 0 auto 1.5rem; }
+  .page-hero h1 em { font-style: italic; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-hero-sub { font-size: 1.1rem; color: var(--fg-sec); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+
+  /* SECTIONS */
+  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; }
+  .sec-alt { background: var(--bg-alt); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6rem 2rem; }
+  .sec-inner { max-width: var(--max-w); margin: 0 auto; }
+  .sec-tag { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--fg-muted); margin-bottom: 1.2rem; opacity: 0; }
+  .sec-tag .line { width: 30px; height: 1px; background: var(--teal); }
+  .sec-title { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 400; letter-spacing: -1px; line-height: 1.12; margin-bottom: 1rem; }
+  .sec-desc { color: var(--fg-sec); font-size: 1.05rem; line-height: 1.7; max-width: 520px; }
+  .r { opacity: 0; }
+
+  /* BUTTONS */
+  .btn-teal { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1.1rem 2.4rem; background: var(--gradient); color: white; font-family: var(--sans); font-weight: 700; font-size: 0.95rem; border: none; border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.35s var(--ease-spring); position: relative; overflow: hidden; }
+  .btn-teal:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(20,144,176,0.3); }
+  .btn-teal .arrow { display: inline-block; transition: transform 0.3s var(--ease-spring); }
+  .btn-teal:hover .arrow { transform: translateX(3px) translateY(-2px); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 1.1rem 2.4rem; background: transparent; color: var(--fg); font-family: var(--sans); font-weight: 600; font-size: 0.95rem; border: 1.5px solid var(--rule); border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
+
+  /* MAP */
+  .ch-map-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--rule); height: 500px; position: relative; margin-top: 3rem; }
+  #chapterMap { height: 100%; width: 100%; }
+  .ch-map-wrap .leaflet-container { background: #EDF2F8; }
+  .ch-map-legend { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .ch-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--fg-sec); font-weight: 500; }
+  .ch-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .ch-legend-dot.school { background: var(--teal-deep); }
+  .ch-legend-dot.community { background: var(--blue); }
+  .ch-legend-dot.both { background: var(--teal-light); }
+  .ch-map-count { font-family: var(--serif); font-size: 1.1rem; color: var(--fg-muted); margin-left: auto; font-style: italic; }
+  .cfb-popup { font-family: var(--sans); }
+  .cfb-popup .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+  .cfb-popup .leaflet-popup-content { margin: 0; padding: 1rem 1.2rem; font-size: 0.85rem; }
+  .cfb-popup .leaflet-popup-tip { display: none; }
+  .cfb-pop-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .cfb-pop-type { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: var(--teal); }
+
+  /* START CHAPTER STEPS */
+  .start-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 3rem; border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); }
+  .start-card { padding: 3rem 2rem; border-right: 1px solid var(--rule); position: relative; transition: background 0.4s; }
+  .start-card:last-child { border-right: none; }
+  .start-card:hover { background: var(--teal-glow); }
+  .start-num { font-family: var(--serif); font-size: 2.5rem; font-weight: 400; line-height: 1; color: var(--teal-deep); margin-bottom: 1.2rem; letter-spacing: -1px; }
+  .start-card h3 { font-family: var(--serif); font-size: 1.2rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.6rem; }
+  .start-card p { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.7; }
+
+  /* CHAPTER TYPES */
+  .types-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-top: 3rem; }
+  .type-card { padding: 3rem; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card); position: relative; overflow: hidden; transition: all 0.4s; }
+  .type-card:hover { transform: translateY(-4px); box-shadow: 0 16px 50px rgba(20,144,176,0.1); border-color: var(--teal); }
+  .type-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient); transform: scaleX(0); transform-origin: left; transition: transform 0.5s; }
+  .type-card:hover::before { transform: scaleX(1); }
+  .type-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--teal-bg); color: var(--teal-deep); display: flex; align-items: center; justify-content: center; margin-bottom: 1.8rem; }
+  .type-card h3 { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
+  .type-card p { font-size: 0.9rem; color: var(--fg-sec); line-height: 1.7; margin-bottom: 1rem; }
+  .type-card ul { list-style: none; }
+  .type-card ul li { font-size: 0.85rem; color: var(--fg-sec); padding: 0.4rem 0; padding-left: 1.2rem; position: relative; line-height: 1.6; }
+  .type-card ul li::before { content: ''; position: absolute; left: 0; top: 0.85rem; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+
+  /* CHAPTER LIST */
+  .chapter-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+  .ch-item { padding: 1.5rem; border-radius: 12px; border: 1px solid var(--card-border); background: var(--card); transition: all 0.3s; display: flex; align-items: center; gap: 1rem; }
+  .ch-item:hover { border-color: var(--teal); background: var(--teal-glow); transform: translateY(-2px); }
+  .ch-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .ch-item-name { font-weight: 600; font-size: 0.9rem; }
+  .ch-item-type { font-size: 0.72rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); margin-top: 3rem; }
+  .stat-item { padding: 3rem 1.5rem; text-align: center; position: relative; }
+  .stat-item:not(:last-child) { border-right: 1px solid var(--rule); }
+  .stat-num { font-family: var(--serif); font-size: 4.5rem; font-weight: 400; letter-spacing: -3px; line-height: 1; color: var(--teal-deep); }
+  .stat-item:nth-child(2) .stat-num { color: var(--teal); }
+  .stat-item:nth-child(3) .stat-num { color: var(--blue); }
+  .stat-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 1rem; color: var(--fg); }
+  .stat-sub { font-size: 0.78rem; color: var(--fg-muted); margin-top: 0.4rem; line-height: 1.5; }
+
+  /* CTA BANNER */
+  .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(20,144,176,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%); pointer-events: none; }
+  .cta-banner-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+  .cta-banner h2 { font-family: var(--serif); color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.12; }
+  .cta-banner h2 em { font-style: italic; color: var(--teal-light); }
+  .cta-banner p { color: rgba(255,255,255,0.5); font-size: 1rem; line-height: 1.7; margin-bottom: 2.5rem; }
+  .cta-banner .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .cta-banner .btn-ghost { color: white; border-color: rgba(255,255,255,0.2); }
+  .cta-banner .btn-ghost:hover { border-color: var(--teal-light); color: var(--teal-light); background: rgba(56,192,212,0.08); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 2rem; }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: var(--fg-sec); text-decoration: none; }
+  .footer-logo img { width: 24px; height: 24px; border-radius: 6px; }
+  .footer-copy { font-size: 0.75rem; color: var(--fg-muted); }
+  .footer-links { display: flex; gap: 1.6rem; list-style: none; }
+  .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .start-grid { grid-template-columns: 1fr 1fr; }
+    .start-card:nth-child(2), .start-card:nth-child(4) { border-right: none; }
+    .start-card:nth-child(3), .start-card:nth-child(4) { border-top: 1px solid var(--rule); }
+    .types-grid { grid-template-columns: 1fr; }
+    .chapter-list { grid-template-columns: 1fr 1fr; }
+    .ch-map-wrap { height: 400px; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .stat-item:nth-child(2) { border-right: none; }
+    .stat-item:nth-child(3) { grid-column: 1 / 3; border-top: 1px solid var(--rule); }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .page-hero { padding: 8rem 1.5rem 4rem; }
+    .sec, .sec-alt { padding: 4rem 1.5rem; }
+    .cta-banner { padding: 4rem 1.5rem; }
+    .start-grid { grid-template-columns: 1fr; }
+    .start-card { border-right: none !important; border-bottom: 1px solid var(--rule); }
+    .start-card:nth-child(3), .start-card:nth-child(4) { border-top: none; }
+    .chapter-list { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; }
+    .stat-item { border-right: none !important; border-bottom: 1px solid var(--rule); }
+    .stat-item:last-child { border-bottom: none; }
+    .stat-item:nth-child(3) { grid-column: 1; border-top: none; }
+    footer .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+    .cursor-glow, .cursor-dot { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor-glow"></div>
+<div class="cursor-dot"></div>
+<div class="scroll-progress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="CareForBrains">
+      <span>CareForBrains</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html" class="active">Chapters</a></li>
+      <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-tag r"><span class="dot"></span> Our Chapters</div>
+    <h1 class="r">A movement <em>coast to coast</em></h1>
+    <p class="page-hero-sub r">22 student-led chapters across the United States and Canada, each one a local hub for mental health education and community support.</p>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="sec" id="map">
+  <div class="sec-tag"><span class="line"></span> / Chapter Map · N. 01</div>
+  <h2 class="sec-title">Find your chapter</h2>
+  <p class="sec-desc r" style="margin-bottom: 0;">Every pin represents a community of students working to make mental health a priority.</p>
+  <div class="ch-map-wrap r">
+    <div id="chapterMap" style="height:500px;width:100%;"></div>
+  </div>
+  <div class="ch-map-legend r">
+    <div class="ch-legend-item"><div class="ch-legend-dot school"></div> School Chapter</div>
+    <div class="ch-legend-item"><div class="ch-legend-dot community"></div> Community Chapter</div>
+    <div class="ch-legend-item"><div class="ch-legend-dot both"></div> School &amp; Community</div>
+    <div class="ch-map-count">22 chapters across North America</div>
+  </div>
+</section>
+
+<!-- CHAPTER STATS -->
+<div class="sec-alt">
+  <div class="sec-inner">
+    <div class="sec-tag"><span class="line"></span> / By The Numbers · N. 02</div>
+    <h2 class="sec-title">Growing every day</h2>
+    <div class="stats-row">
+      <div class="stat-item r">
+        <div class="stat-num">22</div>
+        <div class="stat-label">Chapters</div>
+        <div class="stat-sub">Across US and Canada</div>
+      </div>
+      <div class="stat-item r">
+        <div class="stat-num">852+</div>
+        <div class="stat-label">Volunteers</div>
+        <div class="stat-sub">Students making a difference</div>
+      </div>
+      <div class="stat-item r">
+        <div class="stat-num">10</div>
+        <div class="stat-label">States + 1 Province</div>
+        <div class="stat-sub">TX, CA, AZ, FL, NC, WA, IN, MD, MN, GA + AB</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER LIST -->
+<section class="sec" id="all-chapters">
+  <div class="sec-tag"><span class="line"></span> / All Chapters · N. 03</div>
+  <h2 class="sec-title">Our locations</h2>
+  <p class="sec-desc r" style="margin-bottom: 0;">Each chapter operates locally with the full support of the CareForBrains national team.</p>
+  <div class="chapter-list">
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Cary, NC</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Fort McMurray, AB</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Frisco, TX</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Sammamish, WA</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Granite Bay, CA</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-light)"></div><div><div class="ch-item-name">Orlando, FL</div><div class="ch-item-type">School &amp; Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Houston, TX</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Tucson, AZ</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Missouri City, TX</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Sugar Land, TX</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Glendale, AZ</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">San Anselmo, CA</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Los Angeles, CA</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Cypress, TX</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Carmel, IN</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Bethesda, MD</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Rosenberg, TX</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--teal-deep)"></div><div><div class="ch-item-name">Southport, NC</div><div class="ch-item-type">School</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Rochester, MN</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Tampa, FL</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Suwanee, GA</div><div class="ch-item-type">Community</div></div></div>
+    <div class="ch-item r"><div class="ch-dot" style="background:var(--blue)"></div><div><div class="ch-item-name">Hayward, CA</div><div class="ch-item-type">Community</div></div></div>
+  </div>
+</section>
+
+<!-- CHAPTER TYPES -->
+<div class="sec-alt" id="types">
+  <div class="sec-inner">
+    <div class="sec-tag"><span class="line"></span> / Chapter Types · N. 04</div>
+    <h2 class="sec-title">Two ways to lead</h2>
+    <p class="sec-desc r" style="margin-bottom: 0;">Whether at your school or in your neighborhood, there's a chapter model for you.</p>
+    <div class="types-grid">
+      <div class="type-card r">
+        <div class="type-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+        </div>
+        <h3>School Chapter</h3>
+        <p>Operate within your school as an official club. Host events, workshops, and awareness campaigns on campus.</p>
+        <ul>
+          <li>Faculty advisor required</li>
+          <li>Regular meetings during school year</li>
+          <li>Access to school event spaces</li>
+          <li>Perfect for high school students</li>
+        </ul>
+      </div>
+      <div class="type-card r">
+        <div class="type-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+        </div>
+        <h3>Community Chapter</h3>
+        <p>Serve your wider community beyond school walls. Partner with local organizations and reach more people.</p>
+        <ul>
+          <li>Open to all ages and backgrounds</li>
+          <li>Year-round programming</li>
+          <li>Partner with local nonprofits</li>
+          <li>Greater reach and flexibility</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- START A CHAPTER -->
+<section class="sec" id="start">
+  <div class="sec-tag"><span class="line"></span> / Start a Chapter · N. 05</div>
+  <h2 class="sec-title">How to get started</h2>
+  <p class="sec-desc r" style="margin-bottom: 0;">Four steps to bring CareForBrains to your community.</p>
+  <div class="start-grid">
+    <div class="start-card r">
+      <div class="start-num">01</div>
+      <h3>Apply</h3>
+      <p>Fill out the chapter application form with details about your school or community and your vision for the chapter.</p>
+    </div>
+    <div class="start-card r">
+      <div class="start-num">02</div>
+      <h3>Interview</h3>
+      <p>Chat with our team about your plans, goals, and how we can support you. We'll make sure it's a great fit.</p>
+    </div>
+    <div class="start-card r">
+      <div class="start-num">03</div>
+      <h3>Onboard</h3>
+      <p>Receive your chapter toolkit, branding guidelines, training materials, and access to the CareForBrains resource hub.</p>
+    </div>
+    <div class="start-card r">
+      <div class="start-num">04</div>
+      <h3>Launch</h3>
+      <p>Host your first event, recruit members, and start making an impact. Our national team is with you every step.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="cta-banner-inner r">
+    <h2>Ready to lead a <em>chapter</em>?</h2>
+    <p>Apply to start a CareForBrains chapter in your school or community. We provide everything you need to get started.</p>
+    <div class="cta-actions">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_placeholder/viewform" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
+      <a href="volunteer.html" class="btn-ghost">Volunteer Instead</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <img src="logo.png" alt="">
+      CareForBrains
+    </a>
+    <div class="footer-copy">&copy; 2025 CareForBrains. Mental health for all.</div>
+    <ul class="footer-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Nav hide on scroll
+  let lastScroll = 0;
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const curr = window.scrollY;
+    nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
+    lastScroll = curr;
+  });
+  // Mobile nav
+  document.getElementById('hamburger').addEventListener('click', () => {
+    const l = document.querySelector('.nav-links');
+    const open = l.style.display === 'flex';
+    l.style.display = open ? 'none' : 'flex';
+    if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
+  });
+
+  // Leaflet map
+  (function initMap(){
+    if (typeof L === 'undefined') {
+      setTimeout(initMap, 200);
+      return;
+    }
+    const map = L.map('chapterMap', {
+      zoomControl: true, scrollWheelZoom: false,
+      attributionControl: false
+    });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd', maxZoom: 19
+    }).addTo(map);
+
+    const colors = { school: '#0C6B8E', community: '#1468B0', both: '#38C0D4' };
+    const pin = (c) => L.divIcon({
+      className: '', iconSize: [14, 14],
+      html: `<div style="width:14px;height:14px;border-radius:50%;background:${c};border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>`
+    });
+
+    const chapters = [
+      {name:'Cary, NC', lat:35.7915, lng:-78.7811, type:'community'},
+      {name:'Fort McMurray, AB', lat:56.7264, lng:-111.3803, type:'community'},
+      {name:'Frisco, TX', lat:33.1507, lng:-96.8236, type:'school'},
+      {name:'Sammamish, WA', lat:47.6163, lng:-122.0356, type:'community'},
+      {name:'Granite Bay, CA', lat:38.7632, lng:-121.1639, type:'community'},
+      {name:'Orlando, FL', lat:28.5383, lng:-81.3792, type:'both'},
+      {name:'Houston, TX', lat:29.7604, lng:-95.3698, type:'school'},
+      {name:'Tucson, AZ', lat:32.2226, lng:-110.9747, type:'community'},
+      {name:'Missouri City, TX', lat:29.5636, lng:-95.5377, type:'school'},
+      {name:'Sugar Land, TX', lat:29.6197, lng:-95.6349, type:'school'},
+      {name:'Glendale, AZ', lat:33.5387, lng:-112.1860, type:'school'},
+      {name:'San Anselmo, CA', lat:37.9746, lng:-122.5616, type:'school'},
+      {name:'Los Angeles, CA', lat:34.0522, lng:-118.2437, type:'community'},
+      {name:'Cypress, TX', lat:29.9691, lng:-95.6972, type:'school'},
+      {name:'Carmel, IN', lat:39.9784, lng:-86.1180, type:'community'},
+      {name:'Bethesda, MD', lat:38.9847, lng:-77.0947, type:'school'},
+      {name:'Rosenberg, TX', lat:29.5572, lng:-95.8088, type:'school'},
+      {name:'Southport, NC', lat:33.9215, lng:-78.0198, type:'school'},
+      {name:'Rochester, MN', lat:44.0121, lng:-92.4802, type:'community'},
+      {name:'Tampa, FL', lat:27.9506, lng:-82.4572, type:'community'},
+      {name:'Suwanee, GA', lat:34.0515, lng:-84.0713, type:'community'},
+      {name:'Hayward, CA', lat:37.6688, lng:-122.0808, type:'community'}
+    ];
+
+    chapters.forEach(ch => {
+      const typeLabel = ch.type === 'both' ? 'School & Community' : ch.type.charAt(0).toUpperCase() + ch.type.slice(1);
+      L.marker([ch.lat, ch.lng], { icon: pin(colors[ch.type]) })
+        .bindPopup(`<div class="cfb-popup"><div class="cfb-pop-name">${ch.name}</div><div class="cfb-pop-type">${typeLabel}</div></div>`, { className: 'cfb-popup' })
+        .addTo(map);
+    });
+
+    const bounds = L.latLngBounds(chapters.map(c => [c.lat, c.lng]));
+    map.fitBounds(bounds, { padding: [40, 40] });
+  })();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Lenis
+const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, syncTouch: true, touchMultiplier: 1.5 });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// Page hero entrance
+gsap.set('.page-tag', { y: 20, opacity: 0 });
+gsap.set('.page-hero h1', { y: 40, opacity: 0 });
+gsap.set('.page-hero-sub', { y: 30, opacity: 0, filter: 'blur(6px)' });
+gsap.set('nav', { y: -80 });
+
+const entryTL = gsap.timeline();
+entryTL.to('nav', { y: 0, duration: 0.7, ease: 'power3.out' }, 0.2);
+entryTL.to('.page-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.3);
+entryTL.to('.page-hero h1', { y: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }, 0.5);
+entryTL.to('.page-hero-sub', { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }, 0.7);
+
+// Section tags: line draws in, text clips in
+document.querySelectorAll('.sec-tag').forEach(tag => {
+  const line = tag.querySelector('.line');
+  gsap.set(tag, { clipPath: 'inset(0 100% 0 0)', opacity: 1 });
+  if (line) gsap.set(line, { scaleX: 0, transformOrigin: 'left' });
+  const tl = gsap.timeline({ scrollTrigger: { trigger: tag, start: 'top 85%' } });
+  if (line) tl.to(line, { scaleX: 1, duration: 0.8, ease: 'power2.inOut' });
+  tl.to(tag, { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power3.out' }, line ? '-=0.4' : 0);
+});
+
+// Section titles: split words
+document.querySelectorAll('.sec-title').forEach(title => {
+  const text = title.innerHTML;
+  const words = text.split(/(\s+)/).map(w => {
+    if (w.trim() === '') return w;
+    return `<span style="display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:0.15em;"><span class="tw" style="display:inline-block">${w}</span></span>`;
+  }).join('');
+  title.innerHTML = words;
+  const tw = title.querySelectorAll('.tw');
+  gsap.set(tw, { yPercent: 110 });
+  gsap.to(tw, { yPercent: 0, duration: 1.2, stagger: 0.05, ease: 'power4.out', scrollTrigger: { trigger: title, start: 'top 85%' } });
+});
+
+// Stats — 3D rotateX flip
+document.querySelectorAll('.stat-item').forEach((item, i) => {
+  gsap.set(item, { opacity: 0, rotateX: -45, filter: 'blur(4px)' });
+  gsap.to(item, { opacity: 1, rotateX: 0, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.stats-row', start: 'top 82%' } });
+});
+
+// Chapter list — stagger scale-up from center
+document.querySelectorAll('.ch-item').forEach((item, i) => {
+  gsap.set(item, { scale: 0.88, opacity: 0 });
+  gsap.to(item, { scale: 1, opacity: 1, duration: 0.7, ease: 'power3.out', delay: i * 0.04, scrollTrigger: { trigger: '.chapter-list', start: 'top 85%' } });
+});
+
+// Type cards — slide from opposite sides
+document.querySelectorAll('.type-card').forEach((card, i) => {
+  const dir = i % 2 === 0 ? -60 : 60;
+  gsap.set(card, { x: dir, opacity: 0 });
+  gsap.to(card, { x: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.types-grid', start: 'top 82%' } });
+});
+
+// Start steps — stagger with rotateY
+document.querySelectorAll('.start-card').forEach((card, i) => {
+  gsap.set(card, { rotateY: -30, opacity: 0, x: -30 });
+  gsap.to(card, { rotateY: 0, opacity: 1, x: 0, duration: 1, ease: 'power3.out', delay: i * 0.12, scrollTrigger: { trigger: '.start-grid', start: 'top 82%' } });
+});
+
+// CTA banner
+const ctaInner = document.querySelector('.cta-banner-inner');
+if (ctaInner) {
+  gsap.set(ctaInner, { y: 40, opacity: 0 });
+  gsap.to(ctaInner, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: ctaInner, start: 'top 88%' } });
+}
+
+// Generic reveals
+document.querySelectorAll('.r').forEach(el => {
+  if (el.closest('.page-hero')) return;
+  if (el.matches('.sec-tag, .stat-item, .ch-item, .type-card, .start-card, .cta-banner-inner')) return;
+  gsap.set(el, { y: 40, opacity: 0 });
+  gsap.to(el, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
+});
+
+// Custom cursor
+const cursorGlow = document.querySelector('.cursor-glow');
+const cursorDot = document.querySelector('.cursor-dot');
+if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
+  let cx = -100, cy = -100, tx = -100, ty = -100;
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX; ty = e.clientY;
+    cursorDot.style.left = tx + 'px'; cursorDot.style.top = ty + 'px';
+    if (!cursorGlow.classList.contains('visible')) { cursorGlow.classList.add('visible'); cursorDot.classList.add('visible'); }
+  });
+  function updateCursor() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cursorGlow.style.left = cx + 'px'; cursorGlow.style.top = cy + 'px'; requestAnimationFrame(updateCursor); }
+  updateCursor();
+  document.querySelectorAll('a, button, .btn-teal, .btn-ghost').forEach(el => {
+    el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
+  });
+}
+
+// Scroll progress
+const progressBar = document.querySelector('.scroll-progress');
+if (progressBar) {
+  window.addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; });
+}
+
+// Magnetic buttons
+document.querySelectorAll('.btn-teal, .btn-ghost').forEach(btn => {
+  btn.addEventListener('mousemove', e => { const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' }); });
+  btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
+});
+</script>
+</body>
+</html>

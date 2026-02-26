@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volunteer — CareForBrains</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --bg-alt: #EDF2F8;
+    --bg-dark: #091A26;
+    --fg: #0B1A26;
+    --fg-sec: #3A5068;
+    --fg-muted: #7A8FA4;
+    --teal: #1490B0;
+    --teal-deep: #0C6B8E;
+    --teal-light: #38C0D4;
+    --teal-glow: rgba(20,144,176,0.12);
+    --teal-bg: #E4F1F7;
+    --blue: #1468B0;
+    --gradient: linear-gradient(135deg, #0C6B8E, #1490B0, #1468B0);
+    --rule: #CDDAE6;
+    --card: #FFFFFF;
+    --card-border: #C8D8E6;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --max-w: 1180px;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans); background: var(--bg); color: var(--fg);
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none; opacity: 0.022;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px;
+  }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(250,252,252,0.8); backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--rule); transition: transform 0.4s ease; }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--fg); }
+  .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+  .nav-logo span { font-weight: 700; font-size: 1rem; letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 0.4rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--fg-sec); text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 0.5rem 0.9rem; border-radius: 8px; transition: all 0.25s; }
+  .nav-links a:hover { color: var(--fg); background: var(--teal-glow); }
+  .nav-links a.active { color: var(--teal); font-weight: 600; }
+  .nav-cta { background: var(--bg-dark) !important; color: white !important; font-weight: 600 !important; padding: 0.55rem 1.4rem !important; border-radius: 10px !important; transition: all 0.3s var(--ease-spring) !important; }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 25px rgba(11,29,29,0.2) !important; background: var(--teal-deep) !important; }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
+  .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
+
+  /* Cursor */
+  .cursor-glow { position: fixed; top: 0; left: 0; z-index: 9998; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(20,144,176,0.35); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; backdrop-filter: blur(1px); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+  .cursor-glow.visible { opacity: 1; }
+  .cursor-glow.hovering { width: 60px; height: 60px; background: rgba(20,144,176,0.06); border-color: rgba(20,144,176,0.5); }
+  .cursor-dot { position: fixed; top: 0; left: 0; z-index: 9998; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; }
+  .cursor-dot.visible { opacity: 1; }
+  @media (pointer: fine) { * { cursor: none !important; } }
+  .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; z-index: 10001; background: var(--gradient); width: 0%; }
+
+  /* PAGE HERO */
+  .page-hero { position: relative; overflow: hidden; padding: 10rem 2rem 6rem; text-align: center; background: #F0F5FA; }
+  .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 20% 80%, rgba(20,144,176,0.10) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(20,104,176,0.08) 0%, transparent 60%), radial-gradient(ellipse 35% 35% at 50% 50%, rgba(56,192,212,0.06) 0%, transparent 55%); animation: meshDrift 16s ease-in-out infinite alternate; z-index: 0; }
+  @keyframes meshDrift { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(1%, -1%) scale(1.02); } 100% { transform: translate(-1%, 0.5%) scale(1.01); } }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); z-index: 1; }
+  .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
+  .page-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2rem; }
+  .page-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulseDot 2s ease infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.8); } }
+  .page-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.08; letter-spacing: -2px; max-width: 700px; margin: 0 auto 1.5rem; }
+  .page-hero h1 em { font-style: italic; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-hero-sub { font-size: 1.1rem; color: var(--fg-sec); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+  .page-hero-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+
+  /* SECTIONS */
+  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; }
+  .sec-alt { background: var(--bg-alt); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6rem 2rem; }
+  .sec-inner { max-width: var(--max-w); margin: 0 auto; }
+  .sec-tag { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--fg-muted); margin-bottom: 1.2rem; opacity: 0; }
+  .sec-tag .line { width: 30px; height: 1px; background: var(--teal); }
+  .sec-title { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 400; letter-spacing: -1px; line-height: 1.12; margin-bottom: 1rem; }
+  .sec-desc { color: var(--fg-sec); font-size: 1.05rem; line-height: 1.7; max-width: 520px; }
+  .r { opacity: 0; }
+
+  /* BUTTONS */
+  .btn-teal { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1.1rem 2.4rem; background: var(--gradient); color: white; font-family: var(--sans); font-weight: 700; font-size: 0.95rem; border: none; border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.35s var(--ease-spring); position: relative; overflow: hidden; }
+  .btn-teal:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(20,144,176,0.3); }
+  .btn-teal .arrow { display: inline-block; transition: transform 0.3s var(--ease-spring); }
+  .btn-teal:hover .arrow { transform: translateX(3px) translateY(-2px); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 1.1rem 2.4rem; background: transparent; color: var(--fg); font-family: var(--sans); font-weight: 600; font-size: 0.95rem; border: 1.5px solid var(--rule); border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
+
+  /* HOW IT WORKS - STEPS */
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 3rem; border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); }
+  .step-card { padding: 3rem 2.5rem; border-right: 1px solid var(--rule); position: relative; transition: background 0.4s; }
+  .step-card:last-child { border-right: none; }
+  .step-card:hover { background: var(--teal-glow); }
+  .step-num { font-family: var(--serif); font-size: 3rem; font-weight: 400; line-height: 1; color: var(--teal-deep); margin-bottom: 1.5rem; letter-spacing: -2px; }
+  .step-card h3 { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.8rem; }
+  .step-card p { font-size: 0.9rem; color: var(--fg-sec); line-height: 1.7; }
+
+  /* PVSA */
+  .pvsa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 3rem; }
+  .pvsa-info .sec-desc { margin-bottom: 1.5rem; }
+  .pvsa-visual { position: relative; border-radius: 20px; overflow: hidden; background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.06); padding: 3.5rem 2.5rem; text-align: center; }
+  .pvsa-visual::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 30% 80%, rgba(20,144,176,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%); pointer-events: none; }
+  .pvsa-badge { position: relative; z-index: 2; }
+  .pvsa-badge-icon { width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(20,144,176,0.15), 0 0 0 16px rgba(20,144,176,0.06); }
+  .pvsa-badge-icon svg { width: 36px; height: 36px; color: white; }
+  .pvsa-badge h3 { font-family: var(--serif); color: white; font-size: 1.6rem; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 0.6rem; }
+  .pvsa-badge p { color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.6; }
+
+  /* HOURS TABLE */
+  .hours-table { margin-top: 3rem; border-top: 2px solid var(--fg); }
+  .hours-row { display: grid; grid-template-columns: 1fr 1.5fr 1fr; border-bottom: 1px solid var(--rule); }
+  .hours-row.header { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: var(--fg-muted); }
+  .hours-row.header .hours-cell { padding: 1.2rem 1.5rem; }
+  .hours-cell { padding: 1.5rem 1.5rem; font-size: 0.95rem; display: flex; align-items: center; }
+  .hours-cell:not(:last-child) { border-right: 1px solid var(--rule); }
+  .hours-row:not(.header):hover { background: var(--teal-glow); }
+  .hours-medal { display: inline-flex; align-items: center; gap: 0.6rem; }
+  .medal-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .medal-dot.bronze { background: #CD7F32; }
+  .medal-dot.silver { background: #A8A8A8; }
+  .medal-dot.gold { background: #FFD700; }
+
+  /* BENEFITS */
+  .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem; }
+  .benefit-card { padding: 2.5rem; border-radius: 16px; background: var(--card); border: 1px solid var(--card-border); transition: all 0.4s; }
+  .benefit-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(20,144,176,0.08); border-color: var(--teal); }
+  .benefit-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--teal-bg); color: var(--teal-deep); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+  .benefit-card h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.6rem; }
+  .benefit-card p { font-size: 0.88rem; color: var(--fg-sec); line-height: 1.7; }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); margin-top: 3rem; }
+  .stat-item { padding: 3rem 1.5rem; text-align: center; position: relative; }
+  .stat-item:not(:last-child) { border-right: 1px solid var(--rule); }
+  .stat-num { font-family: var(--serif); font-size: 4.5rem; font-weight: 400; letter-spacing: -3px; line-height: 1; color: var(--teal-deep); }
+  .stat-item:nth-child(2) .stat-num { color: var(--teal); }
+  .stat-item:nth-child(3) .stat-num { color: var(--blue); }
+  .stat-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 1rem; color: var(--fg); }
+  .stat-sub { font-size: 0.78rem; color: var(--fg-muted); margin-top: 0.4rem; line-height: 1.5; }
+
+  /* CTA BANNER */
+  .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(20,144,176,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%); pointer-events: none; }
+  .cta-banner-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+  .cta-banner h2 { font-family: var(--serif); color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.12; }
+  .cta-banner h2 em { font-style: italic; color: var(--teal-light); }
+  .cta-banner p { color: rgba(255,255,255,0.5); font-size: 1rem; line-height: 1.7; margin-bottom: 2.5rem; }
+  .cta-banner .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .cta-banner .btn-ghost { color: white; border-color: rgba(255,255,255,0.2); }
+  .cta-banner .btn-ghost:hover { border-color: var(--teal-light); color: var(--teal-light); background: rgba(56,192,212,0.08); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 2rem; }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: var(--fg-sec); text-decoration: none; }
+  .footer-logo img { width: 24px; height: 24px; border-radius: 6px; }
+  .footer-copy { font-size: 0.75rem; color: var(--fg-muted); }
+  .footer-links { display: flex; gap: 1.6rem; list-style: none; }
+  .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .step-card:nth-child(2) { border-right: none; }
+    .step-card:last-child { grid-column: 1 / 3; border-top: 1px solid var(--rule); border-right: none; }
+    .pvsa-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .benefits-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .page-hero { padding: 8rem 1.5rem 4rem; }
+    .sec, .sec-alt { padding: 4rem 1.5rem; }
+    .cta-banner { padding: 4rem 1.5rem; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .step-card { border-right: none !important; border-bottom: 1px solid var(--rule); }
+    .step-card:last-child { grid-column: 1; border-top: none; }
+    .stats-row { grid-template-columns: 1fr; }
+    .stat-item { border-right: none !important; border-bottom: 1px solid var(--rule); }
+    .stat-item:last-child { border-bottom: none; }
+    .hours-row { grid-template-columns: 1fr 1fr; }
+    .hours-row .hours-cell:last-child { grid-column: 1 / 3; border-top: 1px solid var(--rule); }
+    footer .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+    .cursor-glow, .cursor-dot { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor-glow"></div>
+<div class="cursor-dot"></div>
+<div class="scroll-progress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="CareForBrains">
+      <span>CareForBrains</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html" class="active">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+      <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-tag r"><span class="dot"></span> Volunteer Program</div>
+    <h1 class="r">Make an impact, earn <em>recognition</em></h1>
+    <p class="page-hero-sub r">Join 852+ volunteers across the country. Earn PVSA-certified hours while making a real difference in mental health awareness.</p>
+    <div class="page-hero-actions r">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_placeholder/viewform" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
+      <a href="#how-it-works" class="btn-ghost">How It Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT STATS -->
+<section class="sec" id="impact">
+  <div class="sec-tag"><span class="line"></span> / Impact · N. 01</div>
+  <h2 class="sec-title">Our volunteers, by the numbers</h2>
+  <div class="stats-row">
+    <div class="stat-item r">
+      <div class="stat-num">852+</div>
+      <div class="stat-label">Active Volunteers</div>
+      <div class="stat-sub">Across all chapters nationwide</div>
+    </div>
+    <div class="stat-item r">
+      <div class="stat-num">18,121</div>
+      <div class="stat-label">Hours Logged</div>
+      <div class="stat-sub">And counting every single day</div>
+    </div>
+    <div class="stat-item r">
+      <div class="stat-num">16</div>
+      <div class="stat-label">Active Chapters</div>
+      <div class="stat-sub">US and Canada</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="sec-alt" id="how-it-works">
+  <div class="sec-inner">
+    <div class="sec-tag"><span class="line"></span> / Getting Started · N. 02</div>
+    <h2 class="sec-title">How it works</h2>
+    <p class="sec-desc r" style="margin-bottom: 0;">Getting involved is simple. Three steps to start making a difference in your community.</p>
+    <div class="steps-grid">
+      <div class="step-card r">
+        <div class="step-num">01</div>
+        <h3>Apply online</h3>
+        <p>Fill out a quick application form. Tell us about yourself, your interests, and how you'd like to contribute to mental health awareness.</p>
+      </div>
+      <div class="step-card r">
+        <div class="step-num">02</div>
+        <h3>Get matched</h3>
+        <p>We'll connect you with a chapter near you or pair you with a role that matches your skills. Orientation materials will be sent your way.</p>
+      </div>
+      <div class="step-card r">
+        <div class="step-num">03</div>
+        <h3>Start volunteering</h3>
+        <p>Begin logging hours, attending events, and contributing to your community. Track your progress and earn recognition through PVSA.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PVSA SECTION -->
+<section class="sec" id="pvsa">
+  <div class="sec-tag"><span class="line"></span> / Recognition · N. 03</div>
+  <h2 class="sec-title">PVSA certified hours</h2>
+  <div class="pvsa-grid">
+    <div class="pvsa-info">
+      <p class="sec-desc r">CareForBrains is a certified organization for the <strong>President's Volunteer Service Award</strong>. Every hour you volunteer with us counts toward earning a nationally recognized award signed by the President of the United States.</p>
+      <p class="sec-desc r">Whether you're looking to strengthen your college application, build leadership experience, or simply give back, PVSA certification ensures your service is officially recognized.</p>
+    </div>
+    <div class="pvsa-visual r">
+      <div class="pvsa-badge">
+        <div class="pvsa-badge-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+        </div>
+        <h3>Presidential Recognition</h3>
+        <p>Official PVSA certification for all volunteer hours logged with CareForBrains.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOURS TABLE -->
+<div class="sec-alt" id="hours">
+  <div class="sec-inner">
+    <div class="sec-tag"><span class="line"></span> / Hour Requirements · N. 04</div>
+    <h2 class="sec-title">Award levels</h2>
+    <p class="sec-desc r" style="margin-bottom: 0;">Hours required vary by age group. Here's what you need for each PVSA level.</p>
+    <div class="hours-table r">
+      <div class="hours-row header">
+        <div class="hours-cell">Award Level</div>
+        <div class="hours-cell">Ages 11-15</div>
+        <div class="hours-cell">Ages 16-25</div>
+      </div>
+      <div class="hours-row">
+        <div class="hours-cell"><span class="hours-medal"><span class="medal-dot bronze"></span> Bronze</span></div>
+        <div class="hours-cell">50-74 hours</div>
+        <div class="hours-cell">100-174 hours</div>
+      </div>
+      <div class="hours-row">
+        <div class="hours-cell"><span class="hours-medal"><span class="medal-dot silver"></span> Silver</span></div>
+        <div class="hours-cell">75-99 hours</div>
+        <div class="hours-cell">175-249 hours</div>
+      </div>
+      <div class="hours-row">
+        <div class="hours-cell"><span class="hours-medal"><span class="medal-dot gold"></span> Gold</span></div>
+        <div class="hours-cell">100+ hours</div>
+        <div class="hours-cell">250+ hours</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BENEFITS -->
+<section class="sec" id="benefits">
+  <div class="sec-tag"><span class="line"></span> / Why Volunteer · N. 05</div>
+  <h2 class="sec-title">What you'll gain</h2>
+  <p class="sec-desc r" style="margin-bottom: 0;">Beyond making a difference, volunteering with CareForBrains opens doors.</p>
+  <div class="benefits-grid">
+    <div class="benefit-card r">
+      <div class="benefit-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+      </div>
+      <h3>College applications</h3>
+      <p>PVSA is recognized by colleges nationwide. Show your commitment to community service with a presidential-level award on your resume.</p>
+    </div>
+    <div class="benefit-card r">
+      <div class="benefit-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+      </div>
+      <h3>Leadership skills</h3>
+      <p>Develop real-world leadership experience by organizing events, managing teams, and driving community-level impact on mental health.</p>
+    </div>
+    <div class="benefit-card r">
+      <div class="benefit-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
+      </div>
+      <h3>Mental health knowledge</h3>
+      <p>Gain deep understanding of mental health topics through hands-on experience, training materials, and workshops with professionals.</p>
+    </div>
+    <div class="benefit-card r">
+      <div class="benefit-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+      </div>
+      <h3>Nationwide network</h3>
+      <p>Connect with a growing community of like-minded students and young leaders passionate about making mental health a priority.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="cta-banner-inner r">
+    <h2>Ready to <em>get started</em>?</h2>
+    <p>Apply today and start earning PVSA-certified volunteer hours while making a real difference in mental health awareness.</p>
+    <div class="cta-actions">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_placeholder/viewform" class="btn-teal" target="_blank">Apply Now <span class="arrow">↗</span></a>
+      <a href="chapters.html" class="btn-ghost">Find a Chapter</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <img src="logo.png" alt="">
+      CareForBrains
+    </a>
+    <div class="footer-copy">&copy; 2025 CareForBrains. Mental health for all.</div>
+    <ul class="footer-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Nav hide on scroll
+  let lastScroll = 0;
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const curr = window.scrollY;
+    nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
+    lastScroll = curr;
+  });
+  // Mobile nav
+  document.getElementById('hamburger').addEventListener('click', () => {
+    const l = document.querySelector('.nav-links');
+    const open = l.style.display === 'flex';
+    l.style.display = open ? 'none' : 'flex';
+    if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Lenis
+const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, syncTouch: true, touchMultiplier: 1.5 });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// Page hero entrance
+gsap.set('.page-tag', { y: 20, opacity: 0 });
+gsap.set('.page-hero h1', { y: 40, opacity: 0 });
+gsap.set('.page-hero-sub', { y: 30, opacity: 0, filter: 'blur(6px)' });
+gsap.set('.page-hero-actions', { y: 25, opacity: 0 });
+gsap.set('nav', { y: -80 });
+
+const entryTL = gsap.timeline();
+entryTL.to('nav', { y: 0, duration: 0.7, ease: 'power3.out' }, 0.2);
+entryTL.to('.page-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.3);
+entryTL.to('.page-hero h1', { y: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }, 0.5);
+entryTL.to('.page-hero-sub', { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }, 0.7);
+entryTL.to('.page-hero-actions', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.85);
+
+// Section tags: line draws in, text clips in
+document.querySelectorAll('.sec-tag').forEach(tag => {
+  const line = tag.querySelector('.line');
+  gsap.set(tag, { clipPath: 'inset(0 100% 0 0)', opacity: 1 });
+  if (line) gsap.set(line, { scaleX: 0, transformOrigin: 'left' });
+  const tl = gsap.timeline({ scrollTrigger: { trigger: tag, start: 'top 85%' } });
+  if (line) tl.to(line, { scaleX: 1, duration: 0.8, ease: 'power2.inOut' });
+  tl.to(tag, { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power3.out' }, line ? '-=0.4' : 0);
+});
+
+// Section titles: split words
+document.querySelectorAll('.sec-title').forEach(title => {
+  const text = title.innerHTML;
+  const words = text.split(/(\s+)/).map(w => {
+    if (w.trim() === '') return w;
+    return `<span style="display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:0.15em;"><span class="tw" style="display:inline-block">${w}</span></span>`;
+  }).join('');
+  title.innerHTML = words;
+  const tw = title.querySelectorAll('.tw');
+  gsap.set(tw, { yPercent: 110 });
+  gsap.to(tw, { yPercent: 0, duration: 1.2, stagger: 0.05, ease: 'power4.out', scrollTrigger: { trigger: title, start: 'top 85%' } });
+});
+
+// Stats — 3D rotateX flip in
+document.querySelectorAll('.stat-item').forEach((item, i) => {
+  gsap.set(item, { opacity: 0, rotateX: -45, filter: 'blur(4px)' });
+  gsap.to(item, { opacity: 1, rotateX: 0, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.stats-row', start: 'top 82%' } });
+});
+
+// Steps — stagger slide from right with scale
+document.querySelectorAll('.step-card').forEach((card, i) => {
+  gsap.set(card, { x: 60, opacity: 0, scale: 0.95 });
+  gsap.to(card, { x: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.steps-grid', start: 'top 82%' } });
+});
+
+// PVSA — info slides left, visual slides right
+const pvInfo = document.querySelector('.pvsa-info');
+if (pvInfo) {
+  document.querySelectorAll('.pvsa-info .sec-desc').forEach((d, i) => {
+    gsap.set(d, { x: -50, opacity: 0 });
+    gsap.to(d, { x: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: d, start: 'top 88%' } });
+  });
+}
+const pvVis = document.querySelector('.pvsa-visual');
+if (pvVis) {
+  gsap.set(pvVis, { x: 60, opacity: 0, scale: 0.9 });
+  gsap.to(pvVis, { x: 0, opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: pvVis, start: 'top 85%' } });
+}
+
+// Hours table — clip-path reveal
+const hoursTable = document.querySelector('.hours-table');
+if (hoursTable) {
+  gsap.set(hoursTable, { clipPath: 'inset(0 0 100% 0)', opacity: 1 });
+  gsap.to(hoursTable, { clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: hoursTable, start: 'top 85%' } });
+}
+
+// Benefits — stagger scale-up
+document.querySelectorAll('.benefit-card').forEach((card, i) => {
+  gsap.set(card, { y: 40, opacity: 0, scale: 0.92 });
+  gsap.to(card, { y: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out', delay: i * 0.12, scrollTrigger: { trigger: '.benefits-grid', start: 'top 82%' } });
+});
+
+// CTA banner
+const ctaInner = document.querySelector('.cta-banner-inner');
+if (ctaInner) {
+  gsap.set(ctaInner, { y: 40, opacity: 0 });
+  gsap.to(ctaInner, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: ctaInner, start: 'top 88%' } });
+}
+
+// Generic reveals
+document.querySelectorAll('.r').forEach(el => {
+  if (el.closest('.page-hero')) return;
+  if (el.matches('.sec-tag, .step-card, .stat-item, .pvsa-visual, .benefit-card, .cta-banner-inner')) return;
+  if (el.closest('.pvsa-info')) return;
+  if (el.matches('.hours-table')) return;
+  gsap.set(el, { y: 40, opacity: 0 });
+  gsap.to(el, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
+});
+
+// Custom cursor
+const cursorGlow = document.querySelector('.cursor-glow');
+const cursorDot = document.querySelector('.cursor-dot');
+if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
+  let cx = -100, cy = -100, tx = -100, ty = -100;
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX; ty = e.clientY;
+    cursorDot.style.left = tx + 'px'; cursorDot.style.top = ty + 'px';
+    if (!cursorGlow.classList.contains('visible')) { cursorGlow.classList.add('visible'); cursorDot.classList.add('visible'); }
+  });
+  function updateCursor() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cursorGlow.style.left = cx + 'px'; cursorGlow.style.top = cy + 'px'; requestAnimationFrame(updateCursor); }
+  updateCursor();
+  document.querySelectorAll('a, button, .btn-teal, .btn-ghost').forEach(el => {
+    el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
+  });
+}
+
+// Scroll progress
+const progressBar = document.querySelector('.scroll-progress');
+if (progressBar) {
+  window.addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; });
+}
+
+// Magnetic buttons
+document.querySelectorAll('.btn-teal, .btn-ghost').forEach(btn => {
+  btn.addEventListener('mousemove', e => { const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' }); });
+  btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
+});
+</script>
+</body>
+</html>
