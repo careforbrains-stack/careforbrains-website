@@ -57,14 +57,8 @@
     background: rgba(250,252,252,0.8);
     backdrop-filter: blur(20px) saturate(1.5);
     border-bottom: 1px solid var(--rule);
-    transition: transform 0.4s ease, background 0.4s ease, border-color 0.4s ease;
+    transition: transform 0.4s ease;
   }
-  nav.nav-top { background: rgba(9,26,38,0.5); border-bottom-color: rgba(255,255,255,0.06); }
-  nav.nav-top .nav-logo span { color: white; }
-  nav.nav-top .nav-links a { color: rgba(255,255,255,0.6); }
-  nav.nav-top .nav-links a:hover { color: white; background: rgba(255,255,255,0.08); }
-  nav.nav-top .nav-links a.active { color: var(--teal-light); background: rgba(56,192,212,0.1); }
-  nav.nav-top .hamburger span { background: white; }
   .nav-inner {
     max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem;
     display: flex; align-items: center; justify-content: space-between;
@@ -139,93 +133,54 @@
     width: 0%; will-change: width;
   }
 
-  /* PAGE HERO — DARK CONSTELLATION */
-  .page-hero {
+  /* PAGE HERO — SPLIT LAYOUT WITH GIANT NUMBER */
+  .hero-wrap {
     position: relative; overflow: hidden;
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    padding: 8rem 2rem 5rem; text-align: center;
-    background: var(--bg-dark);
+    background: #F0F5FA;
   }
-  /* Mesh layers */
-  .hero-mesh-1 {
-    position: absolute; inset: -20%; width: 140%; height: 140%;
-    background:
-      radial-gradient(ellipse 45% 55% at 20% 75%, rgba(20,104,176,0.14) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(20,144,176,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 30% 40% at 55% 55%, rgba(56,192,212,0.08) 0%, transparent 55%);
-    animation: meshFloat 20s ease-in-out infinite alternate;
-    z-index: 0;
-  }
-  .hero-mesh-2 {
-    position: absolute; inset: -10%; width: 120%; height: 120%;
-    background:
-      radial-gradient(ellipse 50% 60% at 70% 30%, rgba(56,192,212,0.10) 0%, transparent 55%),
-      radial-gradient(ellipse 40% 50% at 25% 60%, rgba(20,104,176,0.08) 0%, transparent 50%);
-    animation: meshFloat2 15s ease-in-out infinite alternate;
-    z-index: 0;
-  }
-  @keyframes meshFloat {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    33% { transform: translate(1.5%, -2%) rotate(0.4deg) scale(1.03); }
-    66% { transform: translate(-2%, 1.5%) rotate(-0.3deg) scale(1.01); }
-    100% { transform: translate(1%, -1%) rotate(0.2deg) scale(1.04); }
-  }
-  @keyframes meshFloat2 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-1.5%, 2%) scale(1.02); }
-    100% { transform: translate(2%, -1.5%) scale(1.05); }
-  }
-  /* Aura orbs */
-  .hero-aura { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
-  .aura-orb { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; will-change: transform, opacity; }
-  .aura-orb-1 { width: 650px; height: 650px; background: radial-gradient(circle, rgba(20,104,176,0.16), rgba(20,104,176,0) 60%); top: -12%; right: -8%; }
-  .aura-orb-2 { width: 550px; height: 550px; background: radial-gradient(circle, rgba(20,144,176,0.13), rgba(20,144,176,0) 60%); bottom: -10%; left: -5%; }
-  .aura-orb-3 { width: 450px; height: 450px; background: radial-gradient(circle, rgba(56,192,212,0.10), rgba(56,192,212,0) 60%); top: 35%; left: 40%; }
-  /* Constellation canvas */
-  .hero-constellation { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-  .hero-constellation canvas { width: 100%; height: 100%; }
-  /* Sweeps */
-  .page-hero::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(160deg, rgba(255,255,255,0.03) 0%, transparent 40%, rgba(20,104,176,0.04) 70%, rgba(255,255,255,0.02) 100%);
-    z-index: 2; pointer-events: none;
-  }
-  .page-hero::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 180px;
+  .hero-wrap::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
     background: linear-gradient(to bottom, transparent, var(--bg));
-    z-index: 2;
+    z-index: 5; pointer-events: none;
   }
-  .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 3; }
+  .page-hero {
+    position: relative; overflow: visible;
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 8rem 2rem 6rem; text-align: left;
+    max-width: var(--max-w); margin: 0 auto;
+  }
+  /* Giant background number */
+  .hero-big-num {
+    position: absolute; right: -5%; top: 50%; transform: translateY(-50%);
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(20rem, 42vw, 38rem);
+    line-height: 0.85; letter-spacing: -15px;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(20,144,176,0.1);
+    pointer-events: none; z-index: 0;
+    user-select: none;
+  }
+  /* Animated gradient fill that sweeps through the number */
+  .hero-big-num-fill {
+    position: absolute; right: -5%; top: 50%; transform: translateY(-50%);
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(20rem, 42vw, 38rem);
+    line-height: 0.85; letter-spacing: -15px;
+    background: linear-gradient(135deg, rgba(20,144,176,0.06), rgba(56,192,212,0.04), rgba(20,104,176,0.03));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    pointer-events: none; z-index: 0;
+    user-select: none;
+  }
 
-  /* Chapters badge */
-  .chapters-badge {
-    display: inline-flex; align-items: center; gap: 0.7rem;
-    padding: 0.5rem 1.5rem; border-radius: 100px;
-    background: rgba(20,104,176,0.12); border: 1px solid rgba(20,104,176,0.25);
-    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 2.5px; color: var(--teal-light);
-    margin-bottom: 2.5rem; backdrop-filter: blur(8px);
-    box-shadow: 0 0 30px rgba(20,104,176,0.15), inset 0 0 20px rgba(20,104,176,0.05);
-  }
-  .chapters-badge .live-dot {
-    width: 8px; height: 8px; border-radius: 50%; position: relative;
-    background: #34C759;
-  }
-  .chapters-badge .live-dot::after {
-    content: ''; position: absolute; inset: -4px; border-radius: 50%;
-    border: 1.5px solid #34C759; opacity: 0;
-    animation: livePulse 2s ease-out infinite;
-  }
-  @keyframes livePulse { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.2); opacity: 0; } }
+  .hero-content { position: relative; z-index: 2; max-width: 620px; }
 
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
     font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 2.5px; color: var(--teal-light); margin-bottom: 1rem;
-    position: relative; z-index: 3;
+    letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2rem;
   }
   .hero-tag .dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--teal-light);
+    width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
     animation: pulse-dot 2s ease infinite;
   }
   @keyframes pulse-dot {
@@ -234,42 +189,73 @@
   }
   .hero-h1 {
     font-family: var(--serif); font-weight: 400;
-    font-size: clamp(3.2rem, 7.5vw, 6rem);
-    line-height: 1.04; letter-spacing: -2.5px;
-    max-width: 850px; margin: 0 auto 2rem;
-    position: relative; z-index: 3; color: white;
+    font-size: clamp(3.2rem, 7vw, 5.5rem);
+    line-height: 1.06; letter-spacing: -2.5px;
+    margin-bottom: 1.8rem;
   }
   .hero-h1 em {
     font-style: italic;
-    background: linear-gradient(135deg, var(--teal-light), #5CE0F0, var(--teal));
+    background: var(--gradient);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .word-line { display: block; overflow: hidden; padding-bottom: 0.12em; padding-right: 0.05em; }
+  .word-line { display: block; overflow: hidden; padding-bottom: 0.12em; }
   .word { display: inline-block; }
   .hero-sub {
-    font-size: 1.15rem; color: rgba(255,255,255,0.5); line-height: 1.7;
-    max-width: 580px; margin: 0 auto 3rem;
+    font-size: 1.15rem; color: var(--fg-sec); line-height: 1.7;
+    max-width: 480px; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+
+  /* Inline stats — horizontal row with dividers */
+  .hero-stats {
+    display: flex; gap: 0; align-items: stretch;
+    border: 1px solid var(--rule); border-radius: 14px;
+    background: white; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(20,144,176,0.06);
+  }
+  .hero-stat {
+    padding: 1.2rem 2rem; text-align: center;
+    border-right: 1px solid var(--rule); transition: background 0.3s;
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat:hover { background: var(--teal-glow); }
+  .hero-stat-num {
+    font-family: var(--serif); font-size: 2rem; font-weight: 400;
+    letter-spacing: -1.5px; line-height: 1; color: var(--teal-deep);
+  }
+  .hero-stat:nth-child(2) .hero-stat-num { color: var(--teal); }
+  .hero-stat:nth-child(3) .hero-stat-num { color: var(--blue); }
+  .hero-stat-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--fg-muted); margin-top: 0.4rem;
+  }
+
+  /* Chapter marquee ticker */
+  .hero-ticker-wrap {
     position: relative; z-index: 3;
+    overflow: hidden; border-top: 1px solid var(--rule);
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
+    padding: 0.9rem 0;
   }
-
-  /* Hero stat chips */
-  .hero-chips { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 3; }
-  .hero-chip {
-    display: flex; align-items: center; gap: 0.7rem;
-    padding: 0.7rem 1.4rem; border-radius: 14px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px); transition: all 0.35s;
+  .hero-ticker-track {
+    display: flex; width: max-content;
+    animation: tickerScroll 40s linear infinite;
   }
-  .hero-chip:hover { background: rgba(20,144,176,0.1); border-color: rgba(20,144,176,0.25); transform: translateY(-2px); }
-  .hero-chip-num { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--teal-light); letter-spacing: -1px; }
-  .hero-chip-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); }
-
-  /* Scroll hint */
-  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; z-index: 3; }
-  .scroll-hint-text { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.25); }
-  .scroll-hint-line { width: 1px; height: 40px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden; }
-  .scroll-hint-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--teal-light); animation: scrollPulse 2s ease-in-out infinite; }
-  @keyframes scrollPulse { 0% { top: -100%; } 50% { top: 100%; } 100% { top: 100%; } }
+  .hero-ticker-track:hover { animation-play-state: paused; }
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    display: flex; align-items: center; gap: 1.2rem; padding: 0 1.2rem;
+    white-space: nowrap; font-size: 0.82rem; font-weight: 500; color: var(--fg-sec);
+  }
+  .ticker-dot {
+    width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+  }
+  .ticker-dot.t-school { background: var(--teal-deep); }
+  .ticker-dot.t-community { background: var(--blue); }
+  .ticker-dot.t-both { background: var(--teal-light); }
 
   /* SECTION SYSTEM */
   .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; }
@@ -567,12 +553,13 @@
   @media (max-width: 640px) {
     .nav-links { display: none; }
     .hamburger { display: flex; }
-    .page-hero { padding: 7rem 1.5rem 4rem; min-height: auto; }
-    .page-hero .hero-h1 { font-size: 2.8rem; letter-spacing: -1.5px; }
-    .hero-chips { gap: 0.8rem; }
-    .hero-chip { padding: 0.5rem 1rem; }
-    .hero-chip-num { font-size: 1.1rem; }
-    .scroll-hint { display: none; }
+    .page-hero { padding: 7rem 1.5rem 3rem; min-height: auto; }
+    .page-hero .hero-h1 { font-size: 2.6rem; letter-spacing: -1.5px; }
+    .hero-big-num, .hero-big-num-fill { display: none; }
+    .hero-stats { flex-direction: column; }
+    .hero-stat { border-right: none; border-bottom: 1px solid var(--rule); padding: 1rem 1.5rem; }
+    .hero-stat:last-child { border-bottom: none; }
+    .ticker-item { font-size: 0.75rem; }
     .sec, .sec-alt { padding: 4rem 1.5rem; }
     .cta-wrap { padding: 5rem 1.5rem; }
     .req-grid { grid-template-columns: 1fr; }
@@ -613,18 +600,12 @@
 <div class="scroll-progress"></div>
 
 <!-- PAGE HERO -->
+<div class="hero-wrap">
 <section class="page-hero">
-  <div class="hero-mesh-1"></div>
-  <div class="hero-mesh-2"></div>
-  <div class="hero-aura">
-    <div class="aura-orb aura-orb-1"></div>
-    <div class="aura-orb aura-orb-2"></div>
-    <div class="aura-orb aura-orb-3"></div>
-  </div>
-  <div class="hero-constellation"><canvas id="constellationCanvas"></canvas></div>
+  <div class="hero-big-num" aria-hidden="true">22</div>
+  <div class="hero-big-num-fill" aria-hidden="true">22</div>
 
-  <div class="page-hero-inner">
-    <div class="chapters-badge r"><span class="live-dot"></span> 22 Chapters Active</div>
+  <div class="hero-content">
     <div class="hero-tag r">
       <span class="dot"></span>
       Our Chapters
@@ -638,28 +619,79 @@
       </span>
     </h1>
     <p class="hero-sub r">
-      22 chapters across North America. Student-led, community-driven, making mental health awareness accessible everywhere.
+      Student-led, community-driven chapters making mental health awareness accessible across North America.
     </p>
-    <div class="hero-chips r">
-      <div class="hero-chip">
-        <span class="hero-chip-num">22</span>
-        <span class="hero-chip-label">Chapters</span>
-      </div>
-      <div class="hero-chip">
-        <span class="hero-chip-num">852+</span>
-        <span class="hero-chip-label">Volunteers</span>
-      </div>
-      <div class="hero-chip">
-        <span class="hero-chip-num">2</span>
-        <span class="hero-chip-label">Countries</span>
-      </div>
+    <div class="hero-actions r">
+      <a href="#start" class="btn-teal">Start a Chapter <span class="arrow">↗</span></a>
+      <a href="#map-section" class="btn-ghost">View Map</a>
     </div>
-    <div class="scroll-hint">
-      <span class="scroll-hint-text">Scroll</span>
-      <div class="scroll-hint-line"></div>
+    <div class="hero-stats r">
+      <div class="hero-stat">
+        <div class="hero-stat-num">22</div>
+        <div class="hero-stat-label">Chapters</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">852+</div>
+        <div class="hero-stat-label">Volunteers</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">2</div>
+        <div class="hero-stat-label">Countries</div>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- Chapter names ticker -->
+<div class="hero-ticker-wrap">
+  <div class="hero-ticker-track">
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Cary, NC</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Fort McMurray, AB</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Frisco, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Sammamish, WA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Granite Bay, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-both"></span> Orlando, FL</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Houston, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Tucson, AZ</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Missouri City, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Sugar Land, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Glendale, AZ</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> San Anselmo, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Los Angeles, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Cypress, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Carmel, IN</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Bethesda, MD</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Rosenberg, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Southport, NC</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Rochester, MN</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Tampa, FL</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Suwanee, GA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Hayward, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Cary, NC</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Fort McMurray, AB</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Frisco, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Sammamish, WA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Granite Bay, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-both"></span> Orlando, FL</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Houston, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Tucson, AZ</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Missouri City, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Sugar Land, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Glendale, AZ</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> San Anselmo, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Los Angeles, CA</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Cypress, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Carmel, IN</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Bethesda, MD</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Rosenberg, TX</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Southport, NC</div>
+    <div class="ticker-item"><span class="ticker-dot t-school"></span> Rochester, MN</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Tampa, FL</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Suwanee, GA</div>
+    <div class="ticker-item"><span class="ticker-dot t-community"></span> Hayward, CA</div>
+  </div>
+</div>
+</div>
 
 <!-- INTERACTIVE MAP -->
 <section class="sec" id="map-section">
@@ -915,151 +947,39 @@ lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add(t => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
 
-// NAV DARK/LIGHT THEME
-const navEl = document.querySelector('nav');
-const heroSection = document.querySelector('.page-hero');
-function updateNavTheme() {
-  const heroBottom = heroSection.getBoundingClientRect().bottom;
-  if (heroBottom > 80) { navEl.classList.add('nav-top'); } else { navEl.classList.remove('nav-top'); }
-}
-window.addEventListener('scroll', updateNavTheme);
-updateNavTheme();
-
-// CONSTELLATION CANVAS — floating nodes representing chapters
-(function() {
-  const canvas = document.getElementById('constellationCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let w, h, nodes = [], mouse = { x: -1000, y: -1000 };
-
-  function resize() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    w = canvas.width = rect.width * window.devicePixelRatio;
-    h = canvas.height = rect.height * window.devicePixelRatio;
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    createNodes();
-  }
-
-  function createNodes() {
-    nodes = [];
-    const rw = w / window.devicePixelRatio, rh = h / window.devicePixelRatio;
-    const count = Math.min(35, Math.floor(rw * rh / 15000));
-    for (let i = 0; i < count; i++) {
-      nodes.push({
-        x: Math.random() * rw, y: Math.random() * rh,
-        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-        size: 1.5 + Math.random() * 2.5,
-        pulseOffset: Math.random() * Math.PI * 2,
-        color: i % 3 === 0 ? 'rgba(56,192,212,' : i % 3 === 1 ? 'rgba(20,144,176,' : 'rgba(20,104,176,'
-      });
-    }
-  }
-
-  canvas.parentElement.addEventListener('mousemove', e => {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
-  });
-
-  function draw() {
-    const rw = w / window.devicePixelRatio, rh = h / window.devicePixelRatio;
-    ctx.clearRect(0, 0, rw, rh);
-    const t = Date.now() * 0.001;
-
-    // Update positions
-    nodes.forEach(n => {
-      n.x += n.vx; n.y += n.vy;
-      if (n.x < -20) n.x = rw + 20;
-      if (n.x > rw + 20) n.x = -20;
-      if (n.y < -20) n.y = rh + 20;
-      if (n.y > rh + 20) n.y = -20;
-
-      // Mouse repel
-      const dx = n.x - mouse.x, dy = n.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120 && dist > 0) {
-        const force = (1 - dist / 120) * 0.8;
-        n.x += (dx / dist) * force;
-        n.y += (dy / dist) * force;
-      }
-    });
-
-    // Draw connections
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 160) {
-          const alpha = 0.08 * (1 - dist / 160);
-          ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = `rgba(56,192,212,${alpha})`;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Draw nodes
-    nodes.forEach(n => {
-      const pulse = Math.sin(t * 1.5 + n.pulseOffset) * 0.3 + 0.7;
-      const alpha = 0.3 + pulse * 0.4;
-
-      // Glow
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.size * 4, 0, Math.PI * 2);
-      ctx.fillStyle = n.color + (alpha * 0.08) + ')';
-      ctx.fill();
-
-      // Core
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.size * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = n.color + alpha + ')';
-      ctx.fill();
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  resize();
-  draw();
-  window.addEventListener('resize', resize);
-})();
-
-// AURA ORB FLOATING
-gsap.to('.aura-orb-1', { scale: 1.25, x: 15, duration: 5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-gsap.to('.aura-orb-2', { scale: 1.3, x: -20, duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1 });
-gsap.to('.aura-orb-3', { scale: 1.2, y: -25, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2 });
-
-// HERO ENTRANCE
-gsap.set('.chapters-badge', { y: 15, opacity: 0, scale: 0.9 });
-gsap.set('.hero-tag', { y: 20, opacity: 0 });
+// HERO ENTRANCE — split layout with giant number
+gsap.set('.hero-tag', { x: -30, opacity: 0 });
 gsap.set('.word', { yPercent: 120 });
-gsap.set('.hero-sub', { y: 30, opacity: 0, filter: 'blur(8px)' });
-gsap.set('.hero-chips', { y: 30, opacity: 0 });
-gsap.set('.hero-mesh-1, .hero-mesh-2', { scale: 1.3, opacity: 0 });
-gsap.set('#constellationCanvas', { opacity: 0 });
+gsap.set('.hero-sub', { x: -40, opacity: 0, filter: 'blur(6px)' });
+gsap.set('.hero-actions', { y: 25, opacity: 0 });
+gsap.set('.hero-stats', { y: 35, opacity: 0, scale: 0.95 });
+gsap.set('.hero-big-num', { scale: 1.15, opacity: 0 });
+gsap.set('.hero-big-num-fill', { scale: 1.15, opacity: 0 });
+gsap.set('.hero-ticker-wrap', { y: 20, opacity: 0 });
 gsap.set('nav', { y: -100 });
 
 const heroTL = gsap.timeline({ delay: 0.2 });
 
-heroTL.to('.hero-mesh-1, .hero-mesh-2', { scale: 1, opacity: 1, duration: 2, ease: 'power2.out' }, 0);
-heroTL.to('#constellationCanvas', { opacity: 1, duration: 1.5, ease: 'power2.out' }, 0.5);
-heroTL.to('nav', { y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
-heroTL.to('.chapters-badge', { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.7)' }, 0.5);
-heroTL.to('.hero-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.65);
+heroTL.to('nav', { y: 0, duration: 0.8, ease: 'power3.out' }, 0);
+heroTL.to('.hero-big-num', { scale: 1, opacity: 1, duration: 1.8, ease: 'power2.out' }, 0.2);
+heroTL.to('.hero-big-num-fill', { scale: 1, opacity: 1, duration: 2, ease: 'power2.out' }, 0.4);
+heroTL.to('.hero-tag', { x: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.4);
 heroTL.to('.word', {
   yPercent: 0, duration: 1.2,
   stagger: { amount: 0.4, from: 'start' },
   ease: 'power4.out'
-}, 0.75);
+}, 0.55);
 heroTL.to('.hero-sub', {
-  y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power3.out'
-}, 1.1);
-heroTL.to('.hero-chips', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 1.3);
-heroTL.from('.aura-orb', { scale: 0, opacity: 0, duration: 2, stagger: 0.2, ease: 'power3.out' }, 0.4);
+  x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power3.out'
+}, 0.9);
+heroTL.to('.hero-actions', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 1.05);
+heroTL.to('.hero-stats', { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(1.4)' }, 1.2);
+heroTL.to('.hero-ticker-wrap', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 1.4);
+
+// Giant number parallax on scroll
+gsap.to('.hero-big-num, .hero-big-num-fill', {
+  y: -80, scrollTrigger: { trigger: '.hero-wrap', start: 'top top', end: 'bottom top', scrub: 1.5 }
+});
 
 // SECTION TAG ANIMATIONS
 document.querySelectorAll('.sec-tag').forEach(tag => {
