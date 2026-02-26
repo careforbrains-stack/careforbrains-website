@@ -333,24 +333,15 @@
   /* Map outer glow container */
   .ch-map-outer {
     position: relative; padding: 3px; border-radius: 20px;
-    background: linear-gradient(135deg, var(--teal-deep), var(--teal-light), var(--blue), var(--teal-deep));
-    background-size: 300% 300%;
-    animation: mapBorderGlow 8s linear infinite;
+    background: linear-gradient(135deg, var(--teal-deep), var(--teal-light), var(--blue));
     box-shadow:
-      0 0 40px rgba(20,144,176,0.2),
-      0 0 80px rgba(20,144,176,0.1),
-      0 20px 60px rgba(0,0,0,0.12);
-  }
-  @keyframes mapBorderGlow {
-    0%, 100% { background-position: 0% 50%; }
-    25% { background-position: 100% 0%; }
-    50% { background-position: 100% 100%; }
-    75% { background-position: 0% 100%; }
+      0 0 30px rgba(20,144,176,0.15),
+      0 20px 50px rgba(0,0,0,0.1);
   }
   .ch-map-outer::before {
-    content: ''; position: absolute; inset: -12px; border-radius: 26px;
-    background: radial-gradient(ellipse at 50% 50%, rgba(20,144,176,0.15) 0%, rgba(56,192,212,0.08) 50%, transparent 70%);
-    filter: blur(16px); z-index: -1; pointer-events: none;
+    content: ''; position: absolute; inset: -8px; border-radius: 24px;
+    background: radial-gradient(ellipse at 50% 50%, rgba(20,144,176,0.1) 0%, transparent 60%);
+    z-index: -1; pointer-events: none;
   }
 
   /* Corner accent lines */
@@ -376,14 +367,6 @@
     background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 50%, rgba(13,27,42,0.4) 100%);
   }
 
-  /* Coordinate readout */
-  .ch-map-coords {
-    position: absolute; bottom: 12px; left: 14px; z-index: 15; pointer-events: none;
-    font-family: 'Courier New', monospace; font-size: 0.62rem;
-    color: rgba(56,192,212,0.4); letter-spacing: 1px;
-    text-shadow: 0 0 6px rgba(56,192,212,0.2);
-  }
-
   .ch-map-legend {
     display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
   }
@@ -400,10 +383,6 @@
   .ch-map-count {
     font-family: var(--serif); font-size: 1.1rem; color: var(--fg-muted);
     margin-left: auto; font-style: italic;
-  }
-  @keyframes mapPulse {
-    0%, 100% { transform: scale(1); opacity: 0.25; }
-    50% { transform: scale(2.5); opacity: 0; }
   }
   .cfb-popup { font-family: var(--sans); }
   .cfb-popup .leaflet-popup-content-wrapper {
@@ -849,7 +828,6 @@
     <div class="ch-map-wrap">
       <div id="chapterMap"></div>
       <div class="ch-map-vignette"></div>
-      <div class="ch-map-coords">37.5°N 96.0°W · LIVE</div>
     </div>
   </div>
   <div class="ch-map-legend r">
@@ -1291,14 +1269,9 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .btn-ghost-dark').forEach(btn 
     attributionControl: false
   });
 
-  // Custom dark navy tile layer — different from home page
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+  // Dark tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 19
-  }).addTo(map);
-
-  // Add labels as a separate layer with reduced opacity for a cleaner look
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19, opacity: 0.35
   }).addTo(map);
 
   // Add zoom control to top-right
@@ -1309,12 +1282,8 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .btn-ghost-dark').forEach(btn 
   function pin(color) {
     return L.divIcon({
       className: '',
-      html: '<div style="position:relative;width:28px;height:28px;">' +
-        '<div style="position:absolute;inset:0;border-radius:50%;background:'+color+';opacity:0.2;animation:mapPulse 3s ease-in-out infinite;"></div>' +
-        '<div style="position:absolute;inset:4px;border-radius:50%;background:'+color+';opacity:0.12;animation:mapPulse 3s ease-in-out 0.5s infinite;"></div>' +
-        '<div style="position:absolute;top:8px;left:8px;width:12px;height:12px;border-radius:50%;background:'+color+';border:2px solid rgba(255,255,255,0.95);box-shadow:0 0 16px '+color+', 0 0 32px '+color+'44;"></div>' +
-        '</div>',
-      iconSize: [28,28], iconAnchor: [14,14]
+      html: '<div style="width:12px;height:12px;border-radius:50%;background:'+color+';border:2px solid rgba(255,255,255,0.9);box-shadow:0 0 10px '+color+';"></div>',
+      iconSize: [12,12], iconAnchor: [6,6]
     });
   }
 
@@ -1357,17 +1326,6 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .btn-ghost-dark').forEach(btn 
   setTimeout(function(){ map.invalidateSize(); }, 200);
   map.once('click', function(){ map.scrollWheelZoom.enable(); });
 
-  // Live coordinate readout
-  var coordsEl = document.querySelector('.ch-map-coords');
-  if (coordsEl) {
-    map.on('mousemove', function(e) {
-      var lat = e.latlng.lat.toFixed(2);
-      var lng = Math.abs(e.latlng.lng).toFixed(2);
-      var ns = e.latlng.lat >= 0 ? 'N' : 'S';
-      var ew = e.latlng.lng >= 0 ? 'E' : 'W';
-      coordsEl.textContent = lat + '°' + ns + ' ' + lng + '°' + ew + ' · LIVE';
-    });
-  }
 })();
 </script>
 
