@@ -30,482 +30,257 @@
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.022; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 180px; }
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--fg);
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  /* Grain */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 9999;
-    pointer-events: none; opacity: 0.022;
-    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 180px;
-  }
-
-  /* --- NAV --- */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: rgba(250,252,252,0.8);
-    backdrop-filter: blur(20px) saturate(1.5);
-    border-bottom: 1px solid var(--rule);
-    transition: transform 0.4s ease;
-  }
-  .nav-inner {
-    max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .nav-logo {
-    display: flex; align-items: center; gap: 0.6rem;
-    text-decoration: none; color: var(--fg);
-  }
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(250,252,252,0.8); backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--rule); transition: transform 0.4s ease, background 0.4s ease, border-color 0.4s ease; }
+  nav.nav-dark { background: rgba(9,26,38,0.6); border-bottom-color: rgba(255,255,255,0.06); }
+  nav.nav-dark .nav-logo span { color: white; }
+  nav.nav-dark .nav-links a { color: rgba(255,255,255,0.6); }
+  nav.nav-dark .nav-links a:hover { color: white; background: rgba(255,255,255,0.08); }
+  nav.nav-dark .nav-links a.active { color: var(--teal-light); }
+  nav.nav-dark .hamburger span { background: white; }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--fg); }
   .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
   .nav-logo span { font-weight: 700; font-size: 1rem; letter-spacing: -0.3px; }
-  .nav-links {
-    display: flex; gap: 0.4rem; list-style: none; align-items: center;
-  }
-  .nav-links a {
-    color: var(--fg-sec); text-decoration: none; font-size: 0.82rem;
-    font-weight: 500; padding: 0.5rem 0.9rem; border-radius: 8px;
-    transition: all 0.25s;
-  }
+  .nav-links { display: flex; gap: 0.4rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--fg-sec); text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 0.5rem 0.9rem; border-radius: 8px; transition: all 0.25s; }
   .nav-links a:hover { color: var(--fg); background: var(--teal-glow); }
-  .nav-cta {
-    background: var(--bg-dark) !important; color: white !important;
-    font-weight: 600 !important; padding: 0.55rem 1.4rem !important;
-    border-radius: 10px !important; transition: all 0.3s var(--ease-spring) !important;
-  }
-  .nav-cta:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(11,29,29,0.2) !important;
-    background: var(--teal-deep) !important;
-  }
-  .hamburger {
-    display: none; background: none; border: none; cursor: pointer;
-    flex-direction: column; gap: 5px; padding: 4px;
-  }
+  .nav-links a.active { color: var(--teal); font-weight: 600; }
+  .nav-cta { background: var(--bg-dark) !important; color: white !important; font-weight: 600 !important; padding: 0.55rem 1.4rem !important; border-radius: 10px !important; transition: all 0.3s var(--ease-spring) !important; }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 25px rgba(11,29,29,0.2) !important; background: var(--teal-deep) !important; }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
   .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
 
-  /* Custom cursor */
-  .cursor-glow {
-    position: fixed; top: 0; left: 0; z-index: 9998;
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1.5px solid rgba(20,144,176,0.35);
-    pointer-events: none;
-    transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    backdrop-filter: blur(1px);
-  }
+  /* Cursor */
+  .cursor-glow { position: fixed; top: 0; left: 0; z-index: 9998; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(20,144,176,0.35); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; backdrop-filter: blur(1px); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
   .cursor-glow.visible { opacity: 1; }
-  .cursor-glow.hovering {
-    width: 60px; height: 60px;
-    background: rgba(20,144,176,0.06);
-    border-color: rgba(20,144,176,0.5);
-  }
-  .cursor-dot {
-    position: fixed; top: 0; left: 0; z-index: 9998;
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--teal);
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-  }
+  .cursor-glow.hovering { width: 60px; height: 60px; background: rgba(20,144,176,0.06); border-color: rgba(20,144,176,0.5); }
+  .cursor-dot { position: fixed; top: 0; left: 0; z-index: 9998; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; }
   .cursor-dot.visible { opacity: 1; }
+  @media (pointer: fine) { * { cursor: none !important; } }
+  .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; z-index: 10001; background: var(--gradient); width: 0%; }
 
-  @media (pointer: fine) {
-    * { cursor: none !important; }
-  }
-
-  /* Scroll progress bar */
-  .scroll-progress {
-    position: fixed; top: 0; left: 0; height: 2px; z-index: 10001;
-    background: var(--gradient);
-    width: 0%; will-change: width;
-  }
-
-  /* --- PAGE HERO --- */
+  /* HERO — DARK WITH HEX MOLECULAR GRID */
   .page-hero {
     position: relative; overflow: hidden;
-    padding: 10rem 2rem 6rem;
-    text-align: center;
-    background: #F0F5FA;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 8rem 2rem 5rem; text-align: center;
+    background: var(--bg-dark);
   }
-  .page-hero::before {
-    content: ''; position: absolute; inset: -20%; width: 140%; height: 140%;
+  /* Hex canvas background */
+  .hero-hex-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .hero-hex-canvas canvas { width: 100%; height: 100%; }
+  /* Mesh gradients */
+  .hero-mesh {
+    position: absolute; inset: -20%; width: 140%; height: 140%; z-index: 1;
     background:
-      radial-gradient(ellipse 40% 50% at 15% 80%, rgba(20,144,176,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 85% 15%, rgba(20,104,176,0.10) 0%, transparent 60%),
-      radial-gradient(ellipse 35% 35% at 50% 50%, rgba(56,192,212,0.08) 0%, transparent 55%);
-    animation: meshFloat 18s ease-in-out infinite alternate;
-    will-change: transform; z-index: 0;
+      radial-gradient(ellipse 35% 45% at 20% 70%, rgba(20,144,176,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse 45% 35% at 80% 20%, rgba(20,104,176,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 30% 30% at 50% 50%, rgba(56,192,212,0.10) 0%, transparent 50%);
+    animation: meshDrift 16s ease-in-out infinite alternate;
+    pointer-events: none;
   }
-  @keyframes meshFloat {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    33% { transform: translate(2%, -1.5%) rotate(0.5deg) scale(1.03); }
-    66% { transform: translate(-1.5%, 2%) rotate(-0.3deg) scale(1.01); }
-    100% { transform: translate(1%, -1%) rotate(0.2deg) scale(1.04); }
+  @keyframes meshDrift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(2%, -1.5%) scale(1.04); }
+    100% { transform: translate(-1%, 1%) scale(1.02); }
   }
+  /* Light sweep */
+  .page-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(170deg, rgba(255,255,255,0.03) 0%, transparent 35%, rgba(20,144,176,0.03) 65%, rgba(255,255,255,0.01) 100%);
+    z-index: 2; pointer-events: none;
+  }
+  /* Bottom fade */
   .page-hero::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 120px;
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 180px;
     background: linear-gradient(to bottom, transparent, var(--bg));
-    z-index: 1; pointer-events: none;
+    z-index: 2;
   }
-  .page-hero-inner {
-    max-width: var(--max-w); margin: 0 auto;
-    position: relative; z-index: 2;
+  .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 3; }
+
+  /* Program badge */
+  .stem-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 1.4rem; border-radius: 100px;
+    background: rgba(20,144,176,0.12); border: 1px solid rgba(20,144,176,0.25);
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2.5px; color: var(--teal-light);
+    margin-bottom: 2.5rem; backdrop-filter: blur(8px);
+    box-shadow: 0 0 30px rgba(20,144,176,0.15), inset 0 0 20px rgba(20,144,176,0.05);
   }
-  .page-tag {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 2.5px; color: var(--teal); margin-bottom: 2.5rem;
+  .stem-badge .pulse-ring {
+    width: 8px; height: 8px; border-radius: 50%; position: relative;
+    background: var(--teal-light);
   }
-  .page-tag .dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
-    animation: pulseDot 2s ease infinite;
+  .stem-badge .pulse-ring::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 1.5px solid var(--teal-light); opacity: 0;
+    animation: ringPulse 2s ease-out infinite;
   }
-  @keyframes pulseDot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(1.8); }
-  }
+  @keyframes ringPulse { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.2); opacity: 0; } }
+
+  .page-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--teal-light); margin-bottom: 1rem; }
+  .page-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-light); animation: pulseDot 2s ease infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.8); } }
+
   .page-hero h1 {
     font-family: var(--serif); font-weight: 400;
-    font-size: clamp(3rem, 7vw, 5.5rem);
-    line-height: 1.06; letter-spacing: -2.5px;
-    max-width: 750px; margin: 0 auto 2rem;
+    font-size: clamp(3.2rem, 7vw, 5.5rem); line-height: 1.06; letter-spacing: -2.5px;
+    max-width: 800px; margin: 0 auto 1.8rem; color: white;
   }
   .page-hero h1 em {
     font-style: italic;
-    background: var(--gradient);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: linear-gradient(135deg, var(--teal-light), #5CE0F0, var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .word-line { display: block; overflow: hidden; padding-bottom: 0.15em; padding-right: 0.05em; }
-  .word { display: inline-block; }
-  .page-hero-sub {
-    font-size: 1.15rem; color: var(--fg-sec); line-height: 1.7;
-    max-width: 540px; margin: 0 auto;
-  }
+  .hero-word-line { display: block; overflow: hidden; padding-bottom: 0.12em; }
+  .hero-word { display: inline-block; }
+  .page-hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 560px; margin: 0 auto; }
+  .page-hero-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+  .page-hero-actions .btn-ghost { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
+  .page-hero-actions .btn-ghost:hover { border-color: var(--teal-light); color: var(--teal-light); background: rgba(56,192,212,0.08); }
 
-  /* --- BUTTONS --- */
-  .btn-teal {
+  /* Enrollment notice */
+  .enroll-notice {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 1.1rem 2.4rem; background: var(--gradient);
-    color: white; font-family: var(--sans); font-weight: 700;
-    font-size: 0.95rem; border: none; border-radius: 14px;
-    cursor: pointer; text-decoration: none;
-    transition: all 0.35s var(--ease-spring);
-    position: relative; overflow: hidden;
+    margin-top: 2rem; padding: 0.6rem 1.4rem; border-radius: 10px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.78rem; color: rgba(255,255,255,0.45); font-weight: 500;
   }
-  .btn-teal::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
-    opacity: 0; transition: opacity 0.3s;
-  }
-  .btn-teal:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 14px 40px rgba(20,144,176,0.3);
-  }
-  .btn-teal:hover::before { opacity: 1; }
-  .btn-teal .arrow {
-    display: inline-block; transition: transform 0.3s var(--ease-spring);
-  }
-  .btn-teal:hover .arrow { transform: translateX(3px) translateY(-2px); }
-  .btn-ghost {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 1.1rem 2.4rem; background: transparent; color: var(--fg);
-    font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
-    border: 1.5px solid var(--rule); border-radius: 14px;
-    cursor: pointer; text-decoration: none; transition: all 0.3s;
-  }
-  .btn-ghost:hover {
-    border-color: var(--teal); color: var(--teal); background: var(--teal-glow);
-  }
+  .enroll-notice strong { color: var(--teal-light); font-weight: 700; }
 
-  /* --- SECTION SYSTEM --- */
-  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; }
-  .sec-alt {
-    background: var(--bg-alt); border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule); padding: 6rem 2rem;
-  }
+  /* Scroll hint */
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; z-index: 3; }
+  .scroll-hint-text { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.25); }
+  .scroll-hint-line { width: 1px; height: 40px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+  .scroll-hint-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--teal-light); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0% { top: -100%; } 50% { top: 100%; } 100% { top: 100%; } }
+
+  /* SECTIONS */
+  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; position: relative; z-index: 1; }
+  .sec-alt { background: var(--bg-alt); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6rem 2rem; position: relative; z-index: 1; }
   .sec-inner { max-width: var(--max-w); margin: 0 auto; }
-  .sec-tag {
-    display: inline-flex; align-items: center; gap: 1rem;
-    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 2.5px; color: var(--fg-muted); margin-bottom: 1.2rem;
-    opacity: 0;
-  }
+  .sec-tag { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--fg-muted); margin-bottom: 1.2rem; opacity: 0; }
   .sec-tag .line { width: 30px; height: 1px; background: var(--teal); }
-  .sec-title {
-    font-family: var(--serif);
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    font-weight: 400; letter-spacing: -1px;
-    line-height: 1.12; margin-bottom: 1rem;
-    will-change: transform, opacity;
-  }
-  .sec-title .tw { will-change: transform; }
-  .sec-desc {
-    color: var(--fg-sec); font-size: 1.05rem;
-    line-height: 1.7; max-width: 600px;
-  }
-
-  /* Reveal states */
+  .sec-title { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 400; letter-spacing: -1px; line-height: 1.12; margin-bottom: 1rem; }
+  .sec-desc { color: var(--fg-sec); font-size: 1.05rem; line-height: 1.7; max-width: 560px; }
   .r { opacity: 0; }
 
-  /* --- FOCUS AREA GRID (4 cards) --- */
-  .focus-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem; margin-top: 3rem;
-  }
-  .focus-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 2.2rem 2rem;
+  /* BUTTONS */
+  .btn-teal { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1.1rem 2.4rem; background: var(--gradient); color: white; font-family: var(--sans); font-weight: 700; font-size: 0.95rem; border: none; border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.35s var(--ease-spring); position: relative; overflow: hidden; }
+  .btn-teal:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(20,144,176,0.3); }
+  .btn-teal .arrow { display: inline-block; transition: transform 0.3s var(--ease-spring); }
+  .btn-teal:hover .arrow { transform: translateX(3px) translateY(-2px); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 1.1rem 2.4rem; background: transparent; color: var(--fg); font-family: var(--sans); font-weight: 600; font-size: 0.95rem; border: 1.5px solid var(--rule); border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
+
+  /* STEM PILLARS — 2x2 grid with orbit icons */
+  .stem-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .stem-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 2.2rem 2rem;
     transition: all 0.4s var(--ease-spring);
     position: relative; overflow: hidden;
   }
-  .focus-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0;
-    height: 3px; background: var(--gradient);
-    transform: scaleX(0); transform-origin: left;
-    transition: transform 0.5s var(--ease-spring);
+  .stem-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--gradient); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.5s var(--ease-out-expo);
   }
-  .focus-card:hover::before { transform: scaleX(1); }
-  .focus-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(20,144,176,0.1);
-    border-color: var(--teal);
-  }
-  .focus-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    background: var(--teal-bg);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1.2rem;
-    color: var(--teal-deep);
-  }
-  .focus-card h3 {
-    font-family: var(--serif); font-size: 1.25rem;
-    font-weight: 500; margin-bottom: 0.6rem;
-    letter-spacing: -0.3px;
-  }
-  .focus-card p {
-    font-size: 0.9rem; color: var(--fg-sec); line-height: 1.65;
-  }
-
-  /* --- TIMELINE (quarters) --- */
-  .timeline {
-    margin-top: 3rem;
-    position: relative;
-    padding-left: 3.5rem;
-  }
-  .timeline::before {
-    content: ''; position: absolute; left: 7px; top: 0; bottom: 0;
-    width: 2px; background: var(--rule);
-  }
-  .tl-item {
-    position: relative;
-    padding: 0 0 3rem 0;
-  }
-  .tl-item:last-child { padding-bottom: 0; }
-  .tl-dot {
-    position: absolute;
-    left: -3.5rem; top: 0.35rem;
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 3px solid var(--teal);
-    background: var(--bg-alt);
-    z-index: 2;
-    transition: all 0.3s;
-  }
-  .tl-item:hover .tl-dot {
-    background: var(--teal);
-    box-shadow: 0 0 0 6px var(--teal-glow);
-  }
-  .tl-season {
-    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 2px; color: var(--teal); margin-bottom: 0.3rem;
-  }
-  .tl-title {
-    font-family: var(--serif); font-size: 1.3rem;
-    font-weight: 500; letter-spacing: -0.3px; margin-bottom: 0.5rem;
-  }
-  .tl-desc {
-    font-size: 0.9rem; color: var(--fg-sec); line-height: 1.65;
-    max-width: 520px;
-  }
-
-  /* --- CHECKLIST --- */
-  .check-list {
-    list-style: none; margin-top: 2.5rem;
-    display: flex; flex-direction: column;
-  }
-  .check-item {
-    display: flex; align-items: center; gap: 1.2rem;
-    padding: 1.3rem 0;
-    border-bottom: 1px solid var(--rule);
-    font-size: 1.05rem; color: var(--fg);
-    font-weight: 500;
-    transition: all 0.3s;
-  }
-  .check-item:first-child { border-top: 1px solid var(--rule); }
-  .check-item:hover { padding-left: 0.8rem; }
-  .check-item:hover .check-icon { background: var(--teal); color: white; }
-  .check-icon {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--teal-bg); color: var(--teal);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.3s;
-  }
-
-  /* --- BENEFITS GRID --- */
-  .benefits-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 0; margin-top: 3rem;
-    border-top: 2px solid var(--fg);
-    border-bottom: 1px solid var(--rule);
-  }
-  .benefit-card {
-    padding: 2.5rem 2rem;
-    border-right: 1px solid var(--rule);
+  .stem-card:hover::before { transform: scaleX(1); }
+  .stem-card:hover { transform: translateY(-4px); box-shadow: 0 16px 45px rgba(20,144,176,0.12); border-color: rgba(20,144,176,0.3); }
+  .stem-card-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: var(--teal-bg); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem; color: var(--teal-deep);
     transition: all 0.4s;
-    position: relative;
   }
-  .benefit-card:nth-child(3n) { border-right: none; }
-  .benefit-card:nth-child(n+4) { border-top: 1px solid var(--rule); }
-  .benefit-card:hover { background: var(--teal-glow); }
-  .benefit-num {
-    font-family: var(--serif); font-size: 0.85rem;
-    font-style: italic; color: var(--teal);
-    opacity: 0.6; margin-bottom: 1rem;
+  .stem-card:hover .stem-card-icon { background: var(--gradient); color: white; box-shadow: 0 4px 15px rgba(20,144,176,0.3); }
+  .stem-card-label {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--teal); margin-bottom: 0.5rem;
   }
-  .benefit-card h3 {
-    font-family: var(--serif); font-size: 1.2rem;
-    font-weight: 500; margin-bottom: 0.5rem;
-    letter-spacing: -0.3px;
-  }
-  .benefit-card p {
-    font-size: 0.88rem; color: var(--fg-sec); line-height: 1.65;
-  }
+  .stem-card h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; letter-spacing: -0.3px; margin-bottom: 0.7rem; }
+  .stem-card p { font-size: 0.9rem; color: var(--fg-sec); line-height: 1.65; }
 
-  /* --- CTA BANNER --- */
-  .cta-banner {
-    background: var(--bg-dark); padding: 6rem 2rem;
-    text-align: center; position: relative; overflow: hidden;
-  }
-  .cta-banner::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 40% 50% at 20% 80%, rgba(20,144,176,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .cta-banner-inner {
-    max-width: 620px; margin: 0 auto; position: relative; z-index: 2;
-  }
-  .cta-banner h2 {
-    font-family: var(--serif); color: white;
-    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
-    font-weight: 400; letter-spacing: -1px;
-    margin-bottom: 1rem; line-height: 1.12;
-  }
+  /* BENEFITS — editorial columns */
+  .benefit-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 3rem; border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); }
+  .benefit-col { padding: 2.5rem 1.8rem; border-right: 1px solid var(--rule); transition: background 0.4s; }
+  .benefit-col:last-child { border-right: none; }
+  .benefit-col:hover { background: var(--teal-glow); }
+  .benefit-col-icon { color: var(--teal-deep); margin-bottom: 1.5rem; }
+  .benefit-col h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; letter-spacing: -0.3px; margin-bottom: 0.7rem; }
+  .benefit-col p { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.7; }
+  .benefit-hours { display: inline-block; margin-top: 1rem; padding: 0.35rem 1rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal-deep); background: var(--teal-bg); border-radius: 100px; }
+
+  /* CTA BANNER */
+  .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(20,144,176,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%); pointer-events: none; }
+  .cta-banner-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+  .cta-banner h2 { font-family: var(--serif); color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.12; }
   .cta-banner h2 em { font-style: italic; color: var(--teal-light); }
-  .cta-banner-sub {
-    color: rgba(255,255,255,0.5); font-size: 1.05rem;
-    line-height: 1.7; margin-bottom: 2.5rem;
-  }
-  .cta-actions {
-    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-  }
-  .btn-ghost-dark {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 1.1rem 2.4rem; background: transparent;
-    color: rgba(255,255,255,0.7);
-    font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
-    border: 1.5px solid rgba(255,255,255,0.15); border-radius: 14px;
-    cursor: pointer; text-decoration: none; transition: all 0.3s;
-  }
-  .btn-ghost-dark:hover {
-    border-color: var(--teal-light); color: white;
-    background: rgba(255,255,255,0.04);
+  .cta-banner p { color: rgba(255,255,255,0.5); font-size: 1rem; line-height: 1.7; margin-bottom: 2.5rem; }
+  .cta-banner .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .cta-banner .btn-ghost { color: white; border-color: rgba(255,255,255,0.2); }
+  .cta-banner .btn-ghost:hover { border-color: var(--teal-light); color: var(--teal-light); background: rgba(56,192,212,0.08); }
+
+  /* Molecular decoration between sections */
+  .mol-divider { height: 1px; position: relative; overflow: visible; background: linear-gradient(90deg, transparent, rgba(20,144,176,0.3) 30%, rgba(56,192,212,0.5) 50%, rgba(20,144,176,0.3) 70%, transparent); }
+  .mol-divider::before {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 10px; height: 10px; border-radius: 50%; background: var(--teal);
+    box-shadow: 0 0 12px rgba(20,144,176,0.4);
   }
 
-  /* --- FOOTER --- */
-  footer {
-    border-top: 1px solid var(--rule); padding: 2.5rem 2rem;
-  }
-  .footer-inner {
-    max-width: var(--max-w); margin: 0 auto;
-    display: flex; justify-content: space-between;
-    align-items: center; flex-wrap: wrap; gap: 1rem;
-  }
-  .footer-logo {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-weight: 700; font-size: 0.85rem; color: var(--fg-sec);
-    text-decoration: none;
-  }
+  /* FOOTER */
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 2rem; }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: var(--fg-sec); text-decoration: none; }
   .footer-logo img { width: 24px; height: 24px; border-radius: 6px; }
   .footer-copy { font-size: 0.75rem; color: var(--fg-muted); }
   .footer-links { display: flex; gap: 1.6rem; list-style: none; }
-  .footer-links a {
-    color: var(--fg-muted); text-decoration: none; font-size: 0.8rem;
-    font-weight: 500; transition: color 0.2s;
-  }
+  .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
   .footer-links a:hover { color: var(--teal); }
 
-  /* --- RESPONSIVE --- */
+  /* RESPONSIVE */
   @media (max-width: 1024px) {
-    .focus-grid { grid-template-columns: 1fr 1fr; }
-    .benefits-grid { grid-template-columns: 1fr 1fr; }
-    .benefit-card:nth-child(3n) { border-right: 1px solid var(--rule); }
-    .benefit-card:nth-child(2n) { border-right: none; }
-    .benefit-card:nth-child(n+3) { border-top: 1px solid var(--rule); }
-  }
-  @media (max-width: 768px) {
-    .focus-grid { grid-template-columns: 1fr; }
-    .benefits-grid { grid-template-columns: 1fr; }
-    .benefit-card { border-right: none !important; border-bottom: 1px solid var(--rule); }
-    .benefit-card:last-child { border-bottom: none; }
-    .benefit-card:nth-child(n+2) { border-top: none; }
+    .stem-grid { grid-template-columns: 1fr 1fr; }
+    .benefit-cols { grid-template-columns: 1fr 1fr; }
+    .benefit-col:nth-child(2) { border-right: none; }
+    .benefit-col:nth-child(n+3) { border-top: 1px solid var(--rule); }
   }
   @media (max-width: 640px) {
     .nav-links { display: none; }
     .hamburger { display: flex; }
-    .page-hero { padding: 8rem 1.5rem 4rem; }
-    .page-hero h1 { font-size: 2.6rem; letter-spacing: -1.5px; }
+    .page-hero { padding: 7rem 1.5rem 4rem; min-height: auto; }
+    .scroll-hint { display: none; }
     .sec, .sec-alt { padding: 4rem 1.5rem; }
     .cta-banner { padding: 4rem 1.5rem; }
-    .focus-grid { grid-template-columns: 1fr; }
-    .benefits-grid { grid-template-columns: 1fr; }
+    .stem-grid { grid-template-columns: 1fr; }
+    .benefit-cols { grid-template-columns: 1fr; }
+    .benefit-col { border-right: none !important; border-bottom: 1px solid var(--rule); }
+    .benefit-col:last-child { border-bottom: none; }
+    .benefit-col:nth-child(n+2) { border-top: none; }
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
-    .timeline { padding-left: 2.5rem; }
-    .tl-dot { left: -2.5rem; }
   }
 </style>
 </head>
 <body>
-
-<!-- Custom Cursor -->
 <div class="cursor-glow"></div>
 <div class="cursor-dot"></div>
-<!-- Scroll Progress -->
 <div class="scroll-progress"></div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="data:image/png;base64,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" alt="CareForBrains">
+      <img src="logo.png" alt="CareForBrains">
       <span>CareForBrains</span>
     </a>
     <ul class="nav-links">
@@ -513,6 +288,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="volunteer.html">Volunteer</a></li>
       <li><a href="chapters.html">Chapters</a></li>
+      <li><a href="stem.html" class="active">STEM</a></li>
       <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -521,180 +297,144 @@
   </div>
 </nav>
 
-<!-- PAGE HERO -->
+<!-- HERO -->
 <section class="page-hero">
+  <div class="hero-hex-canvas"><canvas id="hexCanvas"></canvas></div>
+  <div class="hero-mesh"></div>
+
   <div class="page-hero-inner">
-    <div class="page-tag"><span class="dot"></span> New Program</div>
+    <div class="stem-badge r"><span class="pulse-ring"></span> Year-Round Program</div>
+    <div class="page-tag r"><span class="dot"></span> STEM Exploration</div>
     <h1>
-      <span class="word-line"><span class="word">STEM</span> <span class="word"><em>Exploration</em></span></span>
+      <span class="hero-word-line"><span class="hero-word">Where</span> <span class="hero-word"><em>STEM</em></span></span>
+      <span class="hero-word-line"><span class="hero-word">meets</span> <span class="hero-word">mental</span> <span class="hero-word"><em>health.</em></span></span>
     </h1>
-    <p class="page-hero-sub">A year-round program connecting STEM education with mental health. Launching June 2025.</p>
-  </div>
-</section>
-
-<!-- SECTION 1: Program Overview -->
-<section class="sec" id="overview">
-  <div class="sec-tag"><span class="line"></span> / Program &middot; N. 01</div>
-  <h2 class="sec-title">What is STEM Exploration?</h2>
-  <p class="sec-desc r">STEM Exploration is CareForBrains' newest initiative &mdash; a year-round program that teaches students how science, technology, engineering, and math intersect with mental health and well-being. Through hands-on projects, workshops, and mentorship, students explore the science behind the mind.</p>
-  <div class="focus-grid">
-    <div class="focus-card r">
-      <div class="focus-icon">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/><path d="M10 17v4"/><path d="M14 17v4"/></svg>
-      </div>
-      <h3>Neuroscience</h3>
-      <p>Understanding how the brain works, neural pathways, and the biology of mental health.</p>
+    <p class="page-hero-sub r">Learn the basics of Science, Technology, Engineering, and Mathematics — and discover how they connect to mental well-being.</p>
+    <div class="page-hero-actions r">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSevjer3uUBKmDF50-B6LoVDNacI5h9S5fcQn83od-73e6ZZnQ/viewform" class="btn-teal" target="_blank">Enroll Now <span class="arrow">↗</span></a>
+      <a href="#learn" class="btn-ghost">What You'll Learn</a>
     </div>
-    <div class="focus-card r">
-      <div class="focus-icon">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8h2"/><path d="M15 8h2"/><path d="M7 12h10"/></svg>
-      </div>
-      <h3>Technology</h3>
-      <p>How tech is used in mental health &mdash; apps, telehealth, AI-assisted therapy, and digital wellness tools.</p>
-    </div>
-    <div class="focus-card r">
-      <div class="focus-icon">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 5-10"/></svg>
-      </div>
-      <h3>Research</h3>
-      <p>Learning research methodology, data analysis, and contributing to real mental health studies.</p>
-    </div>
-    <div class="focus-card r">
-      <div class="focus-icon">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      </div>
-      <h3>Engineering</h3>
-      <p>Designing solutions &mdash; from wearable wellness devices to accessible mental health platforms.</p>
+    <div class="enroll-notice r"><strong>Applications open June 20, 2025</strong> · Year-round, no end date</div>
+    <div class="scroll-hint">
+      <span class="scroll-hint-text">Scroll</span>
+      <div class="scroll-hint-line"></div>
     </div>
   </div>
 </section>
 
-<!-- SECTION 2: Program Structure -->
-<div class="sec-alt" id="structure">
+<div class="mol-divider"></div>
+
+<!-- ABOUT THE PROGRAM -->
+<section class="sec" id="about-program">
+  <div class="sec-tag"><span class="line"></span> / Program · N. 01</div>
+  <h2 class="sec-title">STEM meets mental health</h2>
+  <p class="sec-desc r">At CareForBrains we are dedicated to our mission of promoting mental well-being and furthering the knowledge of our members. In line with these goals we have created CareForBrains: STEM Exploration — a program where you will learn about the basics of STEM and how they connect to mental health.</p>
+</section>
+
+<div class="mol-divider"></div>
+
+<!-- WHAT YOU WILL LEARN -->
+<div class="sec-alt" id="learn">
   <div class="sec-inner">
-    <div class="sec-tag"><span class="line"></span> / Structure &middot; N. 02</div>
-    <h2 class="sec-title">How it's structured.</h2>
-    <p class="sec-desc r">A year-round program organized into seasonal quarters, each building on the last.</p>
-    <div class="timeline">
-      <div class="tl-item r">
-        <div class="tl-dot"></div>
-        <div class="tl-season">Fall</div>
-        <div class="tl-title">Foundations</div>
-        <div class="tl-desc">Introduction to STEM + mental health, team formation, and project ideation. Build the groundwork for the year ahead.</div>
+    <div class="sec-tag"><span class="line"></span> / Curriculum · N. 02</div>
+    <h2 class="sec-title">What you will learn</h2>
+    <p class="sec-desc r" style="margin-bottom: 0;">Four pillars of STEM, each explored through the lens of mental health and well-being.</p>
+    <div class="stem-grid">
+      <div class="stem-card r">
+        <div class="stem-card-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l.8 7.45a.75.75 0 01-.82.82L12 21.75l-7.78 1.82a.75.75 0 01-.82-.82L5 14.5"/></svg>
+        </div>
+        <div class="stem-card-label">Science</div>
+        <h3>Brain Chemistry & Function</h3>
+        <p>Students investigate how stress, mindfulness, and happiness affect brain chemistry and function, building a strong foundation in the science of mental health.</p>
       </div>
-      <div class="tl-item r">
-        <div class="tl-dot"></div>
-        <div class="tl-season">Winter</div>
-        <div class="tl-title">Deep Dive</div>
-        <div class="tl-desc">Focused workshops, guest speakers from the field, and hands-on experiments. Go deep into the areas that interest you most.</div>
+      <div class="stem-card r">
+        <div class="stem-card-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z"/></svg>
+        </div>
+        <div class="stem-card-label">Technology</div>
+        <h3>AI & Cybersecurity</h3>
+        <p>Students explore how AI and cybersecurity work, and how these tools are increasingly used to monitor, protect, and improve mental well-being.</p>
       </div>
-      <div class="tl-item r">
-        <div class="tl-dot"></div>
-        <div class="tl-season">Spring</div>
-        <div class="tl-title">Build</div>
-        <div class="tl-desc">Students develop their own STEM x mental health projects with mentorship from professionals in the field.</div>
+      <div class="stem-card r">
+        <div class="stem-card-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11.42 15.17l-5.03-2.82a.75.75 0 01-.19-1.15l3.54-3.54a.75.75 0 011.15.19l2.82 5.03m-2.29 1.29l5.03 2.82a.75.75 0 00.68-.02l4.56-2.74a.75.75 0 00.12-1.22l-3.54-3.54a.75.75 0 00-1.22.12l-2.74 4.56a.75.75 0 00-.02.68zM2.25 18.75l6-6M4.5 15l3-3"/></svg>
+        </div>
+        <div class="stem-card-label">Engineering</div>
+        <h3>Design & 3D Modeling</h3>
+        <p>Students learn sketching and 3D modeling with Fusion 360, using design thinking to create innovations that could support mental health.</p>
       </div>
-      <div class="tl-item r">
-        <div class="tl-dot"></div>
-        <div class="tl-season">Summer</div>
-        <div class="tl-title">Showcase</div>
-        <div class="tl-desc">Present projects, attend the CareForBrains STEM Summit, and earn certificates. Celebrate what you built.</div>
+      <div class="stem-card r">
+        <div class="stem-card-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.745 3A23.933 23.933 0 003 12c0 3.183.62 6.22 1.745 9M19.255 3C20.38 5.78 21 8.817 21 12s-.62 6.22-1.745 9M12 3a23.967 23.967 0 00-8.25 9A23.967 23.967 0 0012 21m0-18a23.967 23.967 0 018.25 9A23.967 23.967 0 0112 21m0-18v18"/></svg>
+        </div>
+        <div class="stem-card-label">Mathematics</div>
+        <h3>Patterns & Reasoning</h3>
+        <p>Students discover how patterns, probability, and mathematical reasoning help bring clarity to mental health issues and emotional complexity.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SECTION 3: Who Can Join -->
-<section class="sec" id="who">
-  <div class="sec-tag"><span class="line"></span> / Eligibility &middot; N. 03</div>
-  <h2 class="sec-title">Who it's for.</h2>
-  <p class="sec-desc r">STEM Exploration is open to curious minds everywhere.</p>
-  <ul class="check-list">
-    <li class="check-item r">
-      <span class="check-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </span>
-      Open to students ages 13 &ndash; 22
-    </li>
-    <li class="check-item r">
-      <span class="check-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </span>
-      No prior STEM experience needed
-    </li>
-    <li class="check-item r">
-      <span class="check-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </span>
-      Interest in mental health, science, or making a difference
-    </li>
-    <li class="check-item r">
-      <span class="check-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </span>
-      Available virtually &mdash; participate from anywhere
-    </li>
-  </ul>
-</section>
+<div class="mol-divider"></div>
 
-<!-- SECTION 4: Program Benefits -->
-<div class="sec-alt" id="benefits">
-  <div class="sec-inner">
-    <div class="sec-tag"><span class="line"></span> / Benefits &middot; N. 04</div>
-    <h2 class="sec-title">Program benefits.</h2>
-    <p class="sec-desc r">Everything you gain when you join STEM Exploration.</p>
-    <div class="benefits-grid">
-      <div class="benefit-card r">
-        <div class="benefit-num">/01</div>
-        <h3>Mentorship</h3>
-        <p>1-on-1 mentorship from STEM professionals and mental health experts who guide your journey.</p>
+<!-- BENEFITS / TRACKS -->
+<section class="sec" id="benefits">
+  <div class="sec-tag"><span class="line"></span> / Benefits · N. 03</div>
+  <h2 class="sec-title">Earn hours, build skills</h2>
+  <p class="sec-desc r" style="margin-bottom: 0;">Each benefit track earns you <strong>40+ volunteer hours</strong>. Participate in as many as you like.</p>
+  <div class="benefit-cols">
+    <div class="benefit-col r">
+      <div class="benefit-col-icon">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783M10.34 6.66a23.847 23.847 0 008.835-2.535"/></svg>
       </div>
-      <div class="benefit-card r">
-        <div class="benefit-num">/02</div>
-        <h3>Certificate</h3>
-        <p>Official CareForBrains STEM certificate upon completion of the full program year.</p>
+      <h3>STEM Awareness</h3>
+      <p>Promote the connection between STEM and mental health, inspiring others while earning volunteer hours through outreach and advocacy.</p>
+      <span class="benefit-hours">40+ hours</span>
+    </div>
+    <div class="benefit-col r">
+      <div class="benefit-col-icon">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
       </div>
-      <div class="benefit-card r">
-        <div class="benefit-num">/03</div>
-        <h3>Volunteer Hours</h3>
-        <p>Earn PVSA-eligible volunteer hours throughout the program for your service record.</p>
+      <h3>Educational Engagement</h3>
+      <p>Participate in hands-on STEM programs that explore how science, technology, engineering and math relate to mental well-being.</p>
+      <span class="benefit-hours">40+ hours</span>
+    </div>
+    <div class="benefit-col r">
+      <div class="benefit-col-icon">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
       </div>
-      <div class="benefit-card r">
-        <div class="benefit-num">/04</div>
-        <h3>Portfolio</h3>
-        <p>Build real projects for your college applications and resume that showcase your impact.</p>
+      <h3>Community Innovation</h3>
+      <p>Contribute to STEM-based initiatives that create solutions or resources supporting mental health in your community.</p>
+      <span class="benefit-hours">40+ hours</span>
+    </div>
+    <div class="benefit-col r">
+      <div class="benefit-col-icon">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/></svg>
       </div>
-      <div class="benefit-card r">
-        <div class="benefit-num">/05</div>
-        <h3>Network</h3>
-        <p>Connect with like-minded students across the country who share your passion for change.</p>
-      </div>
-      <div class="benefit-card r">
-        <div class="benefit-num">/06</div>
-        <h3>Letters of Rec</h3>
-        <p>Top participants receive letters of recommendation from program leads and mentors.</p>
-      </div>
+      <h3>STEM Media & Activities</h3>
+      <p>Explore STEM-themed articles, complete creative activities, and share your insights on social media to spread awareness.</p>
+      <span class="benefit-hours">40+ hours</span>
     </div>
   </div>
-</div>
+</section>
 
-<!-- CTA BANNER -->
-<section class="cta-banner" id="cta">
+<!-- CTA -->
+<section class="cta-banner">
   <div class="cta-banner-inner r">
     <h2>Ready to <em>explore</em>?</h2>
-    <p class="cta-banner-sub">Applications open soon for the inaugural STEM Exploration cohort.</p>
+    <p>Enroll in CareForBrains STEM Exploration and discover where science meets mental health.</p>
     <div class="cta-actions">
-      <a href="#" class="btn-teal">Join the Waitlist <span class="arrow">&#8599;</span></a>
-      <a href="volunteer.html" class="btn-ghost-dark">Learn about volunteering &rarr;</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSevjer3uUBKmDF50-B6LoVDNacI5h9S5fcQn83od-73e6ZZnQ/viewform" class="btn-teal" target="_blank">Enroll Now <span class="arrow">↗</span></a>
+      <a href="volunteer.html" class="btn-ghost">Volunteer Instead</a>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <a href="index.html" class="footer-logo">
-      <img src="data:image/png;base64,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" alt="">
+      <img src="logo.png" alt="">
       CareForBrains
     </a>
     <div class="footer-copy">&copy; 2025 CareForBrains. Mental health for all.</div>
@@ -702,7 +442,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="volunteer.html">Volunteer</a></li>
       <li><a href="chapters.html">Chapters</a></li>
-      <li><a href="#">Instagram</a></li>
+      <li><a href="stem.html">STEM</a></li>
     </ul>
   </div>
 </footer>
@@ -716,61 +456,179 @@
     nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
     lastScroll = curr;
   });
-
   // Mobile nav
   document.getElementById('hamburger').addEventListener('click', () => {
     const l = document.querySelector('.nav-links');
     const open = l.style.display === 'flex';
     l.style.display = open ? 'none' : 'flex';
-    if (!open) Object.assign(l.style, {
-      flexDirection: 'column', position: 'absolute',
-      top: '100%', left: '0', right: '0',
-      background: 'rgba(250,252,252,0.97)',
-      padding: '1.5rem 2rem', gap: '0.5rem',
-      backdropFilter: 'blur(20px)',
-      borderBottom: '1px solid var(--rule)'
-    });
+    if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
   });
 </script>
 
-<!-- Smooth Scroll + GSAP -->
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-// --- LENIS ---
-const lenis = new Lenis({
-  lerp: 0.09,
-  smoothWheel: true,
-  syncTouch: true,
-  touchMultiplier: 1.5
-});
+// Lenis
+const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, syncTouch: true, touchMultiplier: 1.5 });
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add(t => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
 
-// --- HERO ENTRANCE (no preloader) ---
-gsap.set('.page-tag', { y: 25, opacity: 0 });
-gsap.set('.word', { yPercent: 120, opacity: 0 });
-gsap.set('.page-hero-sub', { y: 35, opacity: 0, filter: 'blur(8px)' });
-gsap.set('nav', { y: -100 });
+// Nav dark mode on hero
+const navEl = document.querySelector('nav');
+const heroSection = document.querySelector('.page-hero');
+function updateNavTheme() {
+  const heroBottom = heroSection.getBoundingClientRect().bottom;
+  if (heroBottom > 80) { navEl.classList.add('nav-dark'); } else { navEl.classList.remove('nav-dark'); }
+}
+window.addEventListener('scroll', updateNavTheme);
+updateNavTheme();
 
-const heroTL = gsap.timeline({ delay: 0.1 });
+// HEXAGONAL MOLECULAR GRID CANVAS — unique aura for STEM
+(function() {
+  const canvas = document.getElementById('hexCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, nodes = [], mouse = { x: -1000, y: -1000 };
 
-heroTL.to('nav', { y: 0, duration: 0.8, ease: 'power3.out' }, 0);
-heroTL.to('.page-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.2);
-heroTL.to('.word', {
-  yPercent: 0, opacity: 1, duration: 0.9,
-  stagger: { amount: 0.3, from: 'start' },
-  ease: 'power4.out'
-}, 0.35);
-heroTL.to('.page-hero-sub', {
-  y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out'
-}, 0.7);
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    w = canvas.width = rect.width * dpr;
+    h = canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    createNodes();
+  }
 
-// --- SECTION TAGS: line draws, text clips ---
+  function createNodes() {
+    nodes = [];
+    const size = 55;
+    const hSpacing = size * 1.75;
+    const vSpacing = size * 1.5;
+    const cols = Math.ceil(w / window.devicePixelRatio / hSpacing) + 2;
+    const rows = Math.ceil(h / window.devicePixelRatio / vSpacing) + 2;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const offsetX = (r % 2) * (hSpacing / 2);
+        const x = c * hSpacing + offsetX;
+        const y = r * vSpacing;
+        nodes.push({ x, y, baseX: x, baseY: y, vx: 0, vy: 0, size: 1.5 + Math.random() * 1 });
+      }
+    }
+  }
+
+  canvas.parentElement.addEventListener('mousemove', e => {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  function draw() {
+    const rw = w / (window.devicePixelRatio || 1);
+    const rh = h / (window.devicePixelRatio || 1);
+    ctx.clearRect(0, 0, rw, rh);
+    const t = Date.now() * 0.0008;
+
+    // Draw connections first
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) {
+          const alpha = 0.04 * (1 - dist / 110);
+          const pulse = Math.sin(t + i * 0.1) * 0.02 + alpha;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(56,192,212,${Math.max(0, pulse)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    nodes.forEach((n, i) => {
+      const dx = mouse.x - n.baseX, dy = mouse.y - n.baseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 180) {
+        const force = (1 - dist / 180) * 8;
+        n.vx += (dx / dist) * force * 0.015;
+        n.vy += (dy / dist) * force * 0.015;
+      }
+      n.vx += (n.baseX - n.x) * 0.03;
+      n.vy += (n.baseY - n.y) * 0.03;
+      n.vx *= 0.88; n.vy *= 0.88;
+      n.x += n.vx; n.y += n.vy;
+
+      const pulse = Math.sin(t * 1.5 + n.baseX * 0.008 + n.baseY * 0.008);
+      const alpha = 0.08 + pulse * 0.06;
+      const sz = n.size + pulse * 0.5;
+
+      // Draw hexagon instead of circle
+      ctx.beginPath();
+      for (let a = 0; a < 6; a++) {
+        const angle = (Math.PI / 3) * a - Math.PI / 6;
+        const px = n.x + sz * Math.cos(angle);
+        const py = n.y + sz * Math.sin(angle);
+        if (a === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = `rgba(20,144,176,${alpha})`;
+      ctx.fill();
+
+      // Glow on close nodes
+      if (dist < 180) {
+        const glowAlpha = (1 - dist / 180) * 0.2;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, sz * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56,192,212,${glowAlpha})`;
+        ctx.fill();
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  draw();
+  window.addEventListener('resize', resize);
+})();
+
+// Hero entrance
+gsap.set('.stem-badge', { y: 15, opacity: 0, scale: 0.9 });
+gsap.set('.page-tag', { y: 20, opacity: 0 });
+gsap.set('.hero-word', { yPercent: 120 });
+gsap.set('.page-hero-sub', { y: 30, opacity: 0, filter: 'blur(8px)' });
+gsap.set('.page-hero-actions', { y: 25, opacity: 0 });
+gsap.set('.enroll-notice', { y: 20, opacity: 0 });
+gsap.set('.hero-mesh', { scale: 1.3, opacity: 0 });
+gsap.set('#hexCanvas', { opacity: 0 });
+gsap.set('nav', { y: -80 });
+
+const entryTL = gsap.timeline();
+entryTL.to('.hero-mesh', { scale: 1, opacity: 1, duration: 2, ease: 'power2.out' }, 0);
+entryTL.to('#hexCanvas', { opacity: 1, duration: 1.5, ease: 'power2.out' }, 0.5);
+entryTL.to('nav', { y: 0, duration: 0.7, ease: 'power3.out' }, 0.3);
+entryTL.to('.stem-badge', { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.7)' }, 0.5);
+entryTL.to('.page-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.65);
+entryTL.to('.hero-word', { yPercent: 0, duration: 1.2, stagger: 0.08, ease: 'power4.out' }, 0.75);
+entryTL.to('.page-hero-sub', { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power3.out' }, 1.1);
+entryTL.to('.page-hero-actions', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 1.25);
+entryTL.to('.enroll-notice', { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 1.4);
+
+// Molecular dividers animate in
+document.querySelectorAll('.mol-divider').forEach(div => {
+  gsap.set(div, { scaleX: 0, transformOrigin: 'center' });
+  gsap.to(div, { scaleX: 1, duration: 1.5, ease: 'power2.inOut', scrollTrigger: { trigger: div, start: 'top 92%' } });
+});
+
+// Section tags
 document.querySelectorAll('.sec-tag').forEach(tag => {
   const line = tag.querySelector('.line');
   gsap.set(tag, { clipPath: 'inset(0 100% 0 0)', opacity: 1 });
@@ -780,161 +638,83 @@ document.querySelectorAll('.sec-tag').forEach(tag => {
   tl.to(tag, { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power3.out' }, line ? '-=0.4' : 0);
 });
 
-// --- SECTION TITLES: word stagger ---
+// Section titles word split
 document.querySelectorAll('.sec-title').forEach(title => {
   const text = title.innerHTML;
   const words = text.split(/(\s+)/).map(w => {
     if (w.trim() === '') return w;
-    return '<span style="display:inline-block;overflow:hidden;vertical-align:top;"><span class="tw" style="display:inline-block">' + w + '</span></span>';
+    return `<span style="display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:0.15em;"><span class="tw" style="display:inline-block">${w}</span></span>`;
   }).join('');
   title.innerHTML = words;
   const tw = title.querySelectorAll('.tw');
   gsap.set(tw, { yPercent: 110 });
-  gsap.to(tw, {
-    yPercent: 0, duration: 1.2, stagger: 0.05, ease: 'power4.out',
-    scrollTrigger: { trigger: title, start: 'top 85%' }
-  });
+  gsap.to(tw, { yPercent: 0, duration: 1.2, stagger: 0.05, ease: 'power4.out', scrollTrigger: { trigger: title, start: 'top 85%' } });
 });
 
-// --- OVERVIEW: desc slides from left ---
-const overviewDesc = document.querySelector('#overview .sec-desc');
-if (overviewDesc) {
-  gsap.set(overviewDesc, { x: -80, opacity: 0 });
-  gsap.to(overviewDesc, {
-    x: 0, opacity: 1, duration: 1.3, ease: 'power3.out',
-    scrollTrigger: { trigger: overviewDesc, start: 'top 88%' }
-  });
-}
-
-// Focus cards: scale + blur stagger
-document.querySelectorAll('.focus-card').forEach((card, i) => {
+// STEM cards — scale pop with blur
+document.querySelectorAll('.stem-card').forEach((card, i) => {
   gsap.set(card, { scale: 0.7, opacity: 0, filter: 'blur(6px)' });
   gsap.to(card, {
     scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'back.out(1.4)',
     delay: i * 0.12,
-    scrollTrigger: { trigger: '.focus-grid', start: 'top 82%' }
+    scrollTrigger: { trigger: '.stem-grid', start: 'top 82%' }
   });
 });
 
-// --- STRUCTURE: desc deblurs, timeline items stagger from left ---
-const structDesc = document.querySelector('#structure .sec-desc');
-if (structDesc) {
-  gsap.set(structDesc, { opacity: 0, filter: 'blur(8px)' });
-  gsap.to(structDesc, {
-    opacity: 1, filter: 'blur(0px)', duration: 1.4, ease: 'power2.out',
-    scrollTrigger: { trigger: structDesc, start: 'top 88%' }
-  });
-}
-
-document.querySelectorAll('.tl-item').forEach((item, i) => {
-  gsap.set(item, { x: -50, opacity: 0 });
-  gsap.to(item, {
-    x: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
-    delay: i * 0.18,
-    scrollTrigger: { trigger: '.timeline', start: 'top 80%' }
-  });
-});
-
-// --- WHO: desc slides from right ---
-const whoDesc = document.querySelector('#who .sec-desc');
-if (whoDesc) {
-  gsap.set(whoDesc, { x: 60, opacity: 0 });
-  gsap.to(whoDesc, {
-    x: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: whoDesc, start: 'top 88%' }
-  });
-}
-
-// Check items: rotateX flip in
-document.querySelectorAll('.check-item').forEach((item, i) => {
-  gsap.set(item, { rotateX: -30, opacity: 0, transformOrigin: 'top center' });
-  gsap.to(item, {
-    rotateX: 0, opacity: 1, duration: 1, ease: 'power3.out',
+// Benefit columns — stagger slide from right
+document.querySelectorAll('.benefit-col').forEach((col, i) => {
+  gsap.set(col, { x: 60, opacity: 0, scale: 0.95 });
+  gsap.to(col, {
+    x: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out',
     delay: i * 0.12,
-    scrollTrigger: { trigger: '.check-list', start: 'top 82%' }
+    scrollTrigger: { trigger: '.benefit-cols', start: 'top 82%' }
   });
 });
 
-// --- BENEFITS: desc fades, cards alternate slide ---
-const benefitsDesc = document.querySelector('#benefits .sec-desc');
-if (benefitsDesc) {
-  gsap.set(benefitsDesc, { opacity: 0 });
-  gsap.to(benefitsDesc, {
-    opacity: 1, duration: 1.6, ease: 'power2.out',
-    scrollTrigger: { trigger: benefitsDesc, start: 'top 88%' }
-  });
-}
-
-document.querySelectorAll('.benefit-card').forEach((card, i) => {
-  const fromX = i % 2 === 0 ? -60 : 60;
-  gsap.set(card, { x: fromX, opacity: 0 });
-  gsap.to(card, {
-    x: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
-    delay: i * 0.1,
-    scrollTrigger: { trigger: '.benefits-grid', start: 'top 82%' }
-  });
-});
-
-// --- CTA: elastic scale pop ---
+// CTA
 const ctaInner = document.querySelector('.cta-banner-inner');
 if (ctaInner) {
-  gsap.set(ctaInner, { scale: 0.85, opacity: 0 });
-  gsap.to(ctaInner, {
-    scale: 1, opacity: 1, duration: 1.4, ease: 'elastic.out(1, 0.6)',
-    scrollTrigger: { trigger: ctaInner, start: 'top 88%' }
-  });
+  gsap.set(ctaInner, { y: 40, opacity: 0 });
+  gsap.to(ctaInner, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: ctaInner, start: 'top 88%' } });
 }
 
-// --- CUSTOM CURSOR ---
+// Generic reveals
+document.querySelectorAll('.r').forEach(el => {
+  if (el.closest('.page-hero')) return;
+  if (el.matches('.sec-tag, .stem-card, .benefit-col, .cta-banner-inner')) return;
+  gsap.set(el, { y: 40, opacity: 0 });
+  gsap.to(el, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
+});
+
+// Custom cursor
 const cursorGlow = document.querySelector('.cursor-glow');
 const cursorDot = document.querySelector('.cursor-dot');
 if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
   let cx = -100, cy = -100, tx = -100, ty = -100;
   document.addEventListener('mousemove', e => {
     tx = e.clientX; ty = e.clientY;
-    cursorDot.style.left = tx + 'px';
-    cursorDot.style.top = ty + 'px';
-    if (!cursorGlow.classList.contains('visible')) {
-      cursorGlow.classList.add('visible');
-      cursorDot.classList.add('visible');
-    }
+    cursorDot.style.left = tx + 'px'; cursorDot.style.top = ty + 'px';
+    if (!cursorGlow.classList.contains('visible')) { cursorGlow.classList.add('visible'); cursorDot.classList.add('visible'); }
   });
-  function updateCursor() {
-    cx += (tx - cx) * 0.15;
-    cy += (ty - cy) * 0.15;
-    cursorGlow.style.left = cx + 'px';
-    cursorGlow.style.top = cy + 'px';
-    requestAnimationFrame(updateCursor);
-  }
+  function updateCursor() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cursorGlow.style.left = cx + 'px'; cursorGlow.style.top = cy + 'px'; requestAnimationFrame(updateCursor); }
   updateCursor();
-  document.querySelectorAll('a, button, .btn-teal, .btn-ghost, .btn-ghost-dark, .focus-card, .benefit-card').forEach(el => {
+  document.querySelectorAll('a, button, .btn-teal, .btn-ghost, .stem-card').forEach(el => {
     el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
     el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
   });
 }
 
-// --- SCROLL PROGRESS BAR ---
+// Scroll progress
 const progressBar = document.querySelector('.scroll-progress');
 if (progressBar) {
-  window.addEventListener('scroll', () => {
-    const h = document.documentElement.scrollHeight - window.innerHeight;
-    progressBar.style.width = (window.scrollY / h * 100) + '%';
-  });
+  window.addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; });
 }
 
-// --- MAGNETIC BUTTONS ---
-document.querySelectorAll('.btn-teal, .btn-ghost, .btn-ghost-dark').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' });
-  });
-  btn.addEventListener('mouseleave', () => {
-    gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' });
-  });
+// Magnetic buttons
+document.querySelectorAll('.btn-teal, .btn-ghost').forEach(btn => {
+  btn.addEventListener('mousemove', e => { const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' }); });
+  btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
 });
 </script>
-
 </body>
 </html>

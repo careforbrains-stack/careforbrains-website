@@ -335,7 +335,8 @@
     height: 500px; position: relative;
   }
   #chapterMap { height: 100%; width: 100%; }
-  .ch-map-wrap .leaflet-container { background: #EDF2F8; }
+  .ch-map-wrap .leaflet-container { background: #1a1a2e; }
+  .ch-map-wrap { box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
   .ch-map-legend {
     display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
   }
@@ -353,6 +354,10 @@
     font-family: var(--serif); font-size: 1.1rem; color: var(--fg-muted);
     margin-left: auto; font-style: italic;
   }
+  @keyframes mapPulse {
+    0%, 100% { transform: scale(1); opacity: 0.25; }
+    50% { transform: scale(2); opacity: 0; }
+  }
   .cfb-popup { font-family: var(--sans); }
   .cfb-popup .leaflet-popup-content-wrapper {
     border-radius: 12px; padding: 0; box-shadow: 0 8px 30px rgba(0,0,0,0.12);
@@ -362,41 +367,83 @@
   .cfb-pop-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
   .cfb-pop-type { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: var(--teal); }
 
-  /* DIRECTORY TABLE */
-  .dir-table {
-    width: 100%; border-collapse: collapse; margin-top: 2.5rem;
+  /* DIRECTORY — CARD GRID */
+  .dir-controls {
+    display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; align-items: center;
   }
-  .dir-table thead th {
-    text-align: left; font-size: 0.68rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 2px; color: var(--fg-muted);
-    padding: 1rem 1.2rem; border-bottom: 2px solid var(--fg);
+  .dir-search {
+    flex: 1; min-width: 200px; padding: 0.85rem 1.2rem 0.85rem 2.8rem;
+    border: 1.5px solid var(--rule); border-radius: 12px;
+    font-family: var(--sans); font-size: 0.88rem; color: var(--fg);
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%237A8FA4' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 0.9rem center;
+    transition: all 0.3s;
+    outline: none;
   }
-  .dir-table tbody tr {
-    border-bottom: 1px solid var(--rule);
-    transition: background 0.25s;
+  .dir-search:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-glow); }
+  .dir-filter-btns { display: flex; gap: 0.4rem; }
+  .dir-filter-btn {
+    padding: 0.55rem 1.1rem; border-radius: 100px;
+    border: 1.5px solid var(--rule); background: white;
+    font-family: var(--sans); font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--fg-muted);
+    cursor: pointer; transition: all 0.3s;
   }
-  .dir-table tbody tr:hover {
-    background: rgba(20,144,176,0.04);
+  .dir-filter-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .dir-filter-btn.active { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
+
+  .dir-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    perspective: 1200px;
   }
-  .dir-table tbody td {
-    padding: 1.1rem 1.2rem; font-size: 0.92rem; color: var(--fg);
+  .dir-card {
+    background: white; border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 1.5rem;
+    transition: all 0.4s var(--ease-spring);
+    transform-style: preserve-3d;
+    position: relative; overflow: hidden;
+    cursor: default;
   }
-  .dir-table tbody td:first-child { font-weight: 600; }
-  .type-tag {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1px; padding: 0.3rem 0.8rem; border-radius: 6px;
+  .dir-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--card-accent, var(--teal-deep));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.5s var(--ease-out-expo);
   }
-  .type-tag.school { background: rgba(12,107,142,0.1); color: var(--teal-deep); }
-  .type-tag.community { background: rgba(20,104,176,0.1); color: var(--blue); }
-  .type-tag.both { background: rgba(56,192,212,0.12); color: #0e8da8; }
-  .status-dot {
+  .dir-card:hover::before { transform: scaleX(1); }
+  .dir-card:hover {
+    box-shadow: 0 20px 50px rgba(20,144,176,0.12);
+    border-color: rgba(20,144,176,0.3);
+  }
+  .dir-card.school { --card-accent: var(--teal-deep); }
+  .dir-card.community { --card-accent: var(--blue); }
+  .dir-card.both { --card-accent: var(--teal-light); }
+
+  .dir-card-name {
+    font-size: 1.05rem; font-weight: 700; margin-bottom: 0.6rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .dir-card-status {
     width: 7px; height: 7px; border-radius: 50%; background: #34C759;
-    display: inline-block; margin-right: 0.4rem;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(52,199,89,0.2);
+    animation: statusPulse 2.5s ease infinite;
   }
-  .status-text {
-    font-size: 0.82rem; color: var(--fg-sec); font-weight: 500;
-    display: inline-flex; align-items: center;
+  @keyframes statusPulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(52,199,89,0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(52,199,89,0.08); }
+  }
+  .dir-card-type {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.2px; padding: 0.3rem 0.8rem; border-radius: 100px;
+  }
+  .dir-card-type.school { background: rgba(12,107,142,0.08); color: var(--teal-deep); }
+  .dir-card-type.community { background: rgba(20,104,176,0.08); color: var(--blue); }
+  .dir-card-type.both { background: rgba(56,192,212,0.1); color: #0e8da8; }
+
+  .dir-empty {
+    grid-column: 1 / -1; text-align: center; padding: 3rem;
+    color: var(--fg-muted); font-size: 0.95rem;
   }
 
   /* FLOATING GEOMETRIC SHAPES — ambient aura */
@@ -581,21 +628,10 @@
   @media (max-width: 1024px) {
     .ch-map-wrap { height: 400px; }
     .req-grid { grid-template-columns: 1fr 1fr; }
+    .dir-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 768px) {
-    .dir-table thead { display: none; }
-    .dir-table, .dir-table tbody, .dir-table tr, .dir-table td {
-      display: block; width: 100%;
-    }
-    .dir-table tbody tr {
-      padding: 1rem 0; border-bottom: 1px solid var(--rule);
-    }
-    .dir-table tbody td {
-      padding: 0.3rem 0; border: none;
-    }
-    .dir-table tbody td:first-child {
-      font-size: 1rem; padding-top: 0.6rem;
-    }
+    .dir-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .nav-links { display: none; }
@@ -632,6 +668,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="volunteer.html">Volunteer</a></li>
       <li><a href="chapters.html" class="active">Chapters</a></li>
+      <li><a href="stem.html">STEM</a></li>
       <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -693,7 +730,7 @@
       </div>
       <div class="hero-stat">
         <div class="hero-stat-num">2</div>
-        <div class="hero-stat-label">Countries</div>
+        <div class="hero-stat-label">Continents</div>
       </div>
     </div>
   </div>
@@ -776,39 +813,38 @@
       <div class="sec-tag"><span class="line"></span> / Directory &middot; N. 02</div>
       <h2 class="sec-title">Chapter directory.</h2>
     </div>
-    <table class="dir-table">
-      <thead>
-        <tr>
-          <th>Chapter</th>
-          <th>Type</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Bethesda, MD</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Carmel, IN</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Cary, NC</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Cypress, TX</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Fort McMurray, AB</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Frisco, TX</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Glendale, AZ</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Granite Bay, CA</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Hayward, CA</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Houston, TX</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Los Angeles, CA</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Missouri City, TX</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Orlando, FL</td><td><span class="type-tag both">Both</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Rochester, MN</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Rosenberg, TX</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Sammamish, WA</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>San Anselmo, CA</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Southport, NC</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Sugar Land, TX</td><td><span class="type-tag school">School</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Suwanee, GA</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Tampa, FL</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-        <tr><td>Tucson, AZ</td><td><span class="type-tag community">Community</span></td><td><span class="status-text"><span class="status-dot"></span>Active</span></td></tr>
-      </tbody>
-    </table>
+    <div class="dir-controls">
+      <input type="text" class="dir-search" id="dirSearch" placeholder="Search chapters...">
+      <div class="dir-filter-btns">
+        <button class="dir-filter-btn active" data-filter="all">All</button>
+        <button class="dir-filter-btn" data-filter="school">School</button>
+        <button class="dir-filter-btn" data-filter="community">Community</button>
+      </div>
+    </div>
+    <div class="dir-grid" id="dirGrid">
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Bethesda, MD</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Carmel, IN</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Cary, NC</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Cypress, TX</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Fort McMurray, AB</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Frisco, TX</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Glendale, AZ</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Granite Bay, CA</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Hayward, CA</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Houston, TX</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Los Angeles, CA</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Missouri City, TX</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card both" data-type="both"><div class="dir-card-name"><span class="dir-card-status"></span> Orlando, FL</div><span class="dir-card-type both">School & Community</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Rochester, MN</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Rosenberg, TX</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Sammamish, WA</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> San Anselmo, CA</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Southport, NC</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card school" data-type="school"><div class="dir-card-name"><span class="dir-card-status"></span> Sugar Land, TX</div><span class="dir-card-type school">School</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Suwanee, GA</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Tampa, FL</div><span class="dir-card-type community">Community</span></div>
+      <div class="dir-card community" data-type="community"><div class="dir-card-name"><span class="dir-card-status"></span> Tucson, AZ</div><span class="dir-card-type community">Community</span></div>
+    </div>
   </div>
 </div>
 
@@ -1000,15 +1036,80 @@ if (mapWrap) {
   });
 }
 
-// DIRECTORY TABLE rows stagger in
-document.querySelectorAll('.dir-table tbody tr').forEach((row, i) => {
-  gsap.set(row, { opacity: 0, x: -40 });
-  gsap.to(row, {
-    opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+// DIRECTORY CARDS — stagger 3D flip in
+document.querySelectorAll('.dir-card').forEach((card, i) => {
+  gsap.set(card, { rotateY: -90, opacity: 0, scale: 0.8, transformOrigin: 'left center' });
+  gsap.to(card, {
+    rotateY: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.2)',
     delay: i * 0.04,
-    scrollTrigger: { trigger: '.dir-table', start: 'top 82%' }
+    scrollTrigger: { trigger: '#dirGrid', start: 'top 85%' }
   });
 });
+
+// Directory 3D tilt on hover
+document.querySelectorAll('.dir-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    gsap.to(card, {
+      rotateY: x * 12, rotateX: -y * 12,
+      scale: 1.04, duration: 0.3, ease: 'power2.out'
+    });
+  });
+  card.addEventListener('mouseleave', () => {
+    gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+  });
+});
+
+// Directory search + filter
+(function() {
+  const search = document.getElementById('dirSearch');
+  const grid = document.getElementById('dirGrid');
+  const cards = grid ? Array.from(grid.querySelectorAll('.dir-card')) : [];
+  const filterBtns = document.querySelectorAll('.dir-filter-btn');
+  let activeFilter = 'all';
+
+  function filterCards() {
+    const query = search ? search.value.toLowerCase() : '';
+    let visible = 0;
+    cards.forEach(card => {
+      const name = card.querySelector('.dir-card-name').textContent.toLowerCase();
+      const type = card.dataset.type;
+      const matchesSearch = name.includes(query);
+      const matchesFilter = activeFilter === 'all' || type === activeFilter || (activeFilter === 'school' && type === 'both') || (activeFilter === 'community' && type === 'both');
+      if (matchesSearch && matchesFilter) {
+        card.style.display = '';
+        gsap.to(card, { opacity: 1, scale: 1, duration: 0.3 });
+        visible++;
+      } else {
+        gsap.to(card, { opacity: 0, scale: 0.9, duration: 0.2, onComplete: () => { card.style.display = 'none'; } });
+      }
+    });
+    // Show empty state
+    let empty = grid.querySelector('.dir-empty');
+    if (visible === 0) {
+      if (!empty) {
+        empty = document.createElement('div');
+        empty.className = 'dir-empty';
+        empty.textContent = 'No chapters found.';
+        grid.appendChild(empty);
+      }
+    } else if (empty) {
+      empty.remove();
+    }
+  }
+
+  if (search) search.addEventListener('input', filterCards);
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      filterCards();
+    });
+  });
+})();
 
 // REQUIREMENTS scale pop
 document.querySelectorAll('.req-card').forEach((card, i) => {
@@ -1136,7 +1237,7 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .btn-ghost-dark').forEach(btn 
     attributionControl: false
   });
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 19
   }).addTo(map);
 
@@ -1145,8 +1246,8 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .btn-ghost-dark').forEach(btn 
   function pin(color) {
     return L.divIcon({
       className: '',
-      html: '<div style="width:14px;height:14px;border-radius:50%;background:'+color+';border:2.5px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>',
-      iconSize: [14,14], iconAnchor: [7,7]
+      html: '<div style="position:relative;width:22px;height:22px;"><div style="position:absolute;inset:0;border-radius:50%;background:'+color+';opacity:0.25;animation:mapPulse 2.5s ease-in-out infinite;"></div><div style="position:absolute;top:5px;left:5px;width:12px;height:12px;border-radius:50%;background:'+color+';border:2px solid rgba(255,255,255,0.9);box-shadow:0 0 12px '+color+';"></div></div>',
+      iconSize: [22,22], iconAnchor: [11,11]
     });
   }
 
