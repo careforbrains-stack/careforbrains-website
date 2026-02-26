@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STEM Exploration — CareForBrains</title>
+<title>STEM Internship — CareForBrains</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
@@ -83,14 +83,15 @@
   }
   /* Animated gradient orbs in background */
   .hero-orb {
-    position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0;
+    position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
   }
-  .hero-orb-1 { width: 500px; height: 500px; background: rgba(20,144,176,0.12); top: -10%; left: -10%; animation: orbDrift1 14s ease-in-out infinite alternate; }
-  .hero-orb-2 { width: 400px; height: 400px; background: rgba(56,192,212,0.08); bottom: 10%; right: -5%; animation: orbDrift2 18s ease-in-out infinite alternate; }
-  .hero-orb-3 { width: 300px; height: 300px; background: rgba(20,104,176,0.10); top: 40%; left: 30%; animation: orbDrift3 12s ease-in-out infinite alternate; }
-  @keyframes orbDrift1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(40px,-30px) scale(1.15); } }
-  @keyframes orbDrift2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-35px,25px) scale(1.1); } }
-  @keyframes orbDrift3 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(25px,-20px) scale(1.2); } }
+  .hero-orb-1 { width: 600px; height: 600px; background: rgba(20,144,176,0.18); filter: blur(90px); top: -15%; left: -12%; animation: orbDrift1 14s ease-in-out infinite alternate; }
+  .hero-orb-2 { width: 500px; height: 500px; background: rgba(56,192,212,0.14); filter: blur(100px); bottom: 5%; right: -8%; animation: orbDrift2 18s ease-in-out infinite alternate; }
+  .hero-orb-3 { width: 400px; height: 400px; background: rgba(20,104,176,0.15); filter: blur(80px); top: 35%; left: 25%; animation: orbDrift3 12s ease-in-out infinite alternate; }
+  .hero-orb-4 { width: 350px; height: 350px; background: rgba(56,192,212,0.10); filter: blur(110px); top: 10%; right: 20%; animation: orbDrift1 20s ease-in-out infinite alternate-reverse; }
+  @keyframes orbDrift1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(40px,-30px) scale(1.2); } }
+  @keyframes orbDrift2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-35px,25px) scale(1.15); } }
+  @keyframes orbDrift3 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(25px,-20px) scale(1.25); } }
 
   /* LEFT CONTENT */
   .hero-text { position: relative; z-index: 2; }
@@ -218,11 +219,29 @@
   .benefit-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 3rem; border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); }
   .benefit-col { padding: 2.5rem 1.8rem; border-right: 1px solid var(--rule); transition: background 0.4s; }
   .benefit-col:last-child { border-right: none; }
-  .benefit-col:hover { background: var(--teal-glow); }
+  .benefit-col:hover {
+    background: var(--teal-glow);
+    box-shadow: 0 8px 30px rgba(20,144,176,0.12), 0 0 60px rgba(20,144,176,0.06);
+    border-color: rgba(20,144,176,0.2);
+  }
   .benefit-col-icon { color: var(--teal-deep); margin-bottom: 1.5rem; }
   .benefit-col h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; letter-spacing: -0.3px; margin-bottom: 0.7rem; }
   .benefit-col p { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.7; }
-  .benefit-hours { display: inline-block; margin-top: 1rem; padding: 0.35rem 1rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal-deep); background: var(--teal-bg); border-radius: 100px; }
+  .benefit-hours {
+    display: inline-block; margin-top: 1rem; padding: 0.45rem 1.2rem;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--teal-deep); background: var(--teal-bg);
+    border-radius: 100px; position: relative;
+    box-shadow: 0 0 12px rgba(20,144,176,0.15), 0 0 30px rgba(20,144,176,0.08);
+    animation: hoursGlow 3s ease-in-out infinite alternate;
+  }
+  @keyframes hoursGlow {
+    0% { box-shadow: 0 0 12px rgba(20,144,176,0.15), 0 0 30px rgba(20,144,176,0.08); }
+    100% { box-shadow: 0 0 20px rgba(20,144,176,0.25), 0 0 45px rgba(56,192,212,0.12); }
+  }
+  .benefit-col:hover .benefit-hours {
+    box-shadow: 0 0 25px rgba(20,144,176,0.3), 0 0 50px rgba(56,192,212,0.15);
+  }
 
   /* CTA BANNER */
   .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
@@ -317,14 +336,15 @@
   <div class="hero-orb hero-orb-1"></div>
   <div class="hero-orb hero-orb-2"></div>
   <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-orb hero-orb-4"></div>
   <section class="page-hero">
     <div class="hero-text">
-      <div class="hero-tag r"><span class="dot"></span> STEM Exploration</div>
+      <div class="hero-tag r"><span class="dot"></span> STEM Internship</div>
       <h1 class="hero-h1">
         <span class="word-line"><span class="word">Where</span> <span class="word"><em>STEM</em></span></span>
         <span class="word-line"><span class="word">meets</span> <span class="word">mental</span> <span class="word"><em>health.</em></span></span>
       </h1>
-      <p class="hero-sub r">Learn the basics of Science, Technology, Engineering, and Mathematics — and discover how they connect to mental well-being.</p>
+      <p class="hero-sub r">A virtual internship exploring Science, Technology, Engineering, and Mathematics, and how they connect to mental well-being. Earn 40+ hours.</p>
       <div class="hero-actions r">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSevjer3uUBKmDF50-B6LoVDNacI5h9S5fcQn83od-73e6ZZnQ/viewform" class="btn-teal" target="_blank">Enroll Now <span class="arrow">↗</span></a>
         <a href="#learn" class="btn-ghost">What You'll Learn</a>
