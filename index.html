@@ -784,8 +784,9 @@
     <span class="scroll-hint-text">Scroll</span>
     <div class="scroll-hint-line"></div>
   </div>
-  <canvas id="particleNet" class="hero-visual"></canvas>
+  </div>
 </section>
+<canvas id="particleNet" class="hero-visual"></canvas>
 </div>
 
 <!-- MARQUEE -->
@@ -1331,7 +1332,7 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .cta-mega-btn').forEach(btn =>
   const MOUSE_RADIUS = 250;
 
   function resize() {
-    const rect = canvas.parentElement.getBoundingClientRect();
+    const rect = document.querySelector('.hero-wrap').getBoundingClientRect();
     w = rect.width; h = rect.height;
     canvas.width = w * dpr; canvas.height = h * dpr;
     canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
@@ -1427,12 +1428,13 @@ document.querySelectorAll('.btn-teal, .btn-ghost, .cta-mega-btn').forEach(btn =>
     requestAnimationFrame(draw);
   }
 
-  canvas.parentElement.addEventListener('mousemove', e => {
-    const rect = canvas.parentElement.getBoundingClientRect();
+  const heroWrap = document.querySelector('.hero-wrap');
+  heroWrap.addEventListener('mousemove', e => {
+    const rect = heroWrap.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
   });
-  canvas.parentElement.addEventListener('mouseleave', () => {
+  heroWrap.addEventListener('mouseleave', () => {
     mouse.x = -999; mouse.y = -999;
   });
 
