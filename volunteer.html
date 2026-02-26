@@ -194,9 +194,45 @@
   .scroll-hint-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--teal-light); animation: scrollPulse 2s ease-in-out infinite; }
   @keyframes scrollPulse { 0% { top: -100%; } 50% { top: 100%; } 100% { top: 100%; } }
 
+  /* AMBIENT FLOATING PARTICLES */
+  .ambient-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .ambient-particle {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(circle, rgba(20,144,176,0.15), transparent 70%);
+    filter: blur(1px); pointer-events: none; will-change: transform;
+    animation: floatParticle var(--dur, 12s) ease-in-out infinite alternate;
+  }
+  @keyframes floatParticle {
+    0% { transform: translate(0, 0) scale(1); opacity: var(--o1, 0.4); }
+    25% { transform: translate(var(--dx1, 30px), var(--dy1, -20px)) scale(var(--s1, 1.2)); }
+    50% { transform: translate(var(--dx2, -20px), var(--dy2, 40px)) scale(1); opacity: var(--o2, 0.7); }
+    75% { transform: translate(var(--dx3, 40px), var(--dy3, -10px)) scale(var(--s2, 0.8)); }
+    100% { transform: translate(var(--dx4, -10px), var(--dy4, 30px)) scale(1.1); opacity: var(--o1, 0.4); }
+  }
+
+  /* GLOW DIVIDER between sections */
+  .glow-divider {
+    height: 1px; position: relative; overflow: visible;
+    background: linear-gradient(90deg, transparent, rgba(20,144,176,0.3) 30%, rgba(56,192,212,0.5) 50%, rgba(20,144,176,0.3) 70%, transparent);
+  }
+  .glow-divider::after {
+    content: ''; position: absolute; top: -6px; left: 0; right: 0; height: 13px;
+    background: linear-gradient(90deg, transparent, rgba(20,144,176,0.08) 30%, rgba(56,192,212,0.12) 50%, rgba(20,144,176,0.08) 70%, transparent);
+    filter: blur(4px);
+  }
+
+  /* Track card shimmer */
+  .benefit-card::before {
+    content: ''; position: absolute; inset: -1px; border-radius: 17px; z-index: -1;
+    background: conic-gradient(from var(--shimmer-angle, 0deg), transparent 0%, rgba(20,144,176,0.15) 10%, transparent 20%);
+    opacity: 0; transition: opacity 0.5s;
+  }
+  .benefit-card { position: relative; overflow: visible; }
+  .benefit-card:hover::before { opacity: 1; }
+
   /* SECTIONS */
-  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; }
-  .sec-alt { background: var(--bg-alt); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6rem 2rem; }
+  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; position: relative; z-index: 1; }
+  .sec-alt { background: var(--bg-alt); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6rem 2rem; position: relative; z-index: 1; }
   .sec-inner { max-width: var(--max-w); margin: 0 auto; }
   .sec-tag { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--fg-muted); margin-bottom: 1.2rem; opacity: 0; }
   .sec-tag .line { width: 30px; height: 1px; background: var(--teal); }
@@ -244,6 +280,20 @@
   .benefit-card h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.6rem; }
   .benefit-card p { font-size: 0.88rem; color: var(--fg-sec); line-height: 1.7; }
 
+  /* Aurora glow behind PVSA visual */
+  .pvsa-visual::after {
+    content: ''; position: absolute; inset: -20px;
+    background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(20,144,176,0.08), transparent 70%);
+    border-radius: 30px; z-index: 0;
+    animation: pvsa-aura 6s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes pvsa-aura {
+    0% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+    50% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1.05) rotate(-1deg); opacity: 0.7; }
+  }
+
   /* CTA BANNER */
   .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
   .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(20,144,176,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%); pointer-events: none; }
@@ -289,6 +339,7 @@
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
+    .ambient-particles { display: none; }
   }
 </style>
 </head>
@@ -296,6 +347,16 @@
 <div class="cursor-glow"></div>
 <div class="cursor-dot"></div>
 <div class="scroll-progress"></div>
+
+<!-- Ambient floating particles -->
+<div class="ambient-particles">
+  <div class="ambient-particle" style="width:6px;height:6px;top:15%;left:8%;--dur:14s;--o1:0.3;--o2:0.6;--dx1:40px;--dy1:-30px;--dx2:-25px;--dy2:50px;--dx3:35px;--dy3:-15px;--dx4:-20px;--dy4:40px;--s1:1.3;--s2:0.7;"></div>
+  <div class="ambient-particle" style="width:4px;height:4px;top:30%;right:12%;--dur:11s;--o1:0.25;--o2:0.5;--dx1:-30px;--dy1:25px;--dx2:45px;--dy2:-35px;--dx3:-15px;--dy3:20px;--dx4:30px;--dy4:-25px;--s1:1.1;--s2:0.9;"></div>
+  <div class="ambient-particle" style="width:8px;height:8px;top:50%;left:5%;--dur:16s;--o1:0.2;--o2:0.45;--dx1:25px;--dy1:-45px;--dx2:-35px;--dy2:30px;--dx3:50px;--dy3:-20px;--dx4:-15px;--dy4:35px;--s1:1.4;--s2:0.6;"></div>
+  <div class="ambient-particle" style="width:5px;height:5px;top:65%;right:7%;--dur:13s;--o1:0.35;--o2:0.55;--dx1:-20px;--dy1:35px;--dx2:30px;--dy2:-40px;--dx3:-40px;--dy3:15px;--dx4:25px;--dy4:-30px;--s1:1.2;--s2:0.8;"></div>
+  <div class="ambient-particle" style="width:3px;height:3px;top:80%;left:15%;--dur:10s;--o1:0.3;--o2:0.65;--dx1:35px;--dy1:-20px;--dx2:-25px;--dy2:45px;--dx3:20px;--dy3:-35px;--dx4:-30px;--dy4:25px;--s1:1.15;--s2:0.85;"></div>
+  <div class="ambient-particle" style="width:7px;height:7px;top:40%;left:92%;--dur:15s;--o1:0.2;--o2:0.5;--dx1:-35px;--dy1:-25px;--dx2:20px;--dy2:40px;--dx3:-25px;--dy3:-30px;--dx4:40px;--dy4:20px;--s1:1.25;--s2:0.75;"></div>
+</div>
 
 <nav>
   <div class="nav-inner">
@@ -359,6 +420,8 @@
   </div>
 </section>
 
+<div class="glow-divider"></div>
+
 <!-- VOLUNTEER TRACKS -->
 <div class="sec-alt" id="tracks">
   <div class="sec-inner">
@@ -402,6 +465,8 @@
   </div>
 </div>
 
+<div class="glow-divider"></div>
+
 <!-- WHAT WE OFFER -->
 <section class="sec" id="offer">
   <div class="sec-tag"><span class="line"></span> / What We Offer · N. 02</div>
@@ -438,6 +503,8 @@
     </div>
   </div>
 </section>
+
+<div class="glow-divider"></div>
 
 <!-- PVSA SECTION -->
 <div class="sec-alt" id="pvsa">
@@ -735,6 +802,39 @@ const progressBar = document.querySelector('.scroll-progress');
 if (progressBar) {
   window.addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; });
 }
+
+// Ambient particles — parallax drift on scroll
+const particles = document.querySelectorAll('.ambient-particle');
+if (particles.length) {
+  window.addEventListener('scroll', () => {
+    const sy = window.scrollY;
+    particles.forEach((p, i) => {
+      const speed = 0.02 + (i % 3) * 0.015;
+      const dir = i % 2 === 0 ? 1 : -1;
+      p.style.transform = `translateY(${sy * speed * dir}px)`;
+    });
+  });
+}
+
+// Glow dividers — animate on scroll
+document.querySelectorAll('.glow-divider').forEach(div => {
+  gsap.set(div, { scaleX: 0, transformOrigin: 'center' });
+  gsap.to(div, {
+    scaleX: 1, duration: 1.5, ease: 'power2.inOut',
+    scrollTrigger: { trigger: div, start: 'top 92%' }
+  });
+});
+
+// Card shimmer angle rotation on mousemove
+document.querySelectorAll('.benefit-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const angle = Math.atan2(y - rect.height/2, x - rect.width/2) * (180 / Math.PI);
+    card.style.setProperty('--shimmer-angle', angle + 'deg');
+  });
+});
 
 // Magnetic buttons
 document.querySelectorAll('.btn-teal, .btn-ghost').forEach(btn => {

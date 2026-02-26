@@ -258,10 +258,11 @@
   .ticker-dot.t-both { background: var(--teal-light); }
 
   /* SECTION SYSTEM */
-  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; }
+  .sec { max-width: var(--max-w); margin: 0 auto; padding: 6rem 2rem; position: relative; z-index: 1; }
   .sec-alt {
     background: var(--bg-alt); border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule); padding: 6rem 2rem;
+    position: relative; z-index: 1;
   }
   .sec-inner { max-width: var(--max-w); margin: 0 auto; }
   .sec-tag {
@@ -398,26 +399,104 @@
     display: inline-flex; align-items: center;
   }
 
-  /* START A CHAPTER */
+  /* FLOATING GEOMETRIC SHAPES — ambient aura */
+  .geo-shapes { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .geo-shape {
+    position: absolute; pointer-events: none; will-change: transform;
+    opacity: 0.06;
+  }
+  .geo-ring {
+    border: 1.5px solid var(--teal);
+    border-radius: 50%;
+    animation: geoFloat var(--dur, 20s) ease-in-out infinite alternate;
+  }
+  .geo-line {
+    height: 1.5px; background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    transform-origin: center;
+    animation: geoRotate var(--dur, 25s) linear infinite;
+  }
+  .geo-diamond {
+    border: 1.5px solid var(--teal-light);
+    transform: rotate(45deg);
+    animation: geoDiamond var(--dur, 18s) ease-in-out infinite alternate;
+  }
+  @keyframes geoFloat {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    33% { transform: translate(var(--dx1, 20px), var(--dy1, -30px)) rotate(60deg) scale(1.1); }
+    66% { transform: translate(var(--dx2, -15px), var(--dy2, 25px)) rotate(120deg) scale(0.9); }
+    100% { transform: translate(var(--dx3, 10px), var(--dy3, -20px)) rotate(180deg) scale(1.05); }
+  }
+  @keyframes geoRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes geoDiamond {
+    0% { transform: rotate(45deg) translate(0, 0) scale(1); opacity: 0.04; }
+    50% { transform: rotate(45deg) translate(var(--dx1, 15px), var(--dy1, -20px)) scale(1.15); opacity: 0.08; }
+    100% { transform: rotate(45deg) translate(var(--dx2, -10px), var(--dy2, 15px)) scale(0.95); opacity: 0.05; }
+  }
+
+  /* Section aurora glow — behind why-start section */
+  .sec-aurora {
+    position: relative;
+  }
+  .sec-aurora::before {
+    content: ''; position: absolute; top: -60px; right: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(20,144,176,0.06), transparent 70%);
+    filter: blur(40px); pointer-events: none;
+    animation: auroraFloat 12s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  .sec-aurora::after {
+    content: ''; position: absolute; bottom: -40px; left: -80px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,192,212,0.05), transparent 70%);
+    filter: blur(30px); pointer-events: none;
+    animation: auroraFloat2 10s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  @keyframes auroraFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, -25px) scale(1.15); }
+  }
+  @keyframes auroraFloat2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-20px, 15px) scale(1.1); }
+  }
+
+  /* START A CHAPTER — pillar cards */
   .req-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
+    display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem; margin: 3rem 0;
   }
   .req-card {
     background: var(--card); border: 1px solid var(--card-border);
     border-radius: 14px; padding: 2rem 1.5rem;
-    transition: all 0.3s;
+    transition: all 0.4s var(--ease-spring);
+    position: relative; overflow: hidden;
   }
+  .req-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--gradient); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+  .req-card:hover::after { transform: scaleX(1); }
   .req-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 35px rgba(20,144,176,0.1);
-    border-color: var(--teal);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 45px rgba(20,144,176,0.12);
+    border-color: rgba(20,144,176,0.3);
   }
   .req-icon {
-    width: 44px; height: 44px; border-radius: 12px;
+    width: 48px; height: 48px; border-radius: 14px;
     background: var(--teal-glow); display: flex;
     align-items: center; justify-content: center;
     font-size: 1.2rem; margin-bottom: 1.2rem; color: var(--teal);
+    transition: all 0.4s;
+  }
+  .req-card:hover .req-icon {
+    background: var(--gradient); color: white;
+    box-shadow: 0 4px 15px rgba(20,144,176,0.3);
   }
   .req-card h4 {
     font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem;
@@ -426,62 +505,31 @@
     font-size: 0.85rem; color: var(--fg-sec); line-height: 1.6;
   }
 
-  /* STEPS */
-  .steps-list {
-    margin-top: 3rem;
-  }
-  .step-item {
-    display: grid; grid-template-columns: 4rem 1fr;
-    gap: 1rem; align-items: start;
-    padding: 1.6rem 0; border-bottom: 1px solid var(--rule);
-    transition: all 0.3s; cursor: default;
-  }
-  .step-item:first-child { border-top: 1px solid var(--rule); }
-  .step-item:hover { padding-left: 0.8rem; }
-  .step-item:hover .step-num { color: var(--teal); }
-  .step-num {
-    font-family: var(--serif); font-size: 1.6rem; font-style: italic;
-    color: var(--fg-muted); transition: color 0.3s;
-    padding-top: 0.1rem;
-  }
-  .step-item h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
-  .step-item p { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.6; }
-
-  /* BENEFITS */
-  .benefits-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem; margin-top: 3rem;
-  }
-  .benefit-card {
-    background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 14px; padding: 2rem 1.5rem;
-    transition: all 0.3s;
-  }
-  .benefit-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 35px rgba(20,144,176,0.1);
-    border-color: var(--teal);
-  }
-  .benefit-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    background: var(--teal-glow); display: flex;
-    align-items: center; justify-content: center;
-    font-size: 1.2rem; margin-bottom: 1.2rem; color: var(--teal-deep);
-  }
-  .benefit-card h4 {
-    font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem;
-  }
-  .benefit-card p {
-    font-size: 0.85rem; color: var(--fg-sec); line-height: 1.6;
-  }
-
   /* CTA BANNER */
   .cta-wrap {
     position: relative; overflow: hidden;
     background: var(--bg-dark); padding: 7rem 2rem;
   }
+  .cta-wrap::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(20,144,176,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 30% 40% at 50% 50%, rgba(20,104,176,0.08) 0%, transparent 50%);
+    animation: ctaAura 10s ease-in-out infinite alternate;
+    pointer-events: none; z-index: 0;
+  }
+  .cta-wrap::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(9,26,38,0) 0%, rgba(9,26,38,0.6) 100%);
+    pointer-events: none; z-index: 1;
+  }
+  @keyframes ctaAura {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.08) rotate(1deg); }
+  }
   .cta-content {
-    position: relative; z-index: 2;
+    position: relative; z-index: 3;
     max-width: var(--max-w); margin: 0 auto; text-align: center;
   }
   .cta-title {
@@ -533,7 +581,6 @@
   @media (max-width: 1024px) {
     .ch-map-wrap { height: 400px; }
     .req-grid { grid-template-columns: 1fr 1fr; }
-    .benefits-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 768px) {
     .dir-table thead { display: none; }
@@ -563,8 +610,8 @@
     .sec, .sec-alt { padding: 4rem 1.5rem; }
     .cta-wrap { padding: 5rem 1.5rem; }
     .req-grid { grid-template-columns: 1fr; }
-    .benefits-grid { grid-template-columns: 1fr; }
     .ch-header { flex-direction: column; align-items: flex-start; }
+    .geo-shapes { display: none; }
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
@@ -598,6 +645,16 @@
 <div class="cursor-dot"></div>
 <!-- Scroll Progress -->
 <div class="scroll-progress"></div>
+
+<!-- Floating geometric shapes -->
+<div class="geo-shapes">
+  <div class="geo-shape geo-ring" style="width:80px;height:80px;top:18%;left:6%;--dur:22s;--dx1:25px;--dy1:-35px;--dx2:-20px;--dy2:30px;--dx3:15px;--dy3:-20px;"></div>
+  <div class="geo-shape geo-line" style="width:120px;top:35%;right:8%;--dur:30s;opacity:0.04;"></div>
+  <div class="geo-shape geo-diamond" style="width:30px;height:30px;top:55%;left:4%;--dur:16s;--dx1:20px;--dy1:-25px;--dx2:-15px;--dy2:20px;"></div>
+  <div class="geo-shape geo-ring" style="width:50px;height:50px;top:70%;right:5%;--dur:19s;--dx1:-30px;--dy1:20px;--dx2:25px;--dy2:-15px;--dx3:-10px;--dy3:25px;"></div>
+  <div class="geo-shape geo-line" style="width:80px;top:45%;left:10%;--dur:35s;opacity:0.03;"></div>
+  <div class="geo-shape geo-diamond" style="width:20px;height:20px;top:25%;right:15%;--dur:14s;--dx1:-15px;--dy1:20px;--dx2:10px;--dy2:-15px;"></div>
+</div>
 
 <!-- PAGE HERO -->
 <div class="hero-wrap">
@@ -756,14 +813,14 @@
 </div>
 
 <!-- WHY START A CHAPTER -->
-<section class="sec" id="start">
+<section class="sec sec-aurora" id="start">
   <div class="r">
     <div class="sec-tag"><span class="line"></span> / Why &middot; N. 03</div>
     <h2 class="sec-title">Why start a chapter?</h2>
     <p class="sec-desc">Starting a CareForBrains chapter means becoming a mental health leader in your school or community. Whether you're passionate about advocacy, connection, or change — your chapter helps spark important conversations.</p>
   </div>
 
-  <div class="req-grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="req-grid">
     <div class="req-card r">
       <div class="req-icon">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783M10.34 6.66a23.847 23.847 0 008.835-2.535"/></svg>
@@ -963,25 +1020,18 @@ document.querySelectorAll('.req-card').forEach((card, i) => {
   });
 });
 
-// STEPS slide in from left
-document.querySelectorAll('.step-item').forEach((step, i) => {
-  gsap.set(step, { x: -60, opacity: 0 });
-  gsap.to(step, {
-    x: 0, opacity: 1, duration: 1, ease: 'power3.out',
-    delay: i * 0.12,
-    scrollTrigger: { trigger: '.steps-list', start: 'top 82%' }
+// GEO SHAPES parallax on scroll
+const geoShapes = document.querySelectorAll('.geo-shape');
+if (geoShapes.length) {
+  window.addEventListener('scroll', () => {
+    const sy = window.scrollY;
+    geoShapes.forEach((s, i) => {
+      const speed = 0.015 + (i % 3) * 0.01;
+      const dir = i % 2 === 0 ? 1 : -1;
+      s.style.transform = `translateY(${sy * speed * dir}px)`;
+    });
   });
-});
-
-// BENEFITS rotateX flip in
-document.querySelectorAll('.benefit-card').forEach((card, i) => {
-  gsap.set(card, { rotateX: -30, opacity: 0, transformOrigin: 'bottom center' });
-  gsap.to(card, {
-    rotateX: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
-    delay: i * 0.1,
-    scrollTrigger: { trigger: '.benefits-grid', start: 'top 82%' }
-  });
-});
+}
 
 // CTA fade up
 const ctaTitle = document.querySelector('.cta-title');
@@ -1004,7 +1054,7 @@ if (ctaBtns) {
 // GENERIC REVEALS
 document.querySelectorAll('.r, .r-scale, .r-left, .r-right').forEach(el => {
   if (el.closest('.page-hero') || el.classList.contains('sec-tag')) return;
-  if (el.matches('.sec-title, .req-card, .step-item, .benefit-card, .cta-title, .cta-btns')) return;
+  if (el.matches('.sec-title, .req-card, .cta-title, .cta-btns')) return;
   if (el.closest('.dir-table')) return;
   if (el.classList.contains('ch-map-wrap')) return;
   const dir = el.classList.contains('r-left') ? -80 : el.classList.contains('r-right') ? 80 : 0;
@@ -1038,7 +1088,7 @@ if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
     requestAnimationFrame(updateCursor);
   }
   updateCursor();
-  document.querySelectorAll('a, button, .btn-teal, .btn-ghost, .btn-ghost-dark, .req-card, .benefit-card').forEach(el => {
+  document.querySelectorAll('a, button, .btn-teal, .btn-ghost, .btn-ghost-dark, .req-card').forEach(el => {
     el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
     el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
   });
