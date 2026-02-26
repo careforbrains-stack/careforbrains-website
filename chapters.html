@@ -335,50 +335,22 @@
     position: relative; padding: 3px; border-radius: 20px;
     background: linear-gradient(135deg, var(--teal-deep), var(--teal-light), var(--blue), var(--teal-deep));
     background-size: 300% 300%;
-    animation: mapBorderGlow 6s ease-in-out infinite;
+    animation: mapBorderGlow 8s linear infinite;
     box-shadow:
-      0 0 40px rgba(20,144,176,0.25),
-      0 0 80px rgba(20,144,176,0.15),
-      0 0 120px rgba(56,192,212,0.08),
-      0 20px 60px rgba(0,0,0,0.15);
+      0 0 40px rgba(20,144,176,0.2),
+      0 0 80px rgba(20,144,176,0.1),
+      0 20px 60px rgba(0,0,0,0.12);
   }
   @keyframes mapBorderGlow {
-    0%, 100% { background-position: 0% 50%; box-shadow: 0 0 40px rgba(20,144,176,0.25), 0 0 80px rgba(20,144,176,0.15), 0 0 120px rgba(56,192,212,0.08), 0 20px 60px rgba(0,0,0,0.15); }
-    25% { background-position: 100% 0%; box-shadow: 0 0 50px rgba(56,192,212,0.3), 0 0 100px rgba(20,144,176,0.18), 0 0 150px rgba(20,104,176,0.1), 0 20px 60px rgba(0,0,0,0.15); }
-    50% { background-position: 100% 100%; box-shadow: 0 0 60px rgba(20,144,176,0.3), 0 0 110px rgba(56,192,212,0.2), 0 0 160px rgba(20,144,176,0.1), 0 20px 60px rgba(0,0,0,0.15); }
-    75% { background-position: 0% 100%; box-shadow: 0 0 45px rgba(20,104,176,0.28), 0 0 90px rgba(20,144,176,0.16), 0 0 140px rgba(56,192,212,0.09), 0 20px 60px rgba(0,0,0,0.15); }
+    0%, 100% { background-position: 0% 50%; }
+    25% { background-position: 100% 0%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
   }
   .ch-map-outer::before {
-    content: ''; position: absolute; inset: -14px; border-radius: 28px;
-    background: linear-gradient(135deg, rgba(20,144,176,0.2), transparent, rgba(56,192,212,0.25), transparent, rgba(20,104,176,0.15));
-    background-size: 300% 300%;
-    animation: mapBorderGlow 6s ease-in-out infinite;
-    filter: blur(20px); z-index: -1; pointer-events: none;
-  }
-
-  /* Floating particles around the map */
-  .ch-map-particles {
-    position: absolute; inset: -60px; z-index: 0; pointer-events: none; overflow: hidden;
-  }
-  .ch-map-particle {
-    position: absolute; border-radius: 50%; pointer-events: none;
-    animation: mapParticleFloat var(--dur, 8s) ease-in-out infinite alternate;
-  }
-  @keyframes mapParticleFloat {
-    0% { transform: translate(0, 0) scale(1); opacity: var(--o1, 0.4); }
-    50% { transform: translate(var(--dx, 15px), var(--dy, -20px)) scale(var(--s, 1.3)); opacity: var(--o2, 0.8); }
-    100% { transform: translate(var(--dx2, -10px), var(--dy2, 10px)) scale(1); opacity: var(--o1, 0.4); }
-  }
-
-  /* Outer aura haze ring */
-  .ch-map-aura {
-    position: absolute; inset: -30px; border-radius: 32px; z-index: -2; pointer-events: none;
-    background: radial-gradient(ellipse at 50% 50%, rgba(20,144,176,0.12) 0%, rgba(56,192,212,0.06) 40%, transparent 70%);
-    animation: auraBreath 4s ease-in-out infinite alternate;
-  }
-  @keyframes auraBreath {
-    0% { transform: scale(1); opacity: 0.7; filter: blur(25px); }
-    100% { transform: scale(1.06); opacity: 1; filter: blur(35px); }
+    content: ''; position: absolute; inset: -12px; border-radius: 26px;
+    background: radial-gradient(ellipse at 50% 50%, rgba(20,144,176,0.15) 0%, rgba(56,192,212,0.08) 50%, transparent 70%);
+    filter: blur(16px); z-index: -1; pointer-events: none;
   }
 
   /* Corner accent lines */
@@ -386,12 +358,7 @@
     content: ''; position: absolute; top: -1px; right: -1px;
     width: 60px; height: 60px; border-radius: 0 20px 0 0;
     border-top: 2px solid var(--teal-light); border-right: 2px solid var(--teal-light);
-    opacity: 0.4; pointer-events: none; z-index: 2;
-    animation: cornerPulse 3s ease-in-out infinite alternate;
-  }
-  @keyframes cornerPulse {
-    0% { opacity: 0.2; transform: scale(1); }
-    100% { opacity: 0.6; transform: scale(1.05); }
+    opacity: 0.35; pointer-events: none; z-index: 2;
   }
 
   .ch-map-wrap {
@@ -403,28 +370,10 @@
   #chapterMap { height: 100%; width: 100%; }
   .ch-map-wrap .leaflet-container { background: #0d1b2a; }
 
-  /* Scan line overlay on the map */
-  .ch-map-scanline {
-    position: absolute; inset: 0; z-index: 10; pointer-events: none;
-    background: repeating-linear-gradient(
-      0deg, transparent, transparent 3px, rgba(20,144,176,0.015) 3px, rgba(20,144,176,0.015) 4px
-    );
-  }
-  .ch-map-scanline::before {
-    content: ''; position: absolute; left: 0; right: 0;
-    height: 80px; top: -80px;
-    background: linear-gradient(180deg, transparent, rgba(56,192,212,0.06));
-    animation: scanMove 5s linear infinite;
-  }
-  @keyframes scanMove {
-    0% { top: -80px; }
-    100% { top: 100%; }
-  }
-
   /* Vignette overlay */
   .ch-map-vignette {
     position: absolute; inset: 0; z-index: 9; pointer-events: none;
-    background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 50%, rgba(13,27,42,0.5) 100%);
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 50%, rgba(13,27,42,0.4) 100%);
   }
 
   /* Coordinate readout */
@@ -897,18 +846,8 @@
     </div>
   </div>
   <div class="ch-map-outer r">
-    <div class="ch-map-aura"></div>
-    <div class="ch-map-particles">
-      <div class="ch-map-particle" style="width:4px;height:4px;background:var(--teal-light);top:10%;left:5%;--dur:7s;--dx:20px;--dy:-15px;--dx2:-10px;--dy2:12px;--o1:0.2;--o2:0.5;--s:1.4;"></div>
-      <div class="ch-map-particle" style="width:3px;height:3px;background:var(--teal);top:80%;right:8%;--dur:9s;--dx:-18px;--dy:12px;--dx2:14px;--dy2:-8px;--o1:0.15;--o2:0.4;--s:1.6;"></div>
-      <div class="ch-map-particle" style="width:5px;height:5px;background:var(--blue);top:40%;left:2%;--dur:11s;--dx:12px;--dy:-22px;--dx2:-8px;--dy2:16px;--o1:0.1;--o2:0.35;--s:1.2;"></div>
-      <div class="ch-map-particle" style="width:3px;height:3px;background:var(--teal-light);bottom:15%;right:3%;--dur:6s;--dx:-14px;--dy:10px;--dx2:10px;--dy2:-14px;--o1:0.2;--o2:0.5;--s:1.5;"></div>
-      <div class="ch-map-particle" style="width:4px;height:4px;background:var(--teal-deep);top:20%;right:4%;--dur:10s;--dx:16px;--dy:18px;--dx2:-12px;--dy2:-10px;--o1:0.15;--o2:0.4;--s:1.3;"></div>
-      <div class="ch-map-particle" style="width:2px;height:2px;background:var(--teal-light);bottom:30%;left:6%;--dur:8s;--dx:-10px;--dy:-16px;--dx2:8px;--dy2:12px;--o1:0.25;--o2:0.6;--s:1.8;"></div>
-    </div>
     <div class="ch-map-wrap">
       <div id="chapterMap"></div>
-      <div class="ch-map-scanline"></div>
       <div class="ch-map-vignette"></div>
       <div class="ch-map-coords">37.5°N 96.0°W · LIVE</div>
     </div>
@@ -1144,9 +1083,9 @@ document.querySelectorAll('.sec-title').forEach(title => {
 // MAP reveal — scale up with glow
 const mapOuter = document.querySelector('.ch-map-outer');
 if (mapOuter) {
-  gsap.set(mapOuter, { scale: 0.85, opacity: 0, filter: 'blur(8px)' });
+  gsap.set(mapOuter, { y: 40, opacity: 0 });
   gsap.to(mapOuter, {
-    scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.6, ease: 'power3.out',
+    y: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
     scrollTrigger: { trigger: mapOuter, start: 'top 85%' }
   });
 }
