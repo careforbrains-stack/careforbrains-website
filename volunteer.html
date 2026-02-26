@@ -244,16 +244,6 @@
   .benefit-card h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 0.6rem; }
   .benefit-card p { font-size: 0.88rem; color: var(--fg-sec); line-height: 1.7; }
 
-  /* STATS ROW */
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule); margin-top: 3rem; }
-  .stat-item { padding: 3rem 1.5rem; text-align: center; position: relative; }
-  .stat-item:not(:last-child) { border-right: 1px solid var(--rule); }
-  .stat-num { font-family: var(--serif); font-size: 4.5rem; font-weight: 400; letter-spacing: -3px; line-height: 1; color: var(--teal-deep); }
-  .stat-item:nth-child(2) .stat-num { color: var(--teal); }
-  .stat-item:nth-child(3) .stat-num { color: var(--blue); }
-  .stat-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 1rem; color: var(--fg); }
-  .stat-sub { font-size: 0.78rem; color: var(--fg-muted); margin-top: 0.4rem; line-height: 1.5; }
-
   /* CTA BANNER */
   .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
   .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(20,144,176,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(56,192,212,0.10) 0%, transparent 60%); pointer-events: none; }
@@ -296,9 +286,6 @@
     .step-card { border-right: none !important; border-bottom: 1px solid var(--rule); }
     .step-card:last-child { border-bottom: none; }
     .benefits-grid { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: 1fr; }
-    .stat-item { border-right: none !important; border-bottom: 1px solid var(--rule); }
-    .stat-item:last-child { border-bottom: none; }
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
@@ -372,33 +359,10 @@
   </div>
 </section>
 
-<!-- IMPACT STATS -->
-<section class="sec" id="impact">
-  <div class="sec-tag"><span class="line"></span> / Impact · N. 01</div>
-  <h2 class="sec-title">Our volunteers, by the numbers</h2>
-  <div class="stats-row">
-    <div class="stat-item r">
-      <div class="stat-num">852+</div>
-      <div class="stat-label">Active Volunteers</div>
-      <div class="stat-sub">Across all chapters nationwide</div>
-    </div>
-    <div class="stat-item r">
-      <div class="stat-num">18,121</div>
-      <div class="stat-label">Hours Logged</div>
-      <div class="stat-sub">And counting every single day</div>
-    </div>
-    <div class="stat-item r">
-      <div class="stat-num">16</div>
-      <div class="stat-label">Active Chapters</div>
-      <div class="stat-sub">US and Canada</div>
-    </div>
-  </div>
-</section>
-
 <!-- VOLUNTEER TRACKS -->
 <div class="sec-alt" id="tracks">
   <div class="sec-inner">
-    <div class="sec-tag"><span class="line"></span> / Volunteer Tracks · N. 02</div>
+    <div class="sec-tag"><span class="line"></span> / Volunteer Tracks · N. 01</div>
     <h2 class="sec-title">Choose your track</h2>
     <p class="sec-desc r" style="margin-bottom: 0;">Each track earns you <strong>50+ volunteer hours</strong>. All tracks are completely virtual — participate from anywhere.</p>
     <div class="benefits-grid">
@@ -440,7 +404,7 @@
 
 <!-- WHAT WE OFFER -->
 <section class="sec" id="offer">
-  <div class="sec-tag"><span class="line"></span> / What We Offer · N. 03</div>
+  <div class="sec-tag"><span class="line"></span> / What We Offer · N. 02</div>
   <h2 class="sec-title">What you'll receive</h2>
   <p class="sec-desc r" style="margin-bottom: 0;">Every volunteer receives official recognition and verification for their service.</p>
   <div class="steps-grid offer-grid">
@@ -478,7 +442,7 @@
 <!-- PVSA SECTION -->
 <div class="sec-alt" id="pvsa">
   <div class="sec-inner">
-    <div class="sec-tag"><span class="line"></span> / Recognition · N. 04</div>
+    <div class="sec-tag"><span class="line"></span> / Recognition · N. 03</div>
     <h2 class="sec-title">PVSA certified hours</h2>
     <div class="pvsa-grid">
       <div class="pvsa-info">
@@ -700,12 +664,6 @@ document.querySelectorAll('.sec-title').forEach(title => {
   const tw = title.querySelectorAll('.tw');
   gsap.set(tw, { yPercent: 110 });
   gsap.to(tw, { yPercent: 0, duration: 1.2, stagger: 0.05, ease: 'power4.out', scrollTrigger: { trigger: title, start: 'top 85%' } });
-});
-
-// Stats — 3D rotateX flip in
-document.querySelectorAll('.stat-item').forEach((item, i) => {
-  gsap.set(item, { opacity: 0, rotateX: -45, filter: 'blur(4px)' });
-  gsap.to(item, { opacity: 1, rotateX: 0, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out', delay: i * 0.15, scrollTrigger: { trigger: '.stats-row', start: 'top 82%' } });
 });
 
 // Offer steps — stagger slide from right with scale
