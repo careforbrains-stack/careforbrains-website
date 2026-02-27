@@ -655,10 +655,9 @@
   // Mobile fullscreen menu
 (function(){
   var ham = document.getElementById('hamburger');
-  var menu = document.getElementById('mobileMenu');
-  var closeBtn = document.getElementById('mobileMenuClose');
+  var menuSrc = document.getElementById('mobileMenu');
   var nl = document.querySelector('.nav-links');
-  if(!ham||!menu) return;
+  if(!ham||!menuSrc) return;
   // Remove nav-links from DOM on mobile
   if(nl && nl.parentNode && window.innerWidth<=900) nl.parentNode.removeChild(nl);
   window.addEventListener('resize', function(){
@@ -669,30 +668,53 @@
       ham.style.removeProperty('display');
     }
   });
+  var overlay = null;
   function openMenu(){
-    // Move menu out of <body> to <html> so no GSAP/Lenis transforms can interfere
-    document.documentElement.appendChild(menu);
-    // Hide entire body
+    if(overlay) return;
+    // Create a brand new div — no CSS classes, pure inline styles
+    overlay = document.createElement('div');
+    overlay.id = 'mm-overlay';
+    overlay.innerHTML = menuSrc.innerHTML;
+    // Apply every style with !important via setProperty
+    var s = overlay.style;
+    s.setProperty('display','flex','important');
+    s.setProperty('flex-direction','column','important');
+    s.setProperty('position','fixed','important');
+    s.setProperty('top','0','important');
+    s.setProperty('left','0','important');
+    s.setProperty('right','0','important');
+    s.setProperty('bottom','0','important');
+    s.setProperty('width','100vw','important');
+    s.setProperty('height','100vh','important');
+    s.setProperty('z-index','2147483647','important');
+    s.setProperty('background','#080C18','important');
+    s.setProperty('background-color','#080C18','important');
+    s.setProperty('overflow-y','auto','important');
+    s.setProperty('margin','0','important');
+    s.setProperty('padding','0','important');
+    s.setProperty('opacity','1','important');
+    s.setProperty('visibility','visible','important');
+    s.setProperty('transform','none','important');
+    s.setProperty('filter','none','important');
+    s.setProperty('-webkit-transform','none','important');
+    s.setProperty('box-sizing','border-box','important');
+    // Append to <html>, hide <body>
+    document.documentElement.appendChild(overlay);
     document.body.style.setProperty('display','none','important');
-    // Show menu with inline styles
-    menu.style.cssText='display:flex !important;flex-direction:column;position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;z-index:2147483647;background-color:#080C18;overflow-y:auto;margin:0;padding:0;';
-    // Kill transforms on html that Lenis/GSAP might have added
-    document.documentElement.style.overflow='hidden';
-    document.documentElement.style.transform='none';
+    document.documentElement.style.setProperty('overflow','hidden','important');
+    // Wire up close button
+    var closeBtn = overlay.querySelector('.mobile-menu-close');
+    if(closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
   }
   function closeMenu(){
-    // Restore body
+    if(!overlay) return;
+    overlay.remove();
+    overlay = null;
     document.body.style.removeProperty('display');
-    // Move menu back into body
-    document.body.appendChild(menu);
-    // Clear inline styles
-    menu.style.cssText='';
-    document.documentElement.style.overflow='';
-    document.documentElement.style.transform='';
+    document.documentElement.style.removeProperty('overflow');
   }
   ham.addEventListener('click', openMenu);
-  if(closeBtn) closeBtn.addEventListener('click', closeMenu);
-  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
 })();
 </script>
 
