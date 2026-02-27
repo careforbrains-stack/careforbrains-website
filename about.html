@@ -600,9 +600,8 @@
   // Mobile fullscreen menu
 (function(){
   var ham = document.getElementById('hamburger');
-  var menuSrc = document.getElementById('mobileMenu');
   var nl = document.querySelector('.nav-links');
-  if(!ham||!menuSrc) return;
+  if(!ham) return;
   if(nl && nl.parentNode && window.innerWidth<=900) nl.parentNode.removeChild(nl);
   window.addEventListener('resize', function(){
     if(window.innerWidth<=900){
@@ -612,75 +611,21 @@
       ham.style.removeProperty('display');
     }
   });
-  var overlay = null;
-  var savedHtmlClass = '';
-  function openMenu(){
-    if(overlay) return;
-    // 1. STOP GSAP ticker + Lenis so they can't fight our styles
-    try{if(typeof gsap!=='undefined')gsap.ticker.sleep();}catch(e){}
-    try{if(typeof lenis!=='undefined')lenis.stop();}catch(e){}
-    // 2. Save and clear html className (Lenis keeps modifying it)
-    savedHtmlClass = document.documentElement.className;
-    document.documentElement.className = '';
-    // 3. Hide body completely
-    document.body.style.setProperty('display','none','important');
-    // 4. Set html element styles — dark background, no scroll, full viewport
-    var hs = document.documentElement.style;
-    hs.setProperty('background','#080C18','important');
-    hs.setProperty('background-color','#080C18','important');
-    hs.setProperty('overflow','hidden','important');
-    hs.setProperty('height','100%','important');
-    hs.setProperty('margin','0','important');
-    hs.setProperty('padding','0','important');
-    hs.setProperty('transform','none','important');
-    hs.setProperty('-webkit-transform','none','important');
-    hs.setProperty('will-change','auto','important');
-    // 5. Create overlay — NO position:fixed, just a regular block filling html
-    overlay = document.createElement('div');
-    overlay.innerHTML = menuSrc.innerHTML;
-    var s = overlay.style;
-    s.setProperty('display','flex','important');
-    s.setProperty('flex-direction','column','important');
-    s.setProperty('min-height','100vh','important');
-    s.setProperty('min-height','100dvh','important');
-    s.setProperty('width','100%','important');
-    s.setProperty('background','#080C18','important');
-    s.setProperty('background-color','#080C18','important');
-    s.setProperty('overflow-y','auto','important');
-    s.setProperty('margin','0','important');
-    s.setProperty('padding','0','important');
-    s.setProperty('color','white','important');
-    s.setProperty('box-sizing','border-box','important');
-    document.documentElement.appendChild(overlay);
-    // 6. Wire up close
-    var closeBtn = overlay.querySelector('.mobile-menu-close');
-    if(closeBtn) closeBtn.addEventListener('click', closeMenu);
-    overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
-  }
-  function closeMenu(){
-    if(!overlay) return;
-    overlay.remove();
-    overlay = null;
-    // Restore body
-    document.body.style.removeProperty('display');
-    // Restore html styles
-    var hs = document.documentElement.style;
-    hs.removeProperty('background');
-    hs.removeProperty('background-color');
-    hs.removeProperty('overflow');
-    hs.removeProperty('height');
-    hs.removeProperty('margin');
-    hs.removeProperty('padding');
-    hs.removeProperty('transform');
-    hs.removeProperty('-webkit-transform');
-    hs.removeProperty('will-change');
-    // Restore html className
-    document.documentElement.className = savedHtmlClass;
-    // Restart GSAP + Lenis
-    try{if(typeof gsap!=='undefined')gsap.ticker.wake();}catch(e){}
-    try{if(typeof lenis!=='undefined')lenis.start();}catch(e){}
-  }
-  ham.addEventListener('click', openMenu);
+  // Global close function the iframe can call
+  window.closeMobileMenu = function(){
+    var f = document.getElementById('mm-iframe');
+    if(f) f.remove();
+    document.body.style.removeProperty('overflow');
+  };
+  ham.addEventListener('click', function(){
+    if(document.getElementById('mm-iframe')) return;
+    var f = document.createElement('iframe');
+    f.id = 'mm-iframe';
+    f.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;border:none;z-index:2147483647;margin:0;padding:0;';
+    f.srcdoc = '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\nbody{background:#080C18;color:white;font-family:-apple-system,system-ui,sans-serif;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;-webkit-font-smoothing:antialiased}\n.close{position:fixed;top:1rem;right:1rem;width:44px;height:44px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem}\n.close:hover{background:rgba(255,255,255,0.15);color:white}\n.brand{font-size:1.5rem;font-weight:800;margin-bottom:2rem;letter-spacing:-0.02em}\n.brand span{color:#14B8A6}\n.nav{display:flex;flex-direction:column;align-items:center;gap:0.15rem;width:100%;max-width:280px}\na{display:block;width:100%;text-align:center;font-size:1.05rem;font-weight:500;color:rgba(255,255,255,0.6);padding:0.7rem 1.5rem;border-radius:12px;text-decoration:none;transition:all .2s}\na:hover,a.active{color:white;background:rgba(255,255,255,0.08)}\n.label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.25);font-weight:700;margin-top:0.75rem;margin-bottom:0.25rem}\n.actions{display:flex;gap:0.75rem;margin-top:2rem}\n.btn{padding:0.7rem 1.8rem;border-radius:12px;font-weight:600;font-size:0.9rem;text-decoration:none}\n.donate{background:rgba(239,68,68,0.12);color:#F87171;border:1px solid rgba(239,68,68,0.25)}\n.join{background:rgba(20,184,166,0.85);color:white}\n</style></head><body>\n<button class="close" onclick="parent.closeMobileMenu()">&#x2715;</button>\n<div class="brand">Care<span>For</span>Brains</div>\n<div class="nav">\n<a href="index.html" >Home</a>\n<a href="about.html" class="active">About</a>\n<div class="label">Programs</div>\n<a href="chapters.html" >Chapters</a>\n<a href="stem.html" >STEM</a>\n<a href="ecard.html" >E-Cards</a>\n<a href="volunteer.html" >Volunteer</a>\n<div class="label">Resources</div>\n<a href="blog.html" >Blog</a>\n<a href="podcast.html" >Podcast</a>\n<a href="assessment.html" >Assessment</a>\n<a href="connect.html" >Connect</a>\n</div>\n<div class="actions">\n<a href="https://www.zeffy.com/en-US/donation-form/ec714506-0c1d-4f2e-b323-00a3c65e9e7f" target="_top" class="btn donate">Donate</a>\n<a href="volunteer.html" class="btn join">Join Us</a>\n</div>\n</body></html>';
+    document.body.appendChild(f);
+    document.body.style.overflow = 'hidden';
+  });
 })();
 </script>
 
