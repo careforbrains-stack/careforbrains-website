@@ -710,7 +710,21 @@
     var ham = document.getElementById('hamburger');
     var menu = document.getElementById('mobileMenu');
     var closeBtn = document.getElementById('mobileMenuClose');
+    var nl = document.querySelector('.nav-links');
+    var nlParent = nl ? nl.parentNode : null;
+    var nlNext = nl ? nl.nextSibling : null;
     if(!ham||!menu) return;
+    function checkMobile(){
+      if(window.innerWidth<=900){
+        if(nl && nl.parentNode) nl.parentNode.removeChild(nl);
+        ham.style.setProperty('display','flex','important');
+      } else {
+        if(nl && !nl.parentNode && nlParent) nlParent.insertBefore(nl, nlNext);
+        ham.style.removeProperty('display');
+      }
+    }
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     ham.addEventListener('click', function(){ menu.classList.toggle('open'); });
     if(closeBtn) closeBtn.addEventListener('click', function(){ menu.classList.remove('open'); });
     menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ menu.classList.remove('open'); }); });
