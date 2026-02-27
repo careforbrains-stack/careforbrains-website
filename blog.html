@@ -85,12 +85,9 @@
   .blog-sec { max-width: var(--max-w); margin: 0 auto; padding: 2.5rem 2rem 6rem; }
 
   /* FEATURED POST */
-  .featured-post { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; margin-bottom: 4rem; padding: 2.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden; cursor: pointer; }
+  .featured-post { margin-bottom: 4rem; padding: 2.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden; cursor: pointer; }
   .featured-post::before { content: 'LATEST'; position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: white; background: var(--accent-gradient); padding: 0.35rem 0.9rem; border-radius: 6px; z-index: 2; }
   .featured-post:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.25); }
-  .featured-visual { aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; position: relative; }
-  .featured-visual img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-out-expo); }
-  .featured-post:hover .featured-visual img { transform: scale(1.04); }
   .featured-text .post-cat { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; }
   .featured-text h2 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 1rem; }
   .featured-text p { font-size: 0.95rem; color: var(--fg-sec); line-height: 1.7; margin-bottom: 1.5rem; }
@@ -105,9 +102,6 @@
   .post-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out-expo); }
   .post-card:hover::after { transform: scaleX(1); }
   .post-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.2); }
-  .post-cover-wrap { aspect-ratio: 16/10; overflow: hidden; position: relative; }
-  .post-cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-out-expo); }
-  .post-card:hover .post-cover-wrap img { transform: scale(1.05); }
   .post-cat { display: inline-block; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.7rem; border-radius: 6px; }
   .cat-wellness { background: #D1FAE5; color: #047857; }
   .cat-anxiety { background: #FEE2E2; color: #B91C1C; }
@@ -143,9 +137,6 @@
   .article-meta { display: flex; align-items: center; justify-content: center; gap: 1.5rem; font-size: 0.82rem; color: var(--fg-muted); flex-wrap: wrap; }
   .article-meta-item { display: flex; align-items: center; gap: 0.4rem; }
   .article-meta-item svg { width: 16px; height: 16px; stroke: var(--fg-muted); fill: none; stroke-width: 1.5; }
-  .article-cover { max-width: 900px; margin: 2.5rem auto 0; padding: 0 2rem; }
-  .article-cover-inner { border-radius: 20px; aspect-ratio: 16/9; overflow: hidden; position: relative; }
-  .article-cover img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
   .article-content { max-width: 680px; margin: 3rem auto 4rem; padding: 0 2rem; }
   .article-content p { font-size: 1.05rem; color: var(--fg-sec); line-height: 1.85; margin-bottom: 1.5rem; }
   .article-content p:first-child::first-letter { font-family: var(--serif); font-size: 3.5rem; float: left; line-height: 1; margin-right: 0.5rem; margin-top: 0.1rem; color: var(--accent-deep); font-weight: 400; }
@@ -197,7 +188,6 @@
 
   /* RESPONSIVE */
   @media (max-width: 1024px) {
-    .featured-post { grid-template-columns: 1fr; gap: 2rem; }
     .posts-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 640px) {
@@ -214,7 +204,6 @@
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
     .article-header { padding: 6rem 1.5rem 1.5rem; }
-    .article-cover { padding: 0 1.5rem; }
     .article-content { padding: 0 1.5rem; }
     .article-back { padding: 0 1.5rem; }
   }
@@ -286,9 +275,6 @@
 
   <!-- FEATURED -->
   <div class="featured-post r" data-cat="community" data-id="1">
-    <div class="featured-visual" style="background:linear-gradient(135deg,#7C3AED,#A78BFA,#DDD6FE)">
-      <img src="images/blog-1.png" alt="Supporting a friend" onerror="this.style.display='none'">
-    </div>
     <div class="featured-text">
       <span class="post-cat cat-community">Community</span>
       <h2>How to Support a Friend Going Through a Tough Time</h2>
@@ -384,9 +370,7 @@ posts.slice(1).forEach((p, i) => {
   card.dataset.cat = p.cat;
   card.dataset.id = p.id;
   card.style.setProperty('--i', String(i % 3));
-  const grad = catGradients[p.cat] || 'linear-gradient(135deg,#64748B,#94A3B8,#CBD5E1)';
   card.innerHTML = `
-    <div class="post-cover-wrap" style="background:${grad}"><img src="${p.img}" alt="${p.title}" loading="lazy" onerror="this.style.display='none'"></div>
     <div class="post-body">
       <span class="post-cat ${p.catClass}">${p.catLabel}</span>
       <h3>${p.title}</h3>
@@ -425,7 +409,6 @@ function openArticle(id) {
         <span class="article-meta-item">${eyeSvg} ${p.views.toLocaleString()} views</span>
       </div>
     </div>
-    <div class="article-cover"><div class="article-cover-inner" style="background:${catGradients[p.cat] || '#CBD5E1'}"><img src="${p.img}" alt="${p.title}" onerror="this.style.display='none'"></div></div>
     <div class="article-content">${p.body}</div>
     <div class="article-back"><a href="#" onclick="closeArticle();return false;">← Back to all articles</a></div>`;
   overlay.classList.add('open');
