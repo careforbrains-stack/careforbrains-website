@@ -37,7 +37,7 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--sans); background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.022; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 180px; }
+  /* grain removed for performance */
 
   /* NAV */
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(250,252,252,0.8); backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--rule); transition: transform 0.4s ease; }
@@ -54,13 +54,7 @@
   .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
   .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
 
-  /* Cursor */
-  .cursor-glow { position: fixed; top: 0; left: 0; z-index: 9998; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(5,150,105,0.35); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; backdrop-filter: blur(1px); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
-  .cursor-glow.visible { opacity: 1; }
-  .cursor-glow.hovering { width: 60px; height: 60px; background: rgba(5,150,105,0.06); border-color: rgba(5,150,105,0.5); }
-  .cursor-dot { position: fixed; top: 0; left: 0; z-index: 9998; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; }
-  .cursor-dot.visible { opacity: 1; }
-  @media (pointer: fine) { * { cursor: none !important; } }
+  /* cursor disabled on blog for performance */
   .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; z-index: 10001; background: var(--accent-gradient); width: 0%; }
 
   /* HERO */
@@ -68,8 +62,8 @@
   .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 20% 80%, rgba(5,150,105,0.1) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(4,120,87,0.08) 0%, transparent 60%); z-index: 0; }
   .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); z-index: 1; }
   .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; }
-  .hero-orb-1 { width: 35vmax; height: 35vmax; background: rgba(52,211,153,0.15); filter: blur(80px); top: -10%; right: -5%; }
-  .hero-orb-2 { width: 28vmax; height: 28vmax; background: rgba(5,150,105,0.12); filter: blur(70px); bottom: -5%; left: -8%; }
+  .hero-orb-1 { width: 35vmax; height: 35vmax; background: radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%); top: -10%; right: -5%; }
+  .hero-orb-2 { width: 28vmax; height: 28vmax; background: radial-gradient(circle, rgba(5,150,105,0.15) 0%, transparent 70%); bottom: -5%; left: -8%; }
   .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
   .page-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--accent); margin-bottom: 2rem; }
   .page-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulseDot 2s ease infinite; }
@@ -187,6 +181,22 @@
   .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
   .footer-links a:hover { color: var(--accent); }
 
+  /* CSS REVEAL ANIMATIONS (replaces GSAP for performance) */
+  .r, .post-card, .featured-post, .cta-banner-inner {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .post-card { transition-delay: calc(var(--i, 0) * 0.08s); }
+  .r.visible, .post-card.visible, .featured-post.visible, .cta-banner-inner.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .page-hero .r { opacity: 0; animation: heroIn 0.8s ease forwards; }
+  .page-hero .r:nth-child(1) { animation-delay: 0.1s; }
+  .page-hero .r:nth-child(2) { animation-delay: 0.3s; }
+  .page-hero .r:nth-child(3) { animation-delay: 0.5s; }
+  .page-hero .r:nth-child(4) { animation-delay: 0.7s; }
+  @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .featured-post { grid-template-columns: 1fr; gap: 2rem; }
@@ -213,8 +223,6 @@
 </style>
 </head>
 <body>
-<div class="cursor-glow"></div>
-<div class="cursor-dot"></div>
 <div class="scroll-progress"></div>
 
 <nav>
@@ -376,9 +384,10 @@ const catGradients = {
 
 posts.slice(1).forEach(p => {
   const card = document.createElement('div');
-  card.className = 'post-card r';
+  card.className = 'post-card';
   card.dataset.cat = p.cat;
   card.dataset.id = p.id;
+  card.style.setProperty('--i', String(i % 3));
   const grad = catGradients[p.cat] || 'linear-gradient(135deg,#64748B,#94A3B8,#CBD5E1)';
   card.innerHTML = `
     <div class="post-cover-wrap" style="background:${grad}"><img src="${p.img}" alt="${p.title}" loading="lazy" onerror="this.style.display='none'"></div>
@@ -478,93 +487,23 @@ document.getElementById('hamburger').addEventListener('click', () => {
 });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-gsap.registerPlugin(ScrollTrigger);
-
-const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, syncTouch: true, touchMultiplier: 1.5 });
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add(t => lenis.raf(t * 1000));
-gsap.ticker.lagSmoothing(0);
-
-// Hero entrance
-gsap.set('.page-tag', { y: 20, opacity: 0 });
-gsap.set('.page-hero h1', { y: 40, opacity: 0 });
-gsap.set('.page-hero-sub', { y: 30, opacity: 0, filter: 'blur(6px)' });
-gsap.set('.hero-stats', { y: 20, opacity: 0 });
-gsap.set('nav', { y: -80 });
-
-const entryTL = gsap.timeline();
-entryTL.to('nav', { y: 0, duration: 0.7, ease: 'power3.out' }, 0.2);
-entryTL.to('.page-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.3);
-entryTL.to('.page-hero h1', { y: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }, 0.5);
-entryTL.to('.page-hero-sub', { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }, 0.7);
-entryTL.to('.hero-stats', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.85);
-
-// Featured post
-const feat = document.querySelector('.featured-post');
-if (feat) {
-  gsap.set(feat, { y: 50, opacity: 0 });
-  gsap.to(feat, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: feat, start: 'top 88%' } });
-}
-
-// Post cards stagger
-document.querySelectorAll('.post-card').forEach((card, i) => {
-  gsap.set(card, { y: 40, opacity: 0, scale: 0.95 });
-  gsap.to(card, {
-    y: 0, opacity: 1, scale: 1,
-    duration: 0.9, ease: 'power3.out',
-    delay: (i % 3) * 0.1,
-    scrollTrigger: { trigger: card, start: 'top 90%' }
+// Lightweight scroll reveal using IntersectionObserver (no GSAP, no Lenis)
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
   });
-});
+}, { threshold: 0.1 });
+document.querySelectorAll('.r, .post-card, .featured-post, .cta-banner-inner').forEach(el => observer.observe(el));
 
-// CTA
-const ctaInner = document.querySelector('.cta-banner-inner');
-if (ctaInner) {
-  gsap.set(ctaInner, { y: 40, opacity: 0 });
-  gsap.to(ctaInner, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: ctaInner, start: 'top 88%' } });
-}
-
-// Generic reveals
-document.querySelectorAll('.r').forEach(el => {
-  if (el.closest('.page-hero')) return;
-  if (el.matches('.featured-post, .post-card, .cta-banner-inner')) return;
-  gsap.set(el, { y: 30, opacity: 0 });
-  gsap.to(el, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
-});
-
-// Custom cursor
-const cursorGlow = document.querySelector('.cursor-glow');
-const cursorDot = document.querySelector('.cursor-dot');
-if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
-  let cx = -100, cy = -100, tx = -100, ty = -100;
-  document.addEventListener('mousemove', e => {
-    tx = e.clientX; ty = e.clientY;
-    cursorDot.style.left = tx + 'px'; cursorDot.style.top = ty + 'px';
-    if (!cursorGlow.classList.contains('visible')) { cursorGlow.classList.add('visible'); cursorDot.classList.add('visible'); }
-  });
-  function updateCursor() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cursorGlow.style.left = cx + 'px'; cursorGlow.style.top = cy + 'px'; requestAnimationFrame(updateCursor); }
-  updateCursor();
-  document.querySelectorAll('a, button, .btn-accent, .btn-ghost, .filter-btn, .post-card, .featured-post').forEach(el => {
-    el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
-    el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
-  });
-}
-
-// Scroll progress
+// Scroll progress (lightweight)
 const progressBar = document.querySelector('.scroll-progress');
 if (progressBar) {
-  window.addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(() => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; ticking = false; }); ticking = true; }
+  });
 }
-
-// Magnetic buttons
-document.querySelectorAll('.btn-accent, .btn-ghost').forEach(btn => {
-  btn.addEventListener('mousemove', e => { const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' }); });
-  btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
-});
 </script>
 </body>
 </html>
