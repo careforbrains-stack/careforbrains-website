@@ -287,7 +287,7 @@
   /* ─── MARQUEE ─── */
   .marquee-wrap {
     overflow: hidden;
-    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
     background: var(--bg-alt); padding: 1rem 0;
   }
   .marquee-track {
@@ -586,12 +586,26 @@
   .hero-wrap {
     position: relative; overflow: hidden;
     background: #0B1A28;
+    margin-bottom: 0;
   }
-  /* Bottom fade to page bg */
+  /* Bottom fade — very tall smooth gradient from dark hero into page bg */
   .hero-wrap::after {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 200px;
-    background: linear-gradient(to bottom, transparent, var(--bg));
+    height: 500px;
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(11,26,40,0.97) 10%,
+      #0F2030 22%,
+      #1A3248 35%,
+      #2E4A5E 46%,
+      #4F6A7F 56%,
+      #7A93A6 66%,
+      #A4B8C6 75%,
+      #C8D8E4 83%,
+      #DDE6EE 90%,
+      #EDF2F8 96%,
+      #EDF2F8 100%
+    );
     z-index: 5; pointer-events: none;
   }
 
