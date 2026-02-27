@@ -34,6 +34,8 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { overflow-x: hidden; }
+
   body {
     font-family: var(--sans);
     background: var(--bg);
@@ -530,6 +532,7 @@
   /* Section aurora glow — behind why-start section */
   .sec-aurora {
     position: relative;
+    overflow: hidden;
   }
   .sec-aurora::before {
     content: ''; position: absolute; top: -60px; right: -100px;
