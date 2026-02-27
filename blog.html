@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — CareForBrains</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --bg-alt: #EDF2F8;
+    --bg-dark: #091A26;
+    --fg: #0B1A26;
+    --fg-sec: #3A5068;
+    --fg-muted: #7A8FA4;
+    --teal: #1490B0;
+    --teal-deep: #0C6B8E;
+    --teal-light: #38C0D4;
+    --teal-glow: rgba(20,144,176,0.12);
+    --teal-bg: #E4F1F7;
+    --blue: #1468B0;
+    --gradient: linear-gradient(135deg, #0C6B8E, #1490B0, #1468B0);
+    --rule: #CDDAE6;
+    --card: #FFFFFF;
+    --card-border: #C8D8E6;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --max-w: 1180px;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --accent: #059669;
+    --accent-deep: #047857;
+    --accent-glow: rgba(5,150,105,0.12);
+    --accent-bg: #D1FAE5;
+    --accent-gradient: linear-gradient(135deg, #047857, #059669, #34D399);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.022; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 180px; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(250,252,252,0.8); backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--rule); transition: transform 0.4s ease; }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--fg); }
+  .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+  .nav-logo span { font-weight: 700; font-size: 1rem; letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 0.4rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--fg-sec); text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 0.5rem 0.9rem; border-radius: 8px; transition: all 0.25s; }
+  .nav-links a:hover { color: var(--fg); background: var(--accent-glow); }
+  .nav-links a.active { color: var(--accent); font-weight: 600; }
+  .nav-cta { background: var(--bg-dark) !important; color: white !important; font-weight: 600 !important; padding: 0.55rem 1.4rem !important; border-radius: 10px !important; transition: all 0.3s var(--ease-spring) !important; }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 25px rgba(11,29,29,0.2) !important; background: var(--teal-deep) !important; }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
+  .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
+
+  /* Cursor */
+  .cursor-glow { position: fixed; top: 0; left: 0; z-index: 9998; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(5,150,105,0.35); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; backdrop-filter: blur(1px); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+  .cursor-glow.visible { opacity: 1; }
+  .cursor-glow.hovering { width: 60px; height: 60px; background: rgba(5,150,105,0.06); border-color: rgba(5,150,105,0.5); }
+  .cursor-dot { position: fixed; top: 0; left: 0; z-index: 9998; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); pointer-events: none; transform: translate(-50%, -50%); opacity: 0; }
+  .cursor-dot.visible { opacity: 1; }
+  @media (pointer: fine) { * { cursor: none !important; } }
+  .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; z-index: 10001; background: var(--accent-gradient); width: 0%; }
+
+  /* HERO */
+  .page-hero { position: relative; overflow: hidden; padding: 10rem 2rem 5rem; text-align: center; background: linear-gradient(165deg, #ECFDF5 0%, #D1FAE5 40%, #A7F3D0 100%); }
+  .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 20% 80%, rgba(5,150,105,0.1) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(4,120,87,0.08) 0%, transparent 60%); z-index: 0; }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); z-index: 1; }
+  .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; }
+  .hero-orb-1 { width: 35vmax; height: 35vmax; background: rgba(52,211,153,0.15); filter: blur(80px); top: -10%; right: -5%; }
+  .hero-orb-2 { width: 28vmax; height: 28vmax; background: rgba(5,150,105,0.12); filter: blur(70px); bottom: -5%; left: -8%; }
+  .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
+  .page-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--accent); margin-bottom: 2rem; }
+  .page-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulseDot 2s ease infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.8); } }
+  .page-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.08; letter-spacing: -2px; max-width: 700px; margin: 0 auto 1.5rem; }
+  .page-hero h1 em { font-style: italic; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-hero-sub { font-size: 1.1rem; color: var(--fg-sec); line-height: 1.7; max-width: 520px; margin: 0 auto 2.5rem; }
+  .hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-family: var(--serif); font-size: 2rem; font-weight: 400; letter-spacing: -1px; color: var(--accent-deep); }
+  .hero-stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--fg-muted); margin-top: 0.2rem; }
+
+  /* FILTER BAR */
+  .filter-bar { max-width: var(--max-w); margin: 0 auto; padding: 2rem 2rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .filter-btn { padding: 0.5rem 1.2rem; border-radius: 100px; border: 1.5px solid var(--rule); background: var(--card); color: var(--fg-sec); font-family: var(--sans); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--ease-spring); }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* BLOG GRID */
+  .blog-sec { max-width: var(--max-w); margin: 0 auto; padding: 2.5rem 2rem 6rem; }
+
+  /* FEATURED POST */
+  .featured-post { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; margin-bottom: 4rem; padding: 2.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden; }
+  .featured-post::before { content: 'LATEST'; position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: white; background: var(--accent-gradient); padding: 0.35rem 0.9rem; border-radius: 6px; }
+  .featured-post:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.25); }
+  .featured-visual { aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; position: relative; }
+  .featured-visual .post-cover { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .featured-text .post-cat { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; }
+  .featured-text h2 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 1rem; }
+  .featured-text p { font-size: 0.95rem; color: var(--fg-sec); line-height: 1.7; margin-bottom: 1.5rem; }
+  .post-meta { display: flex; align-items: center; gap: 1rem; font-size: 0.78rem; color: var(--fg-muted); flex-wrap: wrap; }
+  .post-meta-item { display: flex; align-items: center; gap: 0.35rem; }
+  .post-meta-item svg { width: 14px; height: 14px; stroke: var(--fg-muted); fill: none; stroke-width: 1.5; }
+  .post-author { font-weight: 600; color: var(--fg-sec); }
+
+  /* GRID POSTS */
+  .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
+  .post-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; transition: all 0.4s var(--ease-spring); position: relative; }
+  .post-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out-expo); }
+  .post-card:hover::after { transform: scaleX(1); }
+  .post-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.2); }
+  .post-cover-wrap { aspect-ratio: 16/10; overflow: hidden; position: relative; }
+  .post-cover { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-out-expo); }
+  .post-card:hover .post-cover { transform: scale(1.05); }
+  .post-cat { display: inline-block; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.7rem; border-radius: 6px; }
+  .cat-wellness { background: #D1FAE5; color: #047857; }
+  .cat-anxiety { background: #FEE2E2; color: #B91C1C; }
+  .cat-mindfulness { background: #E0E7FF; color: #4338CA; }
+  .cat-science { background: #DBEAFE; color: #1D4ED8; }
+  .cat-student-life { background: #FEF3C7; color: #B45309; }
+  .cat-self-care { background: #FCE7F3; color: #BE185D; }
+  .cat-community { background: #EDE9FE; color: #7C3AED; }
+  .post-body { padding: 1.4rem 1.6rem 1.6rem; }
+  .post-body .post-cat { margin-bottom: 0.8rem; }
+  .post-body h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 0.6rem; transition: color 0.2s; }
+  .post-card:hover .post-body h3 { color: var(--accent-deep); }
+  .post-excerpt { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.6; margin-bottom: 1.2rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .post-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  .post-footer-left { display: flex; align-items: center; gap: 0.5rem; }
+  .post-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-bg); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--accent-deep); }
+  .post-footer-info { font-size: 0.72rem; }
+  .post-footer-info .post-author { display: block; font-weight: 600; color: var(--fg); }
+  .post-footer-info .post-date { color: var(--fg-muted); }
+  .post-views { display: flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; color: var(--fg-muted); font-weight: 500; }
+  .post-views svg { width: 14px; height: 14px; stroke: var(--fg-muted); fill: none; stroke-width: 1.5; }
+
+  /* LOAD MORE */
+  .load-more-wrap { text-align: center; margin-top: 3rem; }
+  .btn-load { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: transparent; border: 1.5px solid var(--rule); color: var(--fg-sec); font-family: var(--sans); font-weight: 600; font-size: 0.88rem; border-radius: 12px; cursor: pointer; transition: all 0.3s var(--ease-spring); }
+  .btn-load:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); transform: translateY(-2px); }
+
+  /* CTA BANNER */
+  .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(5,150,105,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(52,211,153,0.10) 0%, transparent 60%); pointer-events: none; }
+  .cta-banner-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+  .cta-banner h2 { font-family: var(--serif); color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.12; }
+  .cta-banner h2 em { font-style: italic; color: #34D399; }
+  .cta-banner p { color: rgba(255,255,255,0.5); font-size: 1rem; line-height: 1.7; margin-bottom: 2.5rem; }
+  .btn-accent { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1.1rem 2.4rem; background: var(--accent-gradient); color: white; font-family: var(--sans); font-weight: 700; font-size: 0.95rem; border: none; border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.35s var(--ease-spring); }
+  .btn-accent:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(5,150,105,0.3); }
+  .btn-accent .arrow { display: inline-block; transition: transform 0.3s var(--ease-spring); }
+  .btn-accent:hover .arrow { transform: translateX(3px) translateY(-2px); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 1.1rem 2.4rem; background: transparent; color: white; font-family: var(--sans); font-weight: 600; font-size: 0.95rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+  .btn-ghost:hover { border-color: #34D399; color: #34D399; background: rgba(52,211,153,0.08); }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 2rem; }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: var(--fg-sec); text-decoration: none; }
+  .footer-logo img { width: 24px; height: 24px; border-radius: 6px; }
+  .footer-copy { font-size: 0.75rem; color: var(--fg-muted); }
+  .footer-links { display: flex; gap: 1.6rem; list-style: none; }
+  .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* Post color covers — abstract gradients instead of images */
+  .cover-1 { background: linear-gradient(135deg, #059669, #34D399, #6EE7B7); }
+  .cover-2 { background: linear-gradient(135deg, #B91C1C, #EF4444, #FCA5A5); }
+  .cover-3 { background: linear-gradient(135deg, #4338CA, #818CF8, #C7D2FE); }
+  .cover-4 { background: linear-gradient(135deg, #1D4ED8, #60A5FA, #BFDBFE); }
+  .cover-5 { background: linear-gradient(135deg, #B45309, #F59E0B, #FDE68A); }
+  .cover-6 { background: linear-gradient(135deg, #BE185D, #F472B6, #FBCFE8); }
+  .cover-7 { background: linear-gradient(135deg, #7C3AED, #A78BFA, #DDD6FE); }
+  .cover-8 { background: linear-gradient(135deg, #047857, #10B981, #A7F3D0); }
+  .cover-9 { background: linear-gradient(135deg, #0E7490, #22D3EE, #A5F3FC); }
+  .cover-10 { background: linear-gradient(135deg, #9333EA, #C084FC, #E9D5FF); }
+  .cover-11 { background: linear-gradient(135deg, #0369A1, #38BDF8, #BAE6FD); }
+  .cover-abstract { display: flex; align-items: center; justify-content: center; }
+  .cover-icon { opacity: 0.25; }
+  .cover-icon svg { width: 64px; height: 64px; stroke: white; fill: none; stroke-width: 1; }
+  .featured-visual .cover-icon svg { width: 96px; height: 96px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .featured-post { grid-template-columns: 1fr; gap: 2rem; }
+    .posts-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .page-hero { padding: 8rem 1.5rem 4rem; }
+    .blog-sec { padding: 2rem 1.5rem 4rem; }
+    .posts-grid { grid-template-columns: 1fr; }
+    .featured-post { padding: 1.5rem; }
+    .hero-stats { gap: 2rem; }
+    .filter-bar { padding: 1.5rem 1.5rem 0; }
+    .cta-banner { padding: 4rem 1.5rem; }
+    footer .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+    .cursor-glow, .cursor-dot { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor-glow"></div>
+<div class="cursor-dot"></div>
+<div class="scroll-progress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="CareForBrains">
+      <span>CareForBrains</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+      <li><a href="stem.html">STEM</a></li>
+      <li><a href="ecard.html">E-Cards</a></li>
+      <li><a href="connect.html">Connect</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="page-hero-inner">
+    <div class="page-tag r"><span class="dot"></span> Mental Health Blog</div>
+    <h1 class="r">Stories that <em>matter</em></h1>
+    <p class="page-hero-sub r">Insights, guides, and real talk about mental health — written by our team and community of advocates.</p>
+    <div class="hero-stats r">
+      <div class="hero-stat">
+        <div class="hero-stat-num">12</div>
+        <div class="hero-stat-label">Articles</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">11.2k</div>
+        <div class="hero-stat-label">Total Reads</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">7</div>
+        <div class="hero-stat-label">Topics</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All Posts</button>
+  <button class="filter-btn" data-filter="wellness">Wellness</button>
+  <button class="filter-btn" data-filter="anxiety">Anxiety</button>
+  <button class="filter-btn" data-filter="mindfulness">Mindfulness</button>
+  <button class="filter-btn" data-filter="science">Science</button>
+  <button class="filter-btn" data-filter="student-life">Student Life</button>
+  <button class="filter-btn" data-filter="self-care">Self-Care</button>
+  <button class="filter-btn" data-filter="community">Community</button>
+</div>
+
+<!-- BLOG POSTS -->
+<section class="blog-sec">
+
+  <!-- FEATURED -->
+  <div class="featured-post r" data-cat="community">
+    <div class="featured-visual cover-8 cover-abstract">
+      <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg></div>
+    </div>
+    <div class="featured-text">
+      <span class="post-cat cat-community">Community</span>
+      <h2>How to Support a Friend Going Through a Tough Time</h2>
+      <p>Sometimes the most powerful thing you can do is just be there. This guide covers practical, empathetic ways to show up for someone struggling — without overstepping boundaries or burning out yourself.</p>
+      <div class="post-meta">
+        <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg> <span class="post-author">Tanmay Vasudeva</span></span>
+        <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg> Feb 14, 2026</span>
+        <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 304 views</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="posts-grid">
+
+    <div class="post-card r" data-cat="science">
+      <div class="post-cover-wrap cover-11 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-science">Science</span>
+        <h3>The Science Behind Gratitude and Happiness</h3>
+        <p class="post-excerpt">Neuroscience reveals that practicing gratitude physically rewires your brain. Here's what happens when you make thankfulness a daily habit and how it impacts your mental health.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">ZH</div>
+            <div class="post-footer-info">
+              <span class="post-author">Zavier Hayat</span>
+              <span class="post-date">Jan 18, 2026</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 412</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="self-care">
+      <div class="post-cover-wrap cover-6 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-self-care">Self-Care</span>
+        <h3>Self-Care Isn't Selfish: Making Time for You</h3>
+        <p class="post-excerpt">In a culture that glorifies hustle, taking time for yourself feels like a luxury. But self-care is a necessity — especially for students juggling academics, extracurriculars, and social life.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">RB</div>
+            <div class="post-footer-info">
+              <span class="post-author">Raheesh Basaria</span>
+              <span class="post-date">Nov 5, 2025</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 876</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="science">
+      <div class="post-cover-wrap cover-9 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-science">Science</span>
+        <h3>What Is Neurodiversity? A Beginner's Guide</h3>
+        <p class="post-excerpt">ADHD, autism, dyslexia — these aren't deficits, they're differences. Understanding neurodiversity changes how we approach mental health, education, and community support.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">EW</div>
+            <div class="post-footer-info">
+              <span class="post-author">Ezra Weng</span>
+              <span class="post-date">Sep 22, 2025</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,104</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="community">
+      <div class="post-cover-wrap cover-7 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-community">Community</span>
+        <h3>Building Resilience: Lessons from Student Leaders</h3>
+        <p class="post-excerpt">We interviewed chapter leaders across 5 states about what keeps them going. Their stories reveal a common thread — resilience isn't born, it's built through showing up every day.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">TV</div>
+            <div class="post-footer-info">
+              <span class="post-author">Tanmay Vasudeva</span>
+              <span class="post-date">Jul 30, 2025</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 543</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="student-life">
+      <div class="post-cover-wrap cover-5 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-student-life">Student Life</span>
+        <h3>Social Media and Mental Health: Finding Balance</h3>
+        <p class="post-excerpt">Doom-scrolling, comparison traps, FOMO — social media impacts mental health in ways we're still understanding. Here's how to build a healthier relationship with your feed.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">RB</div>
+            <div class="post-footer-info">
+              <span class="post-author">Raheesh Basaria</span>
+              <span class="post-date">May 12, 2025</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,891</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="mindfulness">
+      <div class="post-cover-wrap cover-3 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-mindfulness">Mindfulness</span>
+        <h3>The Power of Journaling for Emotional Wellness</h3>
+        <p class="post-excerpt">Writing down your thoughts isn't just a hobby — it's a clinically backed strategy for processing emotions, reducing stress, and gaining clarity during overwhelming times.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">EZ</div>
+            <div class="post-footer-info">
+              <span class="post-author">Eric Zang</span>
+              <span class="post-date">Mar 8, 2025</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 738</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="student-life">
+      <div class="post-cover-wrap cover-5 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-student-life">Student Life</span>
+        <h3>Navigating Stress During Exam Season</h3>
+        <p class="post-excerpt">Finals week doesn't have to destroy your mental health. These evidence-based strategies from our chapter leaders help you stay focused without the burnout spiral.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">EW</div>
+            <div class="post-footer-info">
+              <span class="post-author">Ezra Weng</span>
+              <span class="post-date">Jan 15, 2025</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,456</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="wellness">
+      <div class="post-cover-wrap cover-4 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-wellness">Wellness</span>
+        <h3>How Sleep Affects Your Mental Health</h3>
+        <p class="post-excerpt">That all-nighter might feel productive, but chronic sleep deprivation fundamentally changes your brain chemistry. Here's the science — and how to fix your sleep schedule.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">ZH</div>
+            <div class="post-footer-info">
+              <span class="post-author">Zavier Hayat</span>
+              <span class="post-date">Nov 2, 2024</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 654</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="anxiety">
+      <div class="post-cover-wrap cover-2 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-anxiety">Anxiety</span>
+        <h3>Breaking the Stigma: Why Talking Matters</h3>
+        <p class="post-excerpt">1 in 5 teens experience a mental health condition, but most never talk about it. Breaking the silence starts with one honest conversation — and it could save a life.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">TV</div>
+            <div class="post-footer-info">
+              <span class="post-author">Tanmay Vasudeva</span>
+              <span class="post-date">Oct 10, 2024</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 2,103</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="mindfulness">
+      <div class="post-cover-wrap cover-3 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-mindfulness">Mindfulness</span>
+        <h3>5 Mindfulness Exercises You Can Do Anywhere</h3>
+        <p class="post-excerpt">You don't need a meditation cushion or 30 free minutes. These quick grounding techniques work in class, on the bus, or right before a big presentation.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">EZ</div>
+            <div class="post-footer-info">
+              <span class="post-author">Eric Zang</span>
+              <span class="post-date">Sep 18, 2024</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 892</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card r" data-cat="anxiety">
+      <div class="post-cover-wrap cover-2 cover-abstract">
+        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M11.42 15.17l-5.1-5.1m0 0L12 4.37m-5.68 5.7h11.8M4.37 12a7.63 7.63 0 1015.26 0 7.63 7.63 0 00-15.26 0z"/></svg></div>
+      </div>
+      <div class="post-body">
+        <span class="post-cat cat-anxiety">Anxiety</span>
+        <h3>Understanding Anxiety: A Teen's Guide</h3>
+        <p class="post-excerpt">Racing heart, sweaty palms, spiraling thoughts — anxiety is more than just "being nervous." Learn to recognize the signs, understand the triggers, and take back control.</p>
+        <div class="post-footer">
+          <div class="post-footer-left">
+            <div class="post-avatar">TV</div>
+            <div class="post-footer-info">
+              <span class="post-author">Tanmay Vasudeva</span>
+              <span class="post-date">Aug 5, 2024</span>
+            </div>
+          </div>
+          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,247</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="load-more-wrap r">
+    <button class="btn-load">Load More Articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg></button>
+  </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="cta-banner-inner r">
+    <h2>Have a story to <em>share</em>?</h2>
+    <p>We welcome guest writers from our volunteer community. Share your perspective on mental health, student life, and making a difference.</p>
+    <div class="cta-actions">
+      <a href="volunteer.html" class="btn-accent">Join Our Team <span class="arrow">↗</span></a>
+      <a href="connect.html" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <img src="logo.png" alt="">
+      CareForBrains
+    </a>
+    <div class="footer-copy">&copy; 2025 CareForBrains. Mental health for all.</div>
+    <ul class="footer-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll hide
+  let lastScroll = 0;
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const curr = window.scrollY;
+    nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
+    lastScroll = curr;
+  });
+  // Mobile nav
+  document.getElementById('hamburger').addEventListener('click', () => {
+    const l = document.querySelector('.nav-links');
+    const open = l.style.display === 'flex';
+    l.style.display = open ? 'none' : 'flex';
+    if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.filter;
+      const featured = document.querySelector('.featured-post');
+      const cards = document.querySelectorAll('.post-card');
+      if (cat === 'all') {
+        featured.style.display = '';
+        cards.forEach(c => c.style.display = '');
+      } else {
+        featured.style.display = featured.dataset.cat === cat ? '' : 'none';
+        cards.forEach(c => {
+          c.style.display = c.dataset.cat === cat ? '' : 'none';
+        });
+      }
+    });
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, syncTouch: true, touchMultiplier: 1.5 });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// Hero entrance
+gsap.set('.page-tag', { y: 20, opacity: 0 });
+gsap.set('.page-hero h1', { y: 40, opacity: 0 });
+gsap.set('.page-hero-sub', { y: 30, opacity: 0, filter: 'blur(6px)' });
+gsap.set('.hero-stats', { y: 20, opacity: 0 });
+gsap.set('nav', { y: -80 });
+
+const entryTL = gsap.timeline();
+entryTL.to('nav', { y: 0, duration: 0.7, ease: 'power3.out' }, 0.2);
+entryTL.to('.page-tag', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.3);
+entryTL.to('.page-hero h1', { y: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }, 0.5);
+entryTL.to('.page-hero-sub', { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }, 0.7);
+entryTL.to('.hero-stats', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.85);
+
+// Featured post
+const feat = document.querySelector('.featured-post');
+if (feat) {
+  gsap.set(feat, { y: 50, opacity: 0 });
+  gsap.to(feat, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: feat, start: 'top 88%' } });
+}
+
+// Post cards — stagger with scale + blur
+document.querySelectorAll('.post-card').forEach((card, i) => {
+  gsap.set(card, { y: 40, opacity: 0, scale: 0.95 });
+  gsap.to(card, {
+    y: 0, opacity: 1, scale: 1,
+    duration: 0.9, ease: 'power3.out',
+    delay: (i % 3) * 0.1,
+    scrollTrigger: { trigger: card, start: 'top 90%' }
+  });
+});
+
+// CTA
+const ctaInner = document.querySelector('.cta-banner-inner');
+if (ctaInner) {
+  gsap.set(ctaInner, { y: 40, opacity: 0 });
+  gsap.to(ctaInner, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: ctaInner, start: 'top 88%' } });
+}
+
+// Generic reveals
+document.querySelectorAll('.r').forEach(el => {
+  if (el.closest('.page-hero')) return;
+  if (el.matches('.featured-post, .post-card, .cta-banner-inner')) return;
+  gsap.set(el, { y: 30, opacity: 0 });
+  gsap.to(el, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
+});
+
+// Custom cursor
+const cursorGlow = document.querySelector('.cursor-glow');
+const cursorDot = document.querySelector('.cursor-dot');
+if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
+  let cx = -100, cy = -100, tx = -100, ty = -100;
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX; ty = e.clientY;
+    cursorDot.style.left = tx + 'px'; cursorDot.style.top = ty + 'px';
+    if (!cursorGlow.classList.contains('visible')) { cursorGlow.classList.add('visible'); cursorDot.classList.add('visible'); }
+  });
+  function updateCursor() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cursorGlow.style.left = cx + 'px'; cursorGlow.style.top = cy + 'px'; requestAnimationFrame(updateCursor); }
+  updateCursor();
+  document.querySelectorAll('a, button, .btn-accent, .btn-ghost, .btn-load, .filter-btn, .post-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
+  });
+}
+
+// Scroll progress
+const progressBar = document.querySelector('.scroll-progress');
+if (progressBar) {
+  window.addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; });
+}
+
+// Magnetic buttons
+document.querySelectorAll('.btn-accent, .btn-ghost, .btn-load').forEach(btn => {
+  btn.addEventListener('mousemove', e => { const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' }); });
+  btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
+});
+</script>
+</body>
+</html>
