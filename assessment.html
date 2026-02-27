@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Assessment | CareForBrains</title>
+  <meta name="description" content="Free, confidential mental health screenings for depression and anxiety. Take the PHQ-9 and GAD-7 assessments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0B1120;--bg-alt:#101828;--bg-card:#161F32;
+      --text:#E2E8F0;--text-dim:#94A3B8;--text-bright:#F8FAFC;
+      --accent:#0891B2;--accent-deep:#0E7490;--accent-glow:rgba(8,145,178,0.25);
+      --radius:16px;--ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+      --font-serif:'Playfair Display',Georgia,serif;
+      --font-sans:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+
+    /* NAV */
+    .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:9000;padding:1rem 2rem;transition:background .4s,backdrop-filter .4s}
+    .nav-wrap.scrolled{background:rgba(11,17,32,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+    .nav-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-family:var(--font-serif);font-size:1.35rem;font-weight:800;color:var(--text-bright);letter-spacing:-0.02em}
+    .nav-logo span{color:var(--accent)}
+    .nav-links{display:flex;list-style:none;gap:.15rem;align-items:center}
+    .nav-links a{padding:.55rem .85rem;border-radius:10px;font-size:.82rem;font-weight:500;color:var(--text-dim);transition:all .3s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text-bright);background:rgba(255,255,255,0.06)}
+    .nav-cta{background:var(--accent)!important;color:var(--text-bright)!important;font-weight:600!important}
+    .nav-cta:hover{background:var(--accent-deep)!important;transform:translateY(-1px)}
+    .nav-donate{background:rgba(239,68,68,0.15)!important;color:#F87171!important;font-weight:600!important;border:1px solid rgba(239,68,68,0.3)!important}
+    .nav-donate:hover{background:rgba(239,68,68,0.25)!important;transform:translateY(-1px)}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+
+    @media(max-width:900px){
+      .nav-links{position:fixed;inset:0;background:rgba(11,17,32,0.97);backdrop-filter:blur(20px);flex-direction:column;justify-content:center;gap:0.5rem;opacity:0;pointer-events:none;transition:opacity .4s}
+      .nav-links.open{opacity:1;pointer-events:all}
+      .nav-links a{font-size:1.1rem;padding:.8rem 1.5rem}
+      .hamburger{display:flex;z-index:9999}
+    }
+
+    /* HERO */
+    .hero-wrap{position:relative;overflow:hidden;background:var(--bg);padding:10rem 2rem 5rem}
+    .hero-wrap::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);opacity:.4;pointer-events:none}
+    .hero{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:2}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;border-radius:100px;background:rgba(8,145,178,0.12);border:1px solid rgba(8,145,178,0.25);font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:1.5rem;letter-spacing:.03em}
+    .hero h1{font-family:var(--font-serif);font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;color:var(--text-bright);line-height:1.1;margin-bottom:1rem}
+    .hero h1 span{color:var(--accent)}
+    .hero p{font-size:1.1rem;color:var(--text-dim);max-width:600px;margin:0 auto 2rem;line-height:1.7}
+
+    /* DISCLAIMER BANNER */
+    .disclaimer{max-width:800px;margin:0 auto 3rem;padding:1.2rem 1.5rem;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:12px;display:flex;gap:1rem;align-items:flex-start}
+    .disclaimer-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+    .disclaimer p{font-size:.85rem;color:#FCD34D;line-height:1.6}
+    .disclaimer strong{color:#FBBF24}
+
+    /* TAB SWITCHER */
+    .tab-wrap{max-width:800px;margin:0 auto 2.5rem;display:flex;gap:.5rem;background:var(--bg-card);padding:.4rem;border-radius:14px;border:1px solid rgba(255,255,255,0.06)}
+    .tab-btn{flex:1;padding:.85rem;border:none;background:transparent;color:var(--text-dim);font-family:var(--font-sans);font-size:.95rem;font-weight:600;border-radius:10px;cursor:pointer;transition:all .3s}
+    .tab-btn.active{background:var(--accent);color:white}
+    .tab-btn:hover:not(.active){background:rgba(255,255,255,0.05);color:var(--text)}
+
+    /* QUESTIONNAIRE */
+    .questionnaire{max-width:800px;margin:0 auto;display:none}
+    .questionnaire.active{display:block}
+    .q-intro{font-size:.95rem;color:var(--text-dim);margin-bottom:2rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.03);border-radius:12px;border-left:3px solid var(--accent)}
+    .q-card{background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;transition:all .3s}
+    .q-card:hover{border-color:rgba(8,145,178,0.2)}
+    .q-card.answered{border-color:rgba(8,145,178,0.3);background:rgba(8,145,178,0.04)}
+    .q-number{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--accent);color:white;font-size:.78rem;font-weight:700;border-radius:8px;margin-bottom:.75rem}
+    .q-text{font-size:.95rem;font-weight:500;color:var(--text-bright);margin-bottom:1.2rem;line-height:1.5}
+    .q-options{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+    @media(max-width:600px){.q-options{grid-template-columns:repeat(2,1fr)}}
+    .q-option{position:relative}
+    .q-option input{position:absolute;opacity:0;width:0;height:0}
+    .q-option label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.75rem .5rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;cursor:pointer;transition:all .25s;text-align:center}
+    .q-option label:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15)}
+    .q-option input:checked+label{background:rgba(8,145,178,0.15);border-color:var(--accent);color:var(--text-bright)}
+    .q-option .opt-score{font-size:.7rem;font-weight:700;color:var(--accent);opacity:.6}
+    .q-option input:checked+label .opt-score{opacity:1}
+    .q-option .opt-text{font-size:.78rem;color:var(--text-dim);line-height:1.3}
+    .q-option input:checked+label .opt-text{color:var(--text-bright)}
+
+    /* PROGRESS BAR */
+    .progress-wrap{max-width:800px;margin:0 auto 2rem;position:sticky;top:80px;z-index:100;background:var(--bg);padding:.75rem 0}
+    .progress-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#06B6D4);border-radius:100px;transition:width .4s var(--ease-out-expo);width:0%}
+    .progress-text{display:flex;justify-content:space-between;align-items:center;margin-top:.5rem}
+    .progress-text span{font-size:.78rem;color:var(--text-dim)}
+    .progress-text .prog-count{color:var(--accent);font-weight:600}
+
+    /* SUBMIT */
+    .submit-wrap{max-width:800px;margin:2rem auto 0;text-align:center}
+    .submit-btn{display:inline-flex;align-items:center;gap:.6rem;padding:1rem 2.5rem;background:var(--accent);color:white;font-family:var(--font-sans);font-size:1rem;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:all .3s;opacity:.4;pointer-events:none}
+    .submit-btn.ready{opacity:1;pointer-events:all}
+    .submit-btn.ready:hover{background:var(--accent-deep);transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+    .submit-btn svg{width:20px;height:20px}
+
+    /* RESULTS */
+    .results{max-width:800px;margin:0 auto;display:none;padding:2rem 0}
+    .results.show{display:block}
+    .result-card{background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:2.5rem;text-align:center;margin-bottom:2rem;position:relative;overflow:hidden}
+    .result-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:400px;height:200px;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none}
+    .result-card.minimal::before{background:#22C55E}
+    .result-card.mild::before{background:#EAB308}
+    .result-card.moderate::before{background:#F97316}
+    .result-card.mod-severe::before{background:#EF4444}
+    .result-card.severe::before{background:#DC2626}
+    .result-score{font-family:var(--font-serif);font-size:4rem;font-weight:800;line-height:1;margin-bottom:.5rem}
+    .result-card.minimal .result-score{color:#22C55E}
+    .result-card.mild .result-score{color:#EAB308}
+    .result-card.moderate .result-score{color:#F97316}
+    .result-card.mod-severe .result-score{color:#EF4444}
+    .result-card.severe .result-score{color:#DC2626}
+    .result-max{font-size:.9rem;color:var(--text-dim);margin-bottom:1rem}
+    .result-severity{display:inline-block;padding:.5rem 1.5rem;border-radius:100px;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1.5rem}
+    .result-card.minimal .result-severity{background:rgba(34,197,94,0.15);color:#22C55E}
+    .result-card.mild .result-severity{background:rgba(234,179,8,0.15);color:#EAB308}
+    .result-card.moderate .result-severity{background:rgba(249,115,22,0.15);color:#F97316}
+    .result-card.mod-severe .result-severity{background:rgba(239,68,68,0.15);color:#EF4444}
+    .result-card.severe .result-severity{background:rgba(220,38,38,0.15);color:#DC2626}
+    .result-desc{font-size:.95rem;color:var(--text-dim);max-width:500px;margin:0 auto 2rem;line-height:1.7}
+    .result-bar{max-width:400px;margin:0 auto 1.5rem}
+    .result-bar-bg{height:10px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;position:relative}
+    .result-bar-fill{height:100%;border-radius:100px;transition:width 1s var(--ease-out-expo)}
+    .result-card.minimal .result-bar-fill{background:#22C55E}
+    .result-card.mild .result-bar-fill{background:#EAB308}
+    .result-card.moderate .result-bar-fill{background:#F97316}
+    .result-card.mod-severe .result-bar-fill{background:#EF4444}
+    .result-card.severe .result-bar-fill{background:#DC2626}
+    .result-bar-labels{display:flex;justify-content:space-between;margin-top:.4rem;font-size:.7rem;color:var(--text-dim)}
+
+    /* RESOURCES */
+    .resources{max-width:800px;margin:0 auto 4rem}
+    .resources h3{font-family:var(--font-serif);font-size:1.5rem;color:var(--text-bright);margin-bottom:1rem}
+    .resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .resource-card{background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.5rem;transition:all .3s}
+    .resource-card:hover{border-color:rgba(8,145,178,0.3);transform:translateY(-2px)}
+    .resource-icon{font-size:1.5rem;margin-bottom:.75rem}
+    .resource-card h4{font-size:.9rem;font-weight:700;color:var(--text-bright);margin-bottom:.4rem}
+    .resource-card p{font-size:.8rem;color:var(--text-dim);line-height:1.5;margin-bottom:.75rem}
+    .resource-link{display:inline-flex;align-items:center;gap:.3rem;font-size:.8rem;font-weight:600;color:var(--accent);transition:gap .3s}
+    .resource-link:hover{gap:.6rem}
+
+    /* RETAKE */
+    .retake-wrap{text-align:center;margin:2rem auto 4rem}
+    .retake-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 2rem;background:rgba(255,255,255,0.06);color:var(--text);font-family:var(--font-sans);font-size:.9rem;font-weight:600;border:1px solid rgba(255,255,255,0.1);border-radius:12px;cursor:pointer;transition:all .3s}
+    .retake-btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+
+    /* SECTION */
+    .section-pad{padding:0 2rem 4rem}
+
+    /* FOOTER */
+    .site-footer{background:var(--bg-alt);border-top:1px solid rgba(255,255,255,0.06);padding:3rem 2rem;text-align:center}
+    .footer-inner{max-width:1180px;margin:0 auto}
+    .footer-logo{font-family:var(--font-serif);font-size:1.2rem;font-weight:800;color:var(--text-bright);margin-bottom:.5rem}
+    .footer-logo span{color:var(--accent)}
+    .footer-text{font-size:.8rem;color:var(--text-dim)}
+
+    /* ANIMATIONS */
+    .fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease-out-expo),transform .7s var(--ease-out-expo)}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav-wrap" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Care<span>For</span>Brains</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="about.html">About</a></li>
+        <li><a href="chapters.html">Chapters</a></li>
+        <li><a href="stem.html">STEM</a></li>
+        <li><a href="ecard.html">E-Cards</a></li>
+        <li><a href="connect.html">Connect</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="podcast.html">Podcast</a></li>
+        <li><a href="assessment.html" class="active">Assessment</a></li>
+        <li><a href="https://www.zeffy.com/en-US/donation-form/ec714506-0c1d-4f2e-b323-00a3c65e9e7f" target="_blank" class="nav-donate">Donate</a></li>
+        <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrap">
+    <div class="hero fade-up">
+      <div class="hero-badge">Free & Confidential</div>
+      <h1>Mental Health <span>Assessment</span></h1>
+      <p>Take a quick, confidential screening for depression or anxiety. These clinically validated tools can help you understand how you're feeling and guide your next steps.</p>
+    </div>
+  </div>
+
+  <div class="section-pad">
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer fade-up">
+      <div class="disclaimer-icon">&#9888;</div>
+      <div>
+        <p><strong>Important:</strong> These screenings are not a diagnosis. They are validated tools used by healthcare professionals to assess symptom severity. Only a licensed provider can diagnose a mental health condition. If you are in crisis, call or text <strong>988</strong> (Suicide & Crisis Lifeline) or text <strong>HELLO</strong> to <strong>741741</strong> (Crisis Text Line).</p>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-wrap fade-up">
+      <button class="tab-btn active" data-tab="depression" onclick="switchTab('depression')">Depression (PHQ-9)</button>
+      <button class="tab-btn" data-tab="anxiety" onclick="switchTab('anxiety')">Anxiety (GAD-7)</button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap fade-up" id="progressWrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text">
+        <span>Progress</span>
+        <span class="prog-count" id="progCount">0 / 9 answered</span>
+      </div>
+    </div>
+
+    <!-- PHQ-9 DEPRESSION -->
+    <div class="questionnaire active" id="q-depression">
+      <div class="q-intro">Over the <strong>last 2 weeks</strong>, how often have you been bothered by the following problems?</div>
+
+      <div class="q-card" data-q="d1">
+        <div class="q-number">1</div>
+        <div class="q-text">Little interest or pleasure in doing things</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d1" id="d1-0" value="0"><label for="d1-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d1" id="d1-1" value="1"><label for="d1-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d1" id="d1-2" value="2"><label for="d1-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d1" id="d1-3" value="3"><label for="d1-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d2">
+        <div class="q-number">2</div>
+        <div class="q-text">Feeling down, depressed, or hopeless</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d2" id="d2-0" value="0"><label for="d2-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d2" id="d2-1" value="1"><label for="d2-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d2" id="d2-2" value="2"><label for="d2-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d2" id="d2-3" value="3"><label for="d2-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d3">
+        <div class="q-number">3</div>
+        <div class="q-text">Trouble falling or staying asleep, or sleeping too much</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d3" id="d3-0" value="0"><label for="d3-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d3" id="d3-1" value="1"><label for="d3-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d3" id="d3-2" value="2"><label for="d3-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d3" id="d3-3" value="3"><label for="d3-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d4">
+        <div class="q-number">4</div>
+        <div class="q-text">Feeling tired or having little energy</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d4" id="d4-0" value="0"><label for="d4-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d4" id="d4-1" value="1"><label for="d4-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d4" id="d4-2" value="2"><label for="d4-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d4" id="d4-3" value="3"><label for="d4-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d5">
+        <div class="q-number">5</div>
+        <div class="q-text">Poor appetite or overeating</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d5" id="d5-0" value="0"><label for="d5-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d5" id="d5-1" value="1"><label for="d5-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d5" id="d5-2" value="2"><label for="d5-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d5" id="d5-3" value="3"><label for="d5-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d6">
+        <div class="q-number">6</div>
+        <div class="q-text">Feeling bad about yourself, or that you are a failure or have let yourself or your family down</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d6" id="d6-0" value="0"><label for="d6-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d6" id="d6-1" value="1"><label for="d6-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d6" id="d6-2" value="2"><label for="d6-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d6" id="d6-3" value="3"><label for="d6-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d7">
+        <div class="q-number">7</div>
+        <div class="q-text">Trouble concentrating on things, such as reading or watching television</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d7" id="d7-0" value="0"><label for="d7-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d7" id="d7-1" value="1"><label for="d7-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d7" id="d7-2" value="2"><label for="d7-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d7" id="d7-3" value="3"><label for="d7-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d8">
+        <div class="q-number">8</div>
+        <div class="q-text">Moving or speaking so slowly that other people could have noticed, or being so fidgety or restless that you have been moving around a lot more than usual</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d8" id="d8-0" value="0"><label for="d8-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d8" id="d8-1" value="1"><label for="d8-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d8" id="d8-2" value="2"><label for="d8-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d8" id="d8-3" value="3"><label for="d8-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="d9">
+        <div class="q-number">9</div>
+        <div class="q-text">Thoughts that you would be better off dead, or of hurting yourself in some way</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="d9" id="d9-0" value="0"><label for="d9-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="d9" id="d9-1" value="1"><label for="d9-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="d9" id="d9-2" value="2"><label for="d9-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="d9" id="d9-3" value="3"><label for="d9-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAD-7 ANXIETY -->
+    <div class="questionnaire" id="q-anxiety">
+      <div class="q-intro">Over the <strong>last 2 weeks</strong>, how often have you been bothered by the following problems?</div>
+
+      <div class="q-card" data-q="a1">
+        <div class="q-number">1</div>
+        <div class="q-text">Feeling nervous, anxious, or on edge</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a1" id="a1-0" value="0"><label for="a1-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a1" id="a1-1" value="1"><label for="a1-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a1" id="a1-2" value="2"><label for="a1-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a1" id="a1-3" value="3"><label for="a1-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="a2">
+        <div class="q-number">2</div>
+        <div class="q-text">Not being able to stop or control worrying</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a2" id="a2-0" value="0"><label for="a2-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a2" id="a2-1" value="1"><label for="a2-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a2" id="a2-2" value="2"><label for="a2-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a2" id="a2-3" value="3"><label for="a2-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="a3">
+        <div class="q-number">3</div>
+        <div class="q-text">Worrying too much about different things</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a3" id="a3-0" value="0"><label for="a3-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a3" id="a3-1" value="1"><label for="a3-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a3" id="a3-2" value="2"><label for="a3-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a3" id="a3-3" value="3"><label for="a3-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="a4">
+        <div class="q-number">4</div>
+        <div class="q-text">Trouble relaxing</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a4" id="a4-0" value="0"><label for="a4-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a4" id="a4-1" value="1"><label for="a4-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a4" id="a4-2" value="2"><label for="a4-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a4" id="a4-3" value="3"><label for="a4-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="a5">
+        <div class="q-number">5</div>
+        <div class="q-text">Being so restless that it is hard to sit still</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a5" id="a5-0" value="0"><label for="a5-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a5" id="a5-1" value="1"><label for="a5-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a5" id="a5-2" value="2"><label for="a5-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a5" id="a5-3" value="3"><label for="a5-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="a6">
+        <div class="q-number">6</div>
+        <div class="q-text">Becoming easily annoyed or irritable</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a6" id="a6-0" value="0"><label for="a6-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a6" id="a6-1" value="1"><label for="a6-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a6" id="a6-2" value="2"><label for="a6-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a6" id="a6-3" value="3"><label for="a6-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="a7">
+        <div class="q-number">7</div>
+        <div class="q-text">Feeling afraid, as if something awful might happen</div>
+        <div class="q-options">
+          <div class="q-option"><input type="radio" name="a7" id="a7-0" value="0"><label for="a7-0"><span class="opt-score">0</span><span class="opt-text">Not at all</span></label></div>
+          <div class="q-option"><input type="radio" name="a7" id="a7-1" value="1"><label for="a7-1"><span class="opt-score">1</span><span class="opt-text">Several days</span></label></div>
+          <div class="q-option"><input type="radio" name="a7" id="a7-2" value="2"><label for="a7-2"><span class="opt-score">2</span><span class="opt-text">More than half the days</span></label></div>
+          <div class="q-option"><input type="radio" name="a7" id="a7-3" value="3"><label for="a7-3"><span class="opt-score">3</span><span class="opt-text">Nearly every day</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap fade-up" id="submitWrap">
+      <button class="submit-btn" id="submitBtn" onclick="calculateResults()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        Get My Results
+      </button>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results" id="results">
+      <div class="result-card" id="resultCard">
+        <div class="result-score" id="resultScore">0</div>
+        <div class="result-max" id="resultMax">out of 27</div>
+        <div class="result-severity" id="resultSeverity">Minimal</div>
+        <div class="result-bar">
+          <div class="result-bar-bg"><div class="result-bar-fill" id="resultBarFill"></div></div>
+          <div class="result-bar-labels"><span>0</span><span id="resultBarMax">27</span></div>
+        </div>
+        <div class="result-desc" id="resultDesc"></div>
+      </div>
+
+      <div class="resources" id="resourcesSection">
+        <h3>Helpful Resources</h3>
+        <div class="resource-grid">
+          <a href="tel:988" class="resource-card">
+            <div class="resource-icon">&#128222;</div>
+            <h4>988 Suicide & Crisis Lifeline</h4>
+            <p>Call or text 988 for free, confidential support 24/7.</p>
+            <span class="resource-link">Call 988 &#8594;</span>
+          </a>
+          <a href="https://www.crisistextline.org/" target="_blank" class="resource-card">
+            <div class="resource-icon">&#128172;</div>
+            <h4>Crisis Text Line</h4>
+            <p>Text HELLO to 741741 to connect with a trained counselor.</p>
+            <span class="resource-link">Learn more &#8594;</span>
+          </a>
+          <a href="https://www.nami.org/help" target="_blank" class="resource-card">
+            <div class="resource-icon">&#128153;</div>
+            <h4>NAMI Helpline</h4>
+            <p>Free information, referrals, and support. Call 1-800-950-6264.</p>
+            <span class="resource-link">Visit NAMI &#8594;</span>
+          </a>
+          <a href="https://www.zeffy.com/en-US/donation-form/ec714506-0c1d-4f2e-b323-00a3c65e9e7f" target="_blank" class="resource-card" style="border-color:rgba(239,68,68,0.2)">
+            <div class="resource-icon">&#10084;</div>
+            <h4>Support CareForBrains</h4>
+            <p>Your donation helps us provide free mental health resources to youth everywhere.</p>
+            <span class="resource-link" style="color:#F87171">Donate now &#8594;</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="retake-wrap">
+        <button class="retake-btn" onclick="retake()">&#8634; Take Assessment Again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">Care<span>For</span>Brains</div>
+      <p class="footer-text">&copy; 2025 CareForBrains. A youth-led 501(c)(3) nonprofit.</p>
+    </div>
+  </footer>
+
+  <script>
+    // NAV
+    const nav = document.getElementById('nav');
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+    hamburger.addEventListener('click', () => { navLinks.classList.toggle('open'); });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+    // INTERSECTION OBSERVER
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+    // STATE
+    let currentTab = 'depression';
+    const depressionQs = ['d1','d2','d3','d4','d5','d6','d7','d8','d9'];
+    const anxietyQs = ['a1','a2','a3','a4','a5','a6','a7'];
+
+    // TAB SWITCH
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.getElementById('q-depression').classList.toggle('active', tab === 'depression');
+      document.getElementById('q-anxiety').classList.toggle('active', tab === 'anxiety');
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('submitWrap').style.display = '';
+      document.getElementById('progressWrap').style.display = '';
+      updateProgress();
+    }
+
+    // TRACK ANSWERS
+    document.querySelectorAll('.q-option input').forEach(input => {
+      input.addEventListener('change', function() {
+        this.closest('.q-card').classList.add('answered');
+        updateProgress();
+      });
+    });
+
+    function updateProgress() {
+      const qs = currentTab === 'depression' ? depressionQs : anxietyQs;
+      const total = qs.length;
+      let answered = 0;
+      qs.forEach(q => { if (document.querySelector(`input[name="${q}"]:checked`)) answered++; });
+      const pct = (answered / total) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progCount').textContent = answered + ' / ' + total + ' answered';
+      document.getElementById('submitBtn').classList.toggle('ready', answered === total);
+    }
+
+    // CALCULATE
+    function calculateResults() {
+      const qs = currentTab === 'depression' ? depressionQs : anxietyQs;
+      let score = 0;
+      let allAnswered = true;
+
+      qs.forEach(q => {
+        const checked = document.querySelector(`input[name="${q}"]:checked`);
+        if (checked) { score += parseInt(checked.value); }
+        else { allAnswered = false; }
+      });
+
+      if (!allAnswered) return;
+
+      const maxScore = currentTab === 'depression' ? 27 : 21;
+      let severity, severityClass, desc;
+
+      if (currentTab === 'depression') {
+        if (score <= 4) { severity = 'Minimal'; severityClass = 'minimal'; desc = 'Your responses suggest minimal or no depression symptoms. Continue taking care of your mental health through healthy habits, social connections, and self-care.'; }
+        else if (score <= 9) { severity = 'Mild'; severityClass = 'mild'; desc = 'Your responses suggest mild depression symptoms. Consider monitoring how you feel over the coming weeks. Talking to a trusted friend, family member, or counselor can help.'; }
+        else if (score <= 14) { severity = 'Moderate'; severityClass = 'moderate'; desc = 'Your responses suggest moderate depression symptoms. We recommend speaking with a healthcare provider or mental health professional for further evaluation and support.'; }
+        else if (score <= 19) { severity = 'Moderately Severe'; severityClass = 'mod-severe'; desc = 'Your responses suggest moderately severe depression symptoms. Please reach out to a mental health professional. Treatment, including therapy and/or medication, can make a real difference.'; }
+        else { severity = 'Severe'; severityClass = 'severe'; desc = 'Your responses suggest severe depression symptoms. Please seek help from a mental health professional as soon as possible. You are not alone, and effective treatments are available.'; }
+      } else {
+        if (score <= 4) { severity = 'Minimal'; severityClass = 'minimal'; desc = 'Your responses suggest minimal anxiety. Keep up your positive coping strategies and check in with yourself regularly.'; }
+        else if (score <= 9) { severity = 'Mild'; severityClass = 'mild'; desc = 'Your responses suggest mild anxiety. Mindfulness, exercise, and talking to someone you trust can be helpful. Monitor your symptoms over time.'; }
+        else if (score <= 14) { severity = 'Moderate'; severityClass = 'moderate'; desc = 'Your responses suggest moderate anxiety. We recommend consulting with a healthcare provider or mental health professional for further assessment and possible treatment.'; }
+        else { severity = 'Severe'; severityClass = 'severe'; desc = 'Your responses suggest severe anxiety. Please reach out to a mental health professional. Effective treatments including therapy and medication are available and can help.'; }
+      }
+
+      // Check for suicidal ideation (question 9 on depression)
+      if (currentTab === 'depression') {
+        const q9 = document.querySelector('input[name="d9"]:checked');
+        if (q9 && parseInt(q9.value) > 0) {
+          desc += ' Important: You indicated thoughts of self-harm. Please reach out to the 988 Suicide & Crisis Lifeline (call or text 988) or the Crisis Text Line (text HELLO to 741741) right away. You deserve support.';
+        }
+      }
+
+      // Show results
+      const resultCard = document.getElementById('resultCard');
+      resultCard.className = 'result-card ' + severityClass;
+      document.getElementById('resultScore').textContent = score;
+      document.getElementById('resultMax').textContent = 'out of ' + maxScore;
+      document.getElementById('resultSeverity').textContent = severity;
+      document.getElementById('resultDesc').textContent = desc;
+      document.getElementById('resultBarMax').textContent = maxScore;
+      document.getElementById('results').classList.add('show');
+      document.getElementById('submitWrap').style.display = 'none';
+      document.getElementById('progressWrap').style.display = 'none';
+
+      // Animate bar
+      setTimeout(() => {
+        document.getElementById('resultBarFill').style.width = ((score / maxScore) * 100) + '%';
+      }, 100);
+
+      // Scroll to results
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // RETAKE
+    function retake() {
+      const qs = currentTab === 'depression' ? depressionQs : anxietyQs;
+      qs.forEach(q => {
+        const checked = document.querySelector(`input[name="${q}"]:checked`);
+        if (checked) checked.checked = false;
+      });
+      document.querySelectorAll(`#q-${currentTab} .q-card`).forEach(c => c.classList.remove('answered'));
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('resultBarFill').style.width = '0%';
+      document.getElementById('submitWrap').style.display = '';
+      document.getElementById('progressWrap').style.display = '';
+      updateProgress();
+      document.querySelector('.tab-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Init
+    updateProgress();
+  </script>
+</body>
+</html>
