@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — CareForBrains</title>
+<title>Blog - CareForBrains</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
@@ -92,11 +92,12 @@
   .blog-sec { max-width: var(--max-w); margin: 0 auto; padding: 2.5rem 2rem 6rem; }
 
   /* FEATURED POST */
-  .featured-post { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; margin-bottom: 4rem; padding: 2.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden; }
-  .featured-post::before { content: 'LATEST'; position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: white; background: var(--accent-gradient); padding: 0.35rem 0.9rem; border-radius: 6px; }
+  .featured-post { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; margin-bottom: 4rem; padding: 2.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden; cursor: pointer; }
+  .featured-post::before { content: 'LATEST'; position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: white; background: var(--accent-gradient); padding: 0.35rem 0.9rem; border-radius: 6px; z-index: 2; }
   .featured-post:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.25); }
-  .featured-visual { aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; position: relative; }
-  .featured-visual .post-cover { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .featured-visual { aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; position: relative; background: var(--bg-alt); }
+  .featured-visual img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-out-expo); }
+  .featured-post:hover .featured-visual img { transform: scale(1.04); }
   .featured-text .post-cat { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; }
   .featured-text h2 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 1rem; }
   .featured-text p { font-size: 0.95rem; color: var(--fg-sec); line-height: 1.7; margin-bottom: 1.5rem; }
@@ -107,13 +108,13 @@
 
   /* GRID POSTS */
   .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
-  .post-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; transition: all 0.4s var(--ease-spring); position: relative; }
+  .post-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; transition: all 0.4s var(--ease-spring); position: relative; cursor: pointer; }
   .post-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out-expo); }
   .post-card:hover::after { transform: scaleX(1); }
   .post-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.2); }
-  .post-cover-wrap { aspect-ratio: 16/10; overflow: hidden; position: relative; }
-  .post-cover { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-out-expo); }
-  .post-card:hover .post-cover { transform: scale(1.05); }
+  .post-cover-wrap { aspect-ratio: 16/10; overflow: hidden; position: relative; background: var(--bg-alt); }
+  .post-cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-out-expo); }
+  .post-card:hover .post-cover-wrap img { transform: scale(1.05); }
   .post-cat { display: inline-block; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.7rem; border-radius: 6px; }
   .cat-wellness { background: #D1FAE5; color: #047857; }
   .cat-anxiety { background: #FEE2E2; color: #B91C1C; }
@@ -129,17 +130,36 @@
   .post-excerpt { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.6; margin-bottom: 1.2rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .post-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--rule); }
   .post-footer-left { display: flex; align-items: center; gap: 0.5rem; }
-  .post-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-bg); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--accent-deep); }
+  .post-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-bg); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--accent-deep); flex-shrink: 0; }
   .post-footer-info { font-size: 0.72rem; }
   .post-footer-info .post-author { display: block; font-weight: 600; color: var(--fg); }
   .post-footer-info .post-date { color: var(--fg-muted); }
   .post-views { display: flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; color: var(--fg-muted); font-weight: 500; }
   .post-views svg { width: 14px; height: 14px; stroke: var(--fg-muted); fill: none; stroke-width: 1.5; }
 
-  /* LOAD MORE */
-  .load-more-wrap { text-align: center; margin-top: 3rem; }
-  .btn-load { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: transparent; border: 1.5px solid var(--rule); color: var(--fg-sec); font-family: var(--sans); font-weight: 600; font-size: 0.88rem; border-radius: 12px; cursor: pointer; transition: all 0.3s var(--ease-spring); }
-  .btn-load:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); transform: translateY(-2px); }
+  /* ARTICLE OVERLAY */
+  .article-overlay { position: fixed; inset: 0; z-index: 9990; background: var(--bg); overflow-y: auto; transform: translateY(100%); transition: transform 0.5s var(--ease-out-expo); }
+  .article-overlay.open { transform: translateY(0); }
+  .article-close { position: fixed; top: 1.5rem; right: 2rem; z-index: 9991; width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s var(--ease-spring); opacity: 0; pointer-events: none; }
+  .article-overlay.open .article-close { opacity: 1; pointer-events: auto; }
+  .article-close:hover { transform: rotate(90deg) scale(1.1); border-color: var(--accent); }
+  .article-close svg { width: 18px; height: 18px; stroke: var(--fg); stroke-width: 2; }
+  .article-header { max-width: 760px; margin: 0 auto; padding: 7rem 2rem 2rem; text-align: center; }
+  .article-header .post-cat { margin-bottom: 1.2rem; }
+  .article-header h1 { font-family: var(--serif); font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 400; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.5rem; }
+  .article-meta { display: flex; align-items: center; justify-content: center; gap: 1.5rem; font-size: 0.82rem; color: var(--fg-muted); flex-wrap: wrap; }
+  .article-meta-item { display: flex; align-items: center; gap: 0.4rem; }
+  .article-meta-item svg { width: 16px; height: 16px; stroke: var(--fg-muted); fill: none; stroke-width: 1.5; }
+  .article-cover { max-width: 900px; margin: 2.5rem auto 0; padding: 0 2rem; }
+  .article-cover img { width: 100%; border-radius: 20px; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .article-content { max-width: 680px; margin: 3rem auto 4rem; padding: 0 2rem; }
+  .article-content p { font-size: 1.05rem; color: var(--fg-sec); line-height: 1.85; margin-bottom: 1.5rem; }
+  .article-content p:first-child::first-letter { font-family: var(--serif); font-size: 3.5rem; float: left; line-height: 1; margin-right: 0.5rem; margin-top: 0.1rem; color: var(--accent-deep); font-weight: 400; }
+  .article-content h2 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; letter-spacing: -0.5px; margin: 2.5rem 0 1rem; color: var(--fg); }
+  .article-content blockquote { border-left: 3px solid var(--accent); padding: 1rem 0 1rem 1.5rem; margin: 2rem 0; font-style: italic; color: var(--fg-sec); font-size: 1.1rem; line-height: 1.7; }
+  .article-back { max-width: 680px; margin: 0 auto 4rem; padding: 0 2rem; }
+  .article-back a { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent); font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: gap 0.3s; }
+  .article-back a:hover { gap: 0.8rem; }
 
   /* CTA BANNER */
   .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
@@ -166,23 +186,6 @@
   .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
   .footer-links a:hover { color: var(--accent); }
 
-  /* Post color covers — abstract gradients instead of images */
-  .cover-1 { background: linear-gradient(135deg, #059669, #34D399, #6EE7B7); }
-  .cover-2 { background: linear-gradient(135deg, #B91C1C, #EF4444, #FCA5A5); }
-  .cover-3 { background: linear-gradient(135deg, #4338CA, #818CF8, #C7D2FE); }
-  .cover-4 { background: linear-gradient(135deg, #1D4ED8, #60A5FA, #BFDBFE); }
-  .cover-5 { background: linear-gradient(135deg, #B45309, #F59E0B, #FDE68A); }
-  .cover-6 { background: linear-gradient(135deg, #BE185D, #F472B6, #FBCFE8); }
-  .cover-7 { background: linear-gradient(135deg, #7C3AED, #A78BFA, #DDD6FE); }
-  .cover-8 { background: linear-gradient(135deg, #047857, #10B981, #A7F3D0); }
-  .cover-9 { background: linear-gradient(135deg, #0E7490, #22D3EE, #A5F3FC); }
-  .cover-10 { background: linear-gradient(135deg, #9333EA, #C084FC, #E9D5FF); }
-  .cover-11 { background: linear-gradient(135deg, #0369A1, #38BDF8, #BAE6FD); }
-  .cover-abstract { display: flex; align-items: center; justify-content: center; }
-  .cover-icon { opacity: 0.25; }
-  .cover-icon svg { width: 64px; height: 64px; stroke: white; fill: none; stroke-width: 1; }
-  .featured-visual .cover-icon svg { width: 96px; height: 96px; }
-
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .featured-post { grid-template-columns: 1fr; gap: 2rem; }
@@ -201,6 +204,10 @@
     footer .footer-inner { flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
     .cursor-glow, .cursor-dot { display: none; }
+    .article-header { padding: 6rem 1.5rem 1.5rem; }
+    .article-cover { padding: 0 1.5rem; }
+    .article-content { padding: 0 1.5rem; }
+    .article-back { padding: 0 1.5rem; }
   }
 </style>
 </head>
@@ -238,14 +245,14 @@
   <div class="page-hero-inner">
     <div class="page-tag r"><span class="dot"></span> Mental Health Blog</div>
     <h1 class="r">Stories that <em>matter</em></h1>
-    <p class="page-hero-sub r">Insights, guides, and real talk about mental health — written by our team and community of advocates.</p>
+    <p class="page-hero-sub r">Insights, guides, and real talk about mental health, written by our team and community of advocates.</p>
     <div class="hero-stats r">
       <div class="hero-stat">
-        <div class="hero-stat-num">12</div>
+        <div class="hero-stat-num">22</div>
         <div class="hero-stat-label">Articles</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">11.2k</div>
+        <div class="hero-stat-num">21.7k</div>
         <div class="hero-stat-label">Total Reads</div>
       </div>
       <div class="hero-stat">
@@ -272,263 +279,32 @@
 <section class="blog-sec">
 
   <!-- FEATURED -->
-  <div class="featured-post r" data-cat="community">
-    <div class="featured-visual cover-8 cover-abstract">
-      <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg></div>
+  <div class="featured-post r" data-cat="community" data-id="1">
+    <div class="featured-visual">
+      <img src="images/blog-1.png" alt="Supporting a friend">
     </div>
     <div class="featured-text">
       <span class="post-cat cat-community">Community</span>
       <h2>How to Support a Friend Going Through a Tough Time</h2>
-      <p>Sometimes the most powerful thing you can do is just be there. This guide covers practical, empathetic ways to show up for someone struggling — without overstepping boundaries or burning out yourself.</p>
+      <p>Sometimes the most powerful thing you can do is just be there. This guide covers practical, empathetic ways to show up for someone struggling without overstepping boundaries.</p>
       <div class="post-meta">
         <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg> <span class="post-author">Tanmay Vasudeva</span></span>
-        <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg> Feb 14, 2026</span>
+        <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg> Feb 25, 2026</span>
         <span class="post-meta-item"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 304 views</span>
       </div>
     </div>
   </div>
 
   <!-- GRID -->
-  <div class="posts-grid">
-
-    <div class="post-card r" data-cat="science">
-      <div class="post-cover-wrap cover-11 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-science">Science</span>
-        <h3>The Science Behind Gratitude and Happiness</h3>
-        <p class="post-excerpt">Neuroscience reveals that practicing gratitude physically rewires your brain. Here's what happens when you make thankfulness a daily habit and how it impacts your mental health.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">ZH</div>
-            <div class="post-footer-info">
-              <span class="post-author">Zavier Hayat</span>
-              <span class="post-date">Jan 18, 2026</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 412</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="self-care">
-      <div class="post-cover-wrap cover-6 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-self-care">Self-Care</span>
-        <h3>Self-Care Isn't Selfish: Making Time for You</h3>
-        <p class="post-excerpt">In a culture that glorifies hustle, taking time for yourself feels like a luxury. But self-care is a necessity — especially for students juggling academics, extracurriculars, and social life.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">RB</div>
-            <div class="post-footer-info">
-              <span class="post-author">Raheesh Basaria</span>
-              <span class="post-date">Nov 5, 2025</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 876</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="science">
-      <div class="post-cover-wrap cover-9 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-science">Science</span>
-        <h3>What Is Neurodiversity? A Beginner's Guide</h3>
-        <p class="post-excerpt">ADHD, autism, dyslexia — these aren't deficits, they're differences. Understanding neurodiversity changes how we approach mental health, education, and community support.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">EW</div>
-            <div class="post-footer-info">
-              <span class="post-author">Ezra Weng</span>
-              <span class="post-date">Sep 22, 2025</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,104</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="community">
-      <div class="post-cover-wrap cover-7 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-community">Community</span>
-        <h3>Building Resilience: Lessons from Student Leaders</h3>
-        <p class="post-excerpt">We interviewed chapter leaders across 5 states about what keeps them going. Their stories reveal a common thread — resilience isn't born, it's built through showing up every day.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">TV</div>
-            <div class="post-footer-info">
-              <span class="post-author">Tanmay Vasudeva</span>
-              <span class="post-date">Jul 30, 2025</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 543</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="student-life">
-      <div class="post-cover-wrap cover-5 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-student-life">Student Life</span>
-        <h3>Social Media and Mental Health: Finding Balance</h3>
-        <p class="post-excerpt">Doom-scrolling, comparison traps, FOMO — social media impacts mental health in ways we're still understanding. Here's how to build a healthier relationship with your feed.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">RB</div>
-            <div class="post-footer-info">
-              <span class="post-author">Raheesh Basaria</span>
-              <span class="post-date">May 12, 2025</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,891</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="mindfulness">
-      <div class="post-cover-wrap cover-3 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-mindfulness">Mindfulness</span>
-        <h3>The Power of Journaling for Emotional Wellness</h3>
-        <p class="post-excerpt">Writing down your thoughts isn't just a hobby — it's a clinically backed strategy for processing emotions, reducing stress, and gaining clarity during overwhelming times.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">EZ</div>
-            <div class="post-footer-info">
-              <span class="post-author">Eric Zang</span>
-              <span class="post-date">Mar 8, 2025</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 738</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="student-life">
-      <div class="post-cover-wrap cover-5 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-student-life">Student Life</span>
-        <h3>Navigating Stress During Exam Season</h3>
-        <p class="post-excerpt">Finals week doesn't have to destroy your mental health. These evidence-based strategies from our chapter leaders help you stay focused without the burnout spiral.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">EW</div>
-            <div class="post-footer-info">
-              <span class="post-author">Ezra Weng</span>
-              <span class="post-date">Jan 15, 2025</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,456</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="wellness">
-      <div class="post-cover-wrap cover-4 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-wellness">Wellness</span>
-        <h3>How Sleep Affects Your Mental Health</h3>
-        <p class="post-excerpt">That all-nighter might feel productive, but chronic sleep deprivation fundamentally changes your brain chemistry. Here's the science — and how to fix your sleep schedule.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">ZH</div>
-            <div class="post-footer-info">
-              <span class="post-author">Zavier Hayat</span>
-              <span class="post-date">Nov 2, 2024</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 654</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="anxiety">
-      <div class="post-cover-wrap cover-2 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-anxiety">Anxiety</span>
-        <h3>Breaking the Stigma: Why Talking Matters</h3>
-        <p class="post-excerpt">1 in 5 teens experience a mental health condition, but most never talk about it. Breaking the silence starts with one honest conversation — and it could save a life.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">TV</div>
-            <div class="post-footer-info">
-              <span class="post-author">Tanmay Vasudeva</span>
-              <span class="post-date">Oct 10, 2024</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 2,103</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="mindfulness">
-      <div class="post-cover-wrap cover-3 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-mindfulness">Mindfulness</span>
-        <h3>5 Mindfulness Exercises You Can Do Anywhere</h3>
-        <p class="post-excerpt">You don't need a meditation cushion or 30 free minutes. These quick grounding techniques work in class, on the bus, or right before a big presentation.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">EZ</div>
-            <div class="post-footer-info">
-              <span class="post-author">Eric Zang</span>
-              <span class="post-date">Sep 18, 2024</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 892</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-card r" data-cat="anxiety">
-      <div class="post-cover-wrap cover-2 cover-abstract">
-        <div class="cover-icon"><svg viewBox="0 0 24 24"><path d="M11.42 15.17l-5.1-5.1m0 0L12 4.37m-5.68 5.7h11.8M4.37 12a7.63 7.63 0 1015.26 0 7.63 7.63 0 00-15.26 0z"/></svg></div>
-      </div>
-      <div class="post-body">
-        <span class="post-cat cat-anxiety">Anxiety</span>
-        <h3>Understanding Anxiety: A Teen's Guide</h3>
-        <p class="post-excerpt">Racing heart, sweaty palms, spiraling thoughts — anxiety is more than just "being nervous." Learn to recognize the signs, understand the triggers, and take back control.</p>
-        <div class="post-footer">
-          <div class="post-footer-left">
-            <div class="post-avatar">TV</div>
-            <div class="post-footer-info">
-              <span class="post-author">Tanmay Vasudeva</span>
-              <span class="post-date">Aug 5, 2024</span>
-            </div>
-          </div>
-          <div class="post-views"><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,247</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="load-more-wrap r">
-    <button class="btn-load">Load More Articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg></button>
-  </div>
+  <div class="posts-grid" id="postsGrid"></div>
 
 </section>
+
+<!-- ARTICLE OVERLAY -->
+<div class="article-overlay" id="articleOverlay">
+  <button class="article-close" id="articleClose"><svg viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+  <div id="articleContent"></div>
+</div>
 
 <!-- CTA -->
 <section class="cta-banner">
@@ -558,41 +334,137 @@
 </footer>
 
 <script>
-  // Nav scroll hide
-  let lastScroll = 0;
-  const nav = document.querySelector('nav');
-  window.addEventListener('scroll', () => {
-    const curr = window.scrollY;
-    nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
-    lastScroll = curr;
-  });
-  // Mobile nav
-  document.getElementById('hamburger').addEventListener('click', () => {
-    const l = document.querySelector('.nav-links');
-    const open = l.style.display === 'flex';
-    l.style.display = open ? 'none' : 'flex';
-    if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
-  });
+// ─── BLOG DATA ───
+const posts = [
+  { id:1, cat:'community', catLabel:'Community', catClass:'cat-community', img:'images/blog-1.png', title:'How to Support a Friend Going Through a Tough Time', excerpt:'Sometimes the most powerful thing you can do is just be there. This guide covers practical, empathetic ways to show up for someone struggling without overstepping boundaries.', author:'Tanmay Vasudeva', initials:'TV', date:'Feb 25, 2026', views:304, body:`<p>When someone you care about is struggling, it can feel overwhelming. You want to help but you are not sure how. The truth is, you do not need to have all the answers. Just being present makes a bigger difference than most people realize.</p><h2>Listen more than you speak</h2><p>The instinct to fix things is natural, but often what a friend needs most is someone who will simply listen. Put your phone away, make eye contact, and let them talk without interrupting. Sometimes silence is more powerful than advice. Let them feel heard before you try to offer solutions.</p><p>Avoid phrases like "just cheer up" or "it could be worse." These minimize what they are going through. Instead try "I hear you" or "That sounds really hard." Validation goes a long way toward making someone feel safe enough to open up.</p><h2>Set boundaries for yourself</h2><p>Supporting a friend does not mean sacrificing your own mental health. It is okay to say "I care about you and I want to help, but I am not equipped to handle this alone." Encourage them to talk to a counselor, therapist, or trusted adult. You can be a bridge to professional support without becoming their only lifeline.</p><p>Check in regularly, even with a simple text. Consistency matters more than grand gestures. A "thinking of you" message on a random Tuesday can mean the world to someone going through a tough time.</p>` },
+  { id:2, cat:'science', catLabel:'Science', catClass:'cat-science', img:'images/blog-2.png', title:'The Science Behind Gratitude and Happiness', excerpt:'Neuroscience reveals that practicing gratitude physically rewires your brain. Here is what happens when you make thankfulness a daily habit.', author:'Zavier Hayat', initials:'ZH', date:'Feb 10, 2026', views:412, body:`<p>Gratitude is not just a feel-good buzzword. Neuroscience research shows that regularly practicing gratitude literally changes the structure and function of your brain, boosting dopamine and serotonin production in ways similar to antidepressant medication.</p><h2>What happens in your brain</h2><p>When you consciously acknowledge something you are thankful for, your brain releases dopamine and serotonin, two neurotransmitters responsible for making you feel good. Over time, this creates new neural pathways that make positive thinking more automatic.</p><p>A 2015 study published in NeuroImage found that participants who wrote gratitude letters showed significantly greater activation in the medial prefrontal cortex, a brain region associated with learning and decision making. The effects lasted for months after the exercise ended.</p><h2>How to start</h2><p>You do not need a fancy journal or 30 minutes of free time. Start with three things you are grateful for before bed. They can be small like a good meal, a funny text, or sunshine through your window. The key is consistency, not complexity. After two weeks, most people report noticeable improvements in mood, sleep quality, and overall outlook.</p>` },
+  { id:3, cat:'self-care', catLabel:'Self-Care', catClass:'cat-self-care', img:'images/blog-3.png', title:'Digital Detox: Reclaiming Your Attention', excerpt:'Your phone checks you more than you check it. Here is how to break the cycle and reclaim your focus without going completely off the grid.', author:'Raheesh Basaria', initials:'RB', date:'Jan 22, 2026', views:287, body:`<p>The average teenager picks up their phone 96 times per day. That is once every 10 minutes during waking hours. Each notification pulls your attention away from the present moment and fragments your ability to think deeply. But quitting cold turkey is not realistic for most people.</p><h2>Start with boundaries, not bans</h2><p>Instead of deleting all your apps, try setting specific phone-free windows. The first hour after waking up and the last hour before bed are the most impactful. Use that time for stretching, reading, journaling, or just existing without a screen in your hand.</p><p>Turn off all non-essential notifications. You do not need to know the instant someone likes your photo. Batch your social media use into two or three dedicated windows per day. You will be surprised how little you actually miss.</p><h2>Replace the habit</h2><p>Reaching for your phone is often a response to boredom or discomfort. When you feel the urge, pause and ask yourself what you actually need. Connection? Call a friend. Stimulation? Pick up a book. Escape? Take a walk outside. The goal is not to eliminate technology but to use it intentionally rather than compulsively.</p>` },
+  { id:4, cat:'wellness', catLabel:'Wellness', catClass:'cat-wellness', img:'images/blog-4.png', title:'Holiday Blues: Navigating Mental Health During the Holidays', excerpt:'The holidays are not magical for everyone. Here is how to take care of yourself during a season that can amplify loneliness and stress.', author:'Ezra Weng', initials:'EW', date:'Dec 15, 2025', views:561, body:`<p>Social media paints the holidays as a season of warmth, togetherness, and joy. But for many people, the holidays amplify feelings of loneliness, grief, financial stress, and family tension. If the holiday season feels heavy for you, know that you are not alone in that experience.</p><h2>It is okay to set limits</h2><p>You do not owe anyone your energy. If certain family gatherings trigger anxiety or conflict, it is okay to set time limits, skip events, or create new traditions that actually bring you peace. Saying no is a form of self-respect.</p><p>Financial pressure is real too. You do not need to go into debt to show people you care. Homemade gifts, shared experiences, or simply being present are more meaningful than anything you can buy. Give yourself permission to celebrate in ways that feel authentic to you.</p><h2>Create anchors</h2><p>Maintain your routines as much as possible. Sleep schedules, exercise habits, and meal times are the anchors that keep your mental health stable. When everything else feels chaotic, these small consistencies provide a sense of control and normalcy.</p>` },
+  { id:5, cat:'self-care', catLabel:'Self-Care', catClass:'cat-self-care', img:'images/blog-5.png', title:'Self-Care Is Not Selfish: Making Time for You', excerpt:'In a culture that glorifies hustle, taking time for yourself feels like a luxury. But self-care is a necessity, especially for students.', author:'Raheesh Basaria', initials:'RB', date:'Nov 5, 2025', views:876, body:`<p>Between classes, homework, extracurriculars, and social obligations, it can feel like there is no time left for yourself. But running on empty does not make you productive. It makes you burned out. Self-care is not a reward for getting everything done. It is what makes getting everything done possible.</p><h2>Redefine what self-care means</h2><p>Self-care is not always bubble baths and face masks, though those are great too. Sometimes self-care is saying no to plans when you are exhausted. Sometimes it is cleaning your room, drinking water, or going to bed early. It is any intentional action that restores your energy and protects your well-being.</p><p>Start by identifying what drains you and what recharges you. For some people it is alone time. For others it is socializing. There is no wrong answer. The key is knowing yourself well enough to give yourself what you need before you hit a breaking point.</p><h2>Build it into your routine</h2><p>Do not wait until you are overwhelmed to practice self-care. Schedule it like you would a class or meeting. Even 15 minutes a day of intentional rest, movement, or creative expression can dramatically improve your mental health over time.</p>` },
+  { id:6, cat:'science', catLabel:'Science', catClass:'cat-science', img:'images/blog-6.png', title:'Mindful Movement: How Exercise Changes Your Brain', excerpt:'Exercise is not just about physical health. Here is the neuroscience behind why moving your body is one of the best things you can do for your mind.', author:'Zavier Hayat', initials:'ZH', date:'Oct 1, 2025', views:723, body:`<p>You have probably heard that exercise is good for your mental health. But the science behind it is more fascinating than most people realize. Physical movement triggers a cascade of neurochemical changes that directly combat anxiety, depression, and cognitive decline.</p><h2>The brain chemistry</h2><p>When you exercise, your brain releases endorphins, serotonin, dopamine, and norepinephrine. These chemicals collectively reduce pain perception, improve mood, sharpen focus, and decrease stress hormones like cortisol. A single 30 minute walk can produce effects comparable to a low dose antidepressant.</p><p>Exercise also stimulates the production of brain-derived neurotrophic factor, or BDNF, which promotes the growth of new neurons and strengthens existing neural connections. This is why regular physical activity is linked to better memory, faster learning, and greater mental resilience.</p><h2>You do not need to be an athlete</h2><p>The benefits kick in at surprisingly low thresholds. A 20 minute walk, a yoga session, dancing in your room, or even gardening counts. The best exercise for your mental health is whatever you will actually do consistently. Start small, stay consistent, and let the neurochemistry do the rest.</p>` },
+  { id:7, cat:'science', catLabel:'Science', catClass:'cat-science', img:'images/blog-7.png', title:'What Is Neurodiversity? A Beginner\'s Guide', excerpt:'ADHD, autism, dyslexia: these are not deficits, they are differences. Understanding neurodiversity changes how we approach mental health.', author:'Ezra Weng', initials:'EW', date:'Sep 22, 2025', views:1104, body:`<p>Neurodiversity is the idea that neurological differences like ADHD, autism, dyslexia, and Tourette syndrome are natural variations of the human brain rather than disorders that need to be fixed. This perspective is reshaping how educators, employers, and mental health professionals think about support and inclusion.</p><h2>Beyond the medical model</h2><p>Traditionally, conditions like ADHD and autism have been framed as deficits. But the neurodiversity movement argues that many of these traits come with genuine strengths: hyperfocus, pattern recognition, creative thinking, and intense empathy, to name a few. The challenges people face often come from environments that were not designed for their neurotype, not from the neurotype itself.</p><p>This does not mean that neurodivergent people do not struggle or need support. It means that the goal should be accommodation and understanding rather than normalization. A fish is not broken because it cannot climb a tree.</p><h2>Why it matters for mental health</h2><p>When neurodivergent people are told their brain works "wrong," it creates shame, anxiety, and depression on top of the challenges they already face. Embracing neurodiversity means creating spaces where every kind of brain can thrive. At CareForBrains, that is central to our mission.</p>` },
+  { id:8, cat:'community', catLabel:'Community', catClass:'cat-community', img:'images/blog-8.png', title:'Podcast Diaries: What We Learned from 3,000 Listeners', excerpt:'Our podcast crossed 3,000 listeners across 4 continents. Here are the biggest lessons from a year of honest conversations about mental health.', author:'Tanmay Vasudeva', initials:'TV', date:'Aug 14, 2025', views:645, body:`<p>When we launched the CareForBrains podcast, we had no idea if anyone would listen. One year later, over 3,000 people across 4 continents have tuned in. The conversations we have had with students, counselors, researchers, and advocates have taught us more than any textbook ever could.</p><h2>People want honesty, not perfection</h2><p>Our most popular episodes were not the polished ones. They were the raw, unfiltered conversations where guests shared real struggles without sugarcoating them. Listeners told us they felt less alone hearing someone else describe the exact thoughts they had been afraid to say out loud.</p><p>One guest said something that stuck with us: "Mental health advocacy is not about having it all figured out. It is about being willing to figure it out in public." That vulnerability is what creates real connection.</p><h2>What is next</h2><p>Season two is already in the works. We are expanding our guest list to include more student voices, more international perspectives, and more conversations about topics that people are afraid to bring up. If you have a story to share, reach out. The mic is open.</p>` },
+  { id:9, cat:'community', catLabel:'Community', catClass:'cat-community', img:'images/blog-9.png', title:'Building Resilience: Lessons from Student Leaders', excerpt:'We interviewed chapter leaders across 5 states about what keeps them going. Their stories reveal a common thread about showing up every day.', author:'Tanmay Vasudeva', initials:'TV', date:'Jul 30, 2025', views:543, body:`<p>Running a CareForBrains chapter is not easy. Between schoolwork, personal challenges, and the emotional weight of mental health advocacy, our chapter leaders face burnout just like anyone else. So we asked them: what keeps you going?</p><h2>Resilience is a practice</h2><p>Every leader we spoke with said the same thing in different words: resilience is not something you are born with. It is built through small, consistent actions. Showing up for your chapter meeting even when you are tired. Reaching out to a volunteer who seems disconnected. Having the hard conversation with a teammate instead of avoiding it.</p><p>"I used to think resilient people just did not feel things as deeply," said one chapter president from Texas. "But actually, resilient people feel everything. They just choose to keep going anyway."</p><h2>Community is the secret ingredient</h2><p>The leaders who reported the least burnout were the ones who had built strong support systems within their chapters. They delegated, shared responsibilities, and were honest when they needed a break. The myth of the lone hero leader does more harm than good. Real leadership means building a team that can carry the mission forward together.</p>` },
+  { id:10, cat:'wellness', catLabel:'Wellness', catClass:'cat-wellness', img:'images/blog-10.png', title:'The Link Between Creativity and Mental Health', excerpt:'Painting, writing, music, dance: creative expression is more than a hobby. It is a legitimate therapeutic tool backed by decades of research.', author:'Eric Zang', initials:'EZ', date:'Jun 20, 2025', views:489, body:`<p>There is a reason art therapy exists. Creative expression activates different parts of the brain than verbal processing, allowing people to access and process emotions that words cannot always reach. Whether it is painting, journaling, playing music, or dancing, creativity offers a pathway to healing that is both ancient and scientifically validated.</p><h2>Why creativity helps</h2><p>When you engage in creative activities, your brain enters a state similar to meditation. The prefrontal cortex, which handles self-criticism and worry, quiets down. The default mode network, associated with imagination and self-reflection, lights up. This combination creates a mental space where processing difficult emotions feels safer and more natural.</p><p>You do not need to be "good" at art for it to help. The therapeutic benefit comes from the process of creation, not the end product. A messy sketch in a notebook can be just as healing as a gallery painting.</p><h2>Make space for play</h2><p>Our education system trains creativity out of most students by high school. Reclaiming it as an adult or teenager means giving yourself permission to make things without judgment. Doodle during study breaks. Write bad poetry. Sing in the shower. Play is not a waste of time. It is essential maintenance for your mental health.</p>` },
+  { id:11, cat:'student-life', catLabel:'Student Life', catClass:'cat-student-life', img:'images/blog-11.png', title:'Social Media and Mental Health: Finding Balance', excerpt:'Doom-scrolling, comparison traps, FOMO: social media impacts mental health in ways we are still understanding. Here is how to build a healthier relationship with your feed.', author:'Raheesh Basaria', initials:'RB', date:'May 12, 2025', views:1891, body:`<p>Let us be real: no one is deleting social media. It is how we connect, learn, and stay informed. But the relationship between social media and mental health is complicated, and pretending it is all fine or all terrible misses the nuance that actually helps.</p><h2>The comparison trap</h2><p>Social media shows you everyone else's highlight reel. You see the party you were not invited to, the vacation you cannot afford, the relationship that looks perfect. Your brain processes these images the same way it would process real social information, triggering genuine feelings of inadequacy and exclusion even when you know logically that it is curated content.</p><p>The fix is not to stop looking. It is to become aware of how specific content makes you feel. Unfollow accounts that consistently make you feel worse about yourself. Curate your feed intentionally. Follow accounts that educate, inspire, or make you laugh without the comparison hangover.</p><h2>Set intentional limits</h2><p>Use built-in screen time tools to set daily limits for social apps. When your time is up, put the phone in another room. The physical distance matters. Most importantly, never start or end your day with social media. Those first and last moments shape your entire mental state.</p>` },
+  { id:12, cat:'mindfulness', catLabel:'Mindfulness', catClass:'cat-mindfulness', img:'images/blog-12.png', title:'Breathing Techniques That Actually Work', excerpt:'Forget "just breathe." These are specific, science-backed breathing patterns that activate your parasympathetic nervous system in under 60 seconds.', author:'Eric Zang', initials:'EZ', date:'Apr 3, 2025', views:632, body:`<p>You have been told to "just breathe" a thousand times. But no one explains how. Not all breathing is created equal. Specific breathing patterns can activate your vagus nerve and trigger your parasympathetic nervous system, shifting your body from fight-or-flight to rest-and-digest in under a minute.</p><h2>The 4-7-8 technique</h2><p>Inhale quietly through your nose for 4 seconds. Hold your breath for 7 seconds. Exhale completely through your mouth for 8 seconds. Repeat three times. This pattern was popularized by Dr. Andrew Weil and is based on pranayama yoga breathing. The extended exhale is the key, as it directly stimulates the vagus nerve.</p><h2>Box breathing</h2><p>Inhale for 4 seconds. Hold for 4 seconds. Exhale for 4 seconds. Hold for 4 seconds. Repeat. This technique is used by Navy SEALs to stay calm under extreme pressure. If it works in combat zones, it works before your math final.</p><p>Physiological sighing is even simpler: take two quick inhales through your nose followed by one long exhale through your mouth. Stanford research shows this is the fastest way to reduce real-time stress. One cycle takes about 10 seconds and produces immediate results.</p>` },
+  { id:13, cat:'mindfulness', catLabel:'Mindfulness', catClass:'cat-mindfulness', img:'images/blog-13.png', title:'The Power of Journaling for Emotional Wellness', excerpt:'Writing down your thoughts is not just a hobby. It is a clinically backed strategy for processing emotions and reducing stress.', author:'Eric Zang', initials:'EZ', date:'Mar 8, 2025', views:738, body:`<p>Journaling has been a therapeutic tool for centuries, but modern psychology has finally caught up with the data to prove why it works. Expressive writing reduces cortisol levels, strengthens immune function, and helps people process traumatic experiences more effectively than talking alone.</p><h2>Why writing works differently than talking</h2><p>When you write, you are forced to organize scattered thoughts into coherent sentences. This process itself is therapeutic because it transforms overwhelming emotions into something manageable and concrete. Talking can sometimes spiral into rumination, but writing naturally creates structure and closure.</p><p>James Pennebaker's landmark research at the University of Texas showed that people who wrote about traumatic experiences for just 15 minutes a day over four days showed measurable improvements in physical and mental health that lasted for months.</p><h2>Getting started</h2><p>Do not overthink it. Open a notebook or notes app and write whatever comes to mind. There are no rules, no grades, no audience. Stream of consciousness is perfectly valid. If you want more structure, try prompts like "Right now I am feeling..." or "The thing I have been avoiding thinking about is..." The goal is to externalize what is internal. That simple act creates distance between you and your emotions, making them easier to understand and manage.</p>` },
+  { id:14, cat:'community', catLabel:'Community', catClass:'cat-community', img:'images/blog-14.png', title:'Starting a Mental Health Chapter at Your School', excerpt:'Everything you need to know about launching a CareForBrains chapter, from getting admin approval to running your first meeting.', author:'Tanmay Vasudeva', initials:'TV', date:'Feb 1, 2025', views:945, body:`<p>Starting a CareForBrains chapter at your school is one of the most impactful things you can do for your community. It creates a dedicated space for mental health conversations, connects students with resources, and gives you real leadership experience. Here is how to make it happen.</p><h2>Step one: find your team</h2><p>You need at least three committed people to start. Look for friends who care about mental health and are willing to put in consistent effort. Diversity of perspective matters, so recruit across different friend groups, grades, and backgrounds. Your founding team will set the culture for everything that follows.</p><h2>Step two: get official</h2><p>Talk to your school counselor or a trusted teacher about becoming an official club. Most schools require a faculty advisor, a mission statement, and a basic plan for meetings. We provide templates and guides for all of this at careforbrains.org. Your advisor does not need to be a mental health expert. They just need to care and show up.</p><p>Plan your first meeting around something low-pressure and engaging. Icebreakers, a short discussion topic, and a clear call to action for the next meeting. Keep it welcoming, keep it consistent, and the rest will follow. Our 22 chapters all started with a few people in a classroom who decided their school deserved better mental health support.</p>` },
+  { id:15, cat:'student-life', catLabel:'Student Life', catClass:'cat-student-life', img:'images/blog-15.png', title:'Navigating Stress During Exam Season', excerpt:'Finals week does not have to destroy your mental health. These evidence-based strategies help you stay focused without the burnout spiral.', author:'Ezra Weng', initials:'EW', date:'Jan 15, 2025', views:1456, body:`<p>Exam season is when everything collides: deadlines, sleep deprivation, social pressure, and the weight of grades that feel like they determine your entire future. Spoiler: they do not. But the stress is real, and managing it is a skill that nobody teaches you in class.</p><h2>Study smarter, not longer</h2><p>Marathon study sessions feel productive but research consistently shows they are less effective than spaced repetition. Study in focused 25 minute blocks with 5 minute breaks, a method called the Pomodoro Technique. After four blocks, take a longer 15 to 30 minute break. Your brain consolidates information during rest, not during cramming.</p><p>Active recall, which means testing yourself rather than re-reading notes, is the single most effective study technique according to cognitive science. Make flashcards, practice problems, or teach concepts to a friend. If you cannot explain it simply, you do not understand it yet.</p><h2>Protect the basics</h2><p>Sleep is non-negotiable. Pulling an all-nighter before an exam literally impairs your cognitive function to the level of being legally intoxicated. Seven to eight hours of sleep will do more for your grade than three extra hours of studying. Eat real food, drink water, and move your body at least once a day. These basics are not luxuries during exam season. They are survival strategies.</p>` },
+  { id:16, cat:'community', catLabel:'Community', catClass:'cat-community', img:'images/blog-16.png', title:'Year in Review: What CareForBrains Accomplished in 2024', excerpt:'From two founders to 22 chapters and 852 volunteers. Here is everything that happened in our first year as an organization.', author:'Tanmay Vasudeva', initials:'TV', date:'Dec 8, 2024', views:1328, body:`<p>When we started CareForBrains in June 2024, we had a Google Doc, a group chat, and a belief that young people deserved better mental health support. Six months later, we are a 501(c)(3) nonprofit with 22 chapters across multiple states and over 852 registered volunteers. Here is how it happened.</p><h2>The milestones</h2><p>In June, we received our official 501(c)(3) status and PVSA certification, which meant our volunteers could earn nationally recognized service hours. That summer, we launched our first volunteer program and watched the applications roll in from students across the country who were hungry for meaningful ways to give back.</p><p>By fall, we launched the E-Card program, giving volunteers a creative way to earn hours while spreading mental health awareness. Chapters started forming organically as students in new schools heard about us through word of mouth, social media, and our growing network of advocates.</p><h2>What we learned</h2><p>The biggest lesson of 2024 is that young people do not need to be told that mental health matters. They already know. What they need are platforms, resources, and communities that take their passion seriously and channel it into real impact. That is what CareForBrains exists to provide, and we are just getting started.</p>` },
+  { id:17, cat:'wellness', catLabel:'Wellness', catClass:'cat-wellness', img:'images/blog-17.png', title:'How Sleep Affects Your Mental Health', excerpt:'That all-nighter might feel productive, but chronic sleep deprivation fundamentally changes your brain chemistry. Here is the science and how to fix it.', author:'Zavier Hayat', initials:'ZH', date:'Nov 2, 2024', views:654, body:`<p>Sleep is not a luxury. It is the foundation of every other aspect of mental health. During sleep, your brain processes emotions, consolidates memories, clears toxic waste products, and repairs neural connections. Skip it consistently and everything else starts to fall apart.</p><h2>What happens when you do not sleep</h2><p>After just one night of poor sleep, your amygdala, the brain's threat detection center, becomes 60% more reactive. That means you are more irritable, more anxious, and more likely to interpret neutral situations as threatening. After several nights, your prefrontal cortex, which handles rational thinking and impulse control, starts to underperform. This is why sleep deprivation looks and feels a lot like depression.</p><p>Chronic sleep loss is linked to increased risk of anxiety disorders, depression, ADHD symptoms, and even psychosis in extreme cases. Teenagers need 8 to 10 hours per night, but most are getting 6 to 7. The gap between what we need and what we get is a public health crisis hiding in plain sight.</p><h2>Fix your sleep hygiene</h2><p>Go to bed and wake up at the same time every day, including weekends. Stop caffeine after 2pm. Keep your room cool, dark, and screen-free for at least 30 minutes before bed. These sound simple but most people do not actually do them. Start with one change this week and build from there.</p>` },
+  { id:18, cat:'anxiety', catLabel:'Anxiety', catClass:'cat-anxiety', img:'images/blog-18.png', title:'Breaking the Stigma: Why Talking Matters', excerpt:'1 in 5 teens experience a mental health condition, but most never talk about it. Breaking the silence starts with one honest conversation.', author:'Tanmay Vasudeva', initials:'TV', date:'Oct 10, 2024', views:2103, body:`<p>One in five teenagers will experience a serious mental health condition before they turn 18. But the majority of them will never tell anyone. Not their parents, not their friends, not a counselor. The stigma around mental health remains one of the biggest barriers to getting help, and it is killing people.</p><h2>Where stigma comes from</h2><p>Mental health stigma is not one thing. It is a web of cultural messages, family expectations, peer pressure, and internalized shame that tells people their struggles are a sign of weakness. Boys are told to "man up." Girls are told they are being "dramatic." Students of color face additional barriers including cultural taboos and lack of representation in mental health spaces.</p><p>The result is silence. And silence lets problems grow until they become crises. By the time someone finally asks for help, they have often been suffering alone for months or years.</p><h2>How to break it</h2><p>Breaking stigma starts with normalization. Talk about mental health the same way you talk about physical health. If you had a broken arm, you would not hide it. You would not feel ashamed. You would get treatment and tell your friends about it. Mental health deserves the same openness. When you share your own experiences, even casually, you give everyone around you permission to do the same. That is how cultures change, one honest conversation at a time.</p>` },
+  { id:19, cat:'mindfulness', catLabel:'Mindfulness', catClass:'cat-mindfulness', img:'images/blog-19.png', title:'5 Mindfulness Exercises You Can Do Anywhere', excerpt:'You do not need a meditation cushion or 30 free minutes. These quick grounding techniques work in class, on the bus, or right before a big presentation.', author:'Eric Zang', initials:'EZ', date:'Sep 18, 2024', views:892, body:`<p>Mindfulness sounds intimidating but it is really just the practice of paying attention to the present moment without judgment. You do not need to sit cross-legged on a mountain. You can practice it in a classroom, on the bus, or even in line at the cafeteria.</p><h2>Five techniques to try today</h2><p>First, the 5-4-3-2-1 grounding exercise. Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, and 1 you can taste. This pulls your brain out of anxious spiraling and anchors it in your physical surroundings. It takes less than two minutes.</p><p>Second, body scanning. Close your eyes and slowly move your attention from your toes to the top of your head, noticing any tension, warmth, or tingling along the way. Third, mindful eating, where you pay full attention to the taste, texture, and temperature of one bite of food. Fourth, walking meditation, where you focus entirely on the sensation of each step. Fifth, square breathing: inhale for 4 counts, hold for 4, exhale for 4, hold for 4.</p><p>None of these require equipment, privacy, or special training. They work because they interrupt the autopilot mode your brain runs on and force you into the present. Try one today and notice how it shifts your mental state even slightly. That shift is the whole point.</p>` },
+  { id:20, cat:'anxiety', catLabel:'Anxiety', catClass:'cat-anxiety', img:'images/blog-20.png', title:'Understanding Anxiety: A Teen\'s Guide', excerpt:'Racing heart, sweaty palms, spiraling thoughts. Anxiety is more than just "being nervous." Learn to recognize the signs and take back control.', author:'Tanmay Vasudeva', initials:'TV', date:'Aug 5, 2024', views:1247, body:`<p>Everyone feels anxious sometimes. Before a test, a first date, a big game. That is normal, healthy anxiety doing its job: preparing you for a challenge. But when anxiety shows up constantly, disproportionately, or without a clear trigger, it becomes something different. It becomes a condition that affects roughly 1 in 3 teenagers.</p><h2>What anxiety actually feels like</h2><p>Anxiety is not just "being nervous." It is a full-body experience. Racing heartbeat. Tight chest. Sweaty palms. Stomach knots. Difficulty breathing. Racing thoughts that jump from worst case to worst case. Some people experience depersonalization, where the world feels unreal or dreamlike. Others have panic attacks that mimic heart attacks.</p><p>The physical symptoms are often the most confusing part. Many teens go to the doctor thinking something is physically wrong with them before discovering that anxiety is the root cause. Understanding that these symptoms are your nervous system misfiring, not a sign of danger, is the first step toward managing them.</p><h2>What you can do</h2><p>Start by naming it. "I am experiencing anxiety" is more helpful than "something is wrong with me." Practice grounding techniques like the 5-4-3-2-1 method. Talk to someone you trust. And if anxiety is consistently interfering with school, friendships, or daily life, ask a parent or counselor about therapy. Cognitive behavioral therapy, or CBT, is the gold standard treatment for anxiety disorders and has a high success rate in teenagers. You do not have to white-knuckle your way through this alone.</p>` },
+  { id:21, cat:'wellness', catLabel:'Wellness', catClass:'cat-wellness', img:'images/blog-21.png', title:'Why Mental Health Education Belongs in Every School', excerpt:'We teach students about physical health, nutrition, and safety. So why is mental health still missing from most school curriculums?', author:'Ezra Weng', initials:'EW', date:'Jul 12, 2024', views:1582, body:`<p>Most students can name the four chambers of the heart but cannot identify the symptoms of a panic attack. They know about food groups and fire drills but have never been taught how to manage stress, recognize depression in a friend, or ask for help when they are struggling. This gap in education has real consequences.</p><h2>The case for mental health literacy</h2><p>Mental health conditions typically onset during adolescence, with 50% of all lifetime cases beginning by age 14. Yet the average delay between symptom onset and treatment is 11 years. Eleven years of unnecessary suffering, largely because people do not recognize what they are experiencing or know that effective treatments exist.</p><p>Mental health education in schools would change this. Teaching students to identify symptoms, understand when and how to seek help, and support peers in crisis could dramatically reduce that treatment gap. It would also normalize mental health conversations in the same way sex ed normalized reproductive health conversations over the past few decades.</p><h2>What this looks like</h2><p>It does not require a complete curriculum overhaul. Even one semester of mental health literacy, covering topics like stress management, emotional regulation, warning signs, and local resources, would make a measurable difference. Several states are already mandating it, and the early results are promising. At CareForBrains, we believe every student deserves this knowledge. That is why our chapters bring mental health education directly into schools.</p>` },
+  { id:22, cat:'community', catLabel:'Community', catClass:'cat-community', img:'images/blog-22.png', title:'Welcome to CareForBrains: Our Mission and Vision', excerpt:'We started with a simple belief: mental health awareness should be led by the people who need it most. Here is what we are building and why.', author:'Tanmay Vasudeva', initials:'TV', date:'Jun 28, 2024', views:2341, body:`<p>CareForBrains started with a question: why are the people most affected by the mental health crisis, young people, the least involved in solving it? We did not have funding, office space, or institutional support. We had a shared conviction that mental health awareness should not be a top-down lecture. It should be a peer-driven movement.</p><h2>What we believe</h2><p>We believe that every person deserves access to mental health education and support regardless of their zip code, income, or background. We believe that young people are not just the future of mental health advocacy. They are the present. And we believe that community, not just clinical intervention, is a core pillar of mental wellness.</p><p>CareForBrains exists to build the infrastructure for that community. Through volunteer programs, school chapters, digital resources, and direct outreach, we are creating a network of young advocates who understand mental health, support each other, and push for systemic change.</p><h2>Join us</h2><p>Whether you want to volunteer, start a chapter, create e-cards, contribute to our blog, or simply learn more about mental health, there is a place for you here. We are just getting started, and the best part of this story has not been written yet. It will be written by people like you who decided that mental health matters enough to do something about it.</p>` }
+];
 
-  // Filter buttons
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const cat = btn.dataset.filter;
-      const featured = document.querySelector('.featured-post');
-      const cards = document.querySelectorAll('.post-card');
-      if (cat === 'all') {
-        featured.style.display = '';
-        cards.forEach(c => c.style.display = '');
-      } else {
-        featured.style.display = featured.dataset.cat === cat ? '' : 'none';
-        cards.forEach(c => {
-          c.style.display = c.dataset.cat === cat ? '' : 'none';
-        });
-      }
-    });
+// ─── RENDER GRID CARDS ───
+const grid = document.getElementById('postsGrid');
+const eyeSvg = '<svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+posts.slice(1).forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'post-card r';
+  card.dataset.cat = p.cat;
+  card.dataset.id = p.id;
+  card.innerHTML = `
+    <div class="post-cover-wrap"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>
+    <div class="post-body">
+      <span class="post-cat ${p.catClass}">${p.catLabel}</span>
+      <h3>${p.title}</h3>
+      <p class="post-excerpt">${p.excerpt}</p>
+      <div class="post-footer">
+        <div class="post-footer-left">
+          <div class="post-avatar">${p.initials}</div>
+          <div class="post-footer-info">
+            <span class="post-author">${p.author}</span>
+            <span class="post-date">${p.date}</span>
+          </div>
+        </div>
+        <div class="post-views">${eyeSvg} ${p.views.toLocaleString()}</div>
+      </div>
+    </div>`;
+  grid.appendChild(card);
+});
+
+// ─── ARTICLE OVERLAY ───
+const overlay = document.getElementById('articleOverlay');
+const articleContent = document.getElementById('articleContent');
+const closeBtn = document.getElementById('articleClose');
+
+function openArticle(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  const personSvg = '<svg viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>';
+  const calSvg = '<svg viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>';
+  articleContent.innerHTML = `
+    <div class="article-header">
+      <span class="post-cat ${p.catClass}">${p.catLabel}</span>
+      <h1>${p.title}</h1>
+      <div class="article-meta">
+        <span class="article-meta-item">${personSvg} <strong>${p.author}</strong></span>
+        <span class="article-meta-item">${calSvg} ${p.date}</span>
+        <span class="article-meta-item">${eyeSvg} ${p.views.toLocaleString()} views</span>
+      </div>
+    </div>
+    <div class="article-cover"><img src="${p.img}" alt="${p.title}"></div>
+    <div class="article-content">${p.body}</div>
+    <div class="article-back"><a href="#" onclick="closeArticle();return false;">← Back to all articles</a></div>`;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  overlay.scrollTop = 0;
+}
+
+function closeArticle() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+closeBtn.addEventListener('click', closeArticle);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeArticle(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeArticle(); });
+
+// Click handlers for cards
+document.querySelector('.featured-post').addEventListener('click', () => openArticle(1));
+grid.addEventListener('click', e => {
+  const card = e.target.closest('.post-card');
+  if (card) openArticle(Number(card.dataset.id));
+});
+
+// ─── FILTER ───
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.filter;
+    const featured = document.querySelector('.featured-post');
+    const cards = document.querySelectorAll('.post-card');
+    if (cat === 'all') {
+      featured.style.display = '';
+      cards.forEach(c => c.style.display = '');
+    } else {
+      featured.style.display = featured.dataset.cat === cat ? '' : 'none';
+      cards.forEach(c => { c.style.display = c.dataset.cat === cat ? '' : 'none'; });
+    }
   });
+});
+
+// ─── NAV ───
+let lastScroll = 0;
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  const curr = window.scrollY;
+  nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
+  lastScroll = curr;
+});
+document.getElementById('hamburger').addEventListener('click', () => {
+  const l = document.querySelector('.nav-links');
+  const open = l.style.display === 'flex';
+  l.style.display = open ? 'none' : 'flex';
+  if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
+});
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
@@ -627,7 +499,7 @@ if (feat) {
   gsap.to(feat, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: feat, start: 'top 88%' } });
 }
 
-// Post cards — stagger with scale + blur
+// Post cards stagger
 document.querySelectorAll('.post-card').forEach((card, i) => {
   gsap.set(card, { y: 40, opacity: 0, scale: 0.95 });
   gsap.to(card, {
@@ -665,7 +537,7 @@ if (cursorGlow && cursorDot && window.matchMedia('(pointer: fine)').matches) {
   });
   function updateCursor() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cursorGlow.style.left = cx + 'px'; cursorGlow.style.top = cy + 'px'; requestAnimationFrame(updateCursor); }
   updateCursor();
-  document.querySelectorAll('a, button, .btn-accent, .btn-ghost, .btn-load, .filter-btn, .post-card').forEach(el => {
+  document.querySelectorAll('a, button, .btn-accent, .btn-ghost, .filter-btn, .post-card, .featured-post').forEach(el => {
     el.addEventListener('mouseenter', () => cursorGlow.classList.add('hovering'));
     el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hovering'));
   });
@@ -678,7 +550,7 @@ if (progressBar) {
 }
 
 // Magnetic buttons
-document.querySelectorAll('.btn-accent, .btn-ghost, .btn-load').forEach(btn => {
+document.querySelectorAll('.btn-accent, .btn-ghost').forEach(btn => {
   btn.addEventListener('mousemove', e => { const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' }); });
   btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
 });
