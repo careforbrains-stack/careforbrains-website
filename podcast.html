@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast - CareForBrains</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --bg-alt: #EDF2F8;
+    --bg-dark: #091A26;
+    --fg: #0B1A26;
+    --fg-sec: #3A5068;
+    --fg-muted: #7A8FA4;
+    --teal: #1490B0;
+    --teal-deep: #0C6B8E;
+    --teal-light: #38C0D4;
+    --teal-glow: rgba(20,144,176,0.12);
+    --teal-bg: #E4F1F7;
+    --blue: #1468B0;
+    --gradient: linear-gradient(135deg, #0C6B8E, #1490B0, #1468B0);
+    --rule: #CDDAE6;
+    --card: #FFFFFF;
+    --card-border: #C8D8E6;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --max-w: 1180px;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --accent: #6366F1;
+    --accent-deep: #4F46E5;
+    --accent-glow: rgba(99,102,241,0.12);
+    --accent-bg: #EEF2FF;
+    --accent-gradient: linear-gradient(135deg, #4F46E5, #6366F1, #818CF8);
+    --spotify: #1DB954;
+    --amazon: #FF9900;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(250,252,252,0.8); backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--rule); transition: transform 0.4s ease; }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--fg); }
+  .nav-logo span { font-weight: 700; font-size: 1rem; letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 0.4rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--fg-sec); text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 0.5rem 0.9rem; border-radius: 8px; transition: all 0.25s; }
+  .nav-links a:hover { color: var(--fg); background: var(--accent-glow); }
+  .nav-links a.active { color: var(--accent); font-weight: 600; }
+  .nav-cta { background: var(--bg-dark) !important; color: white !important; font-weight: 600 !important; padding: 0.55rem 1.4rem !important; border-radius: 10px !important; transition: all 0.3s var(--ease-spring) !important; }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 25px rgba(11,29,29,0.2) !important; background: var(--teal-deep) !important; }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
+  .hamburger span { width: 22px; height: 1.5px; background: var(--fg); border-radius: 2px; }
+
+  .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; z-index: 10001; background: var(--accent-gradient); width: 0%; }
+
+  /* HERO */
+  .page-hero { position: relative; overflow: hidden; padding: 10rem 2rem 6rem; text-align: center; background: linear-gradient(165deg, #EEF2FF 0%, #E0E7FF 40%, #C7D2FE 100%); }
+  .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 20% 80%, rgba(99,102,241,0.1) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(79,70,229,0.08) 0%, transparent 60%); z-index: 0; }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); z-index: 1; }
+  .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; }
+  .hero-orb-1 { width: 35vmax; height: 35vmax; background: radial-gradient(circle, rgba(129,140,248,0.18) 0%, transparent 70%); top: -10%; right: -5%; }
+  .hero-orb-2 { width: 28vmax; height: 28vmax; background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%); bottom: -5%; left: -8%; }
+  .page-hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
+  .page-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--accent); margin-bottom: 2rem; }
+  .page-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulseDot 2s ease infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.8); } }
+  .page-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.08; letter-spacing: -2px; max-width: 700px; margin: 0 auto 1.5rem; }
+  .page-hero h1 em { font-style: italic; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-hero-sub { font-size: 1.1rem; color: var(--fg-sec); line-height: 1.7; max-width: 560px; margin: 0 auto 2.5rem; }
+
+  /* STATS */
+  .stats-row { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-bottom: 0; }
+  .stat { text-align: center; }
+  .stat-num { font-family: var(--serif); font-size: 2.5rem; font-weight: 400; letter-spacing: -1.5px; color: var(--accent-deep); line-height: 1; }
+  .stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--fg-muted); margin-top: 0.4rem; }
+
+  /* SECTIONS */
+  .sec { max-width: var(--max-w); margin: 0 auto; padding: 5rem 2rem; }
+  .sec-tag { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--fg-muted); margin-bottom: 1.2rem; }
+  .sec-tag .line { width: 30px; height: 1px; background: var(--accent); }
+  .sec-title { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 400; letter-spacing: -1px; line-height: 1.12; margin-bottom: 1rem; }
+  .sec-title em { font-style: italic; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sec-desc { color: var(--fg-sec); font-size: 1.05rem; line-height: 1.7; max-width: 560px; }
+
+  /* LISTEN SECTION */
+  .listen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 2.5rem; }
+  .listen-left { display: flex; flex-direction: column; gap: 1.5rem; }
+  .platform-card { display: flex; align-items: center; gap: 1.2rem; padding: 1.5rem 2rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; text-decoration: none; color: var(--fg); transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden; }
+  .platform-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out-expo); }
+  .platform-card:hover::after { transform: scaleX(1); }
+  .platform-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.06); }
+  .platform-card.spotify::after { background: var(--spotify); }
+  .platform-card.amazon::after { background: var(--amazon); }
+  .platform-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .platform-icon.spotify-icon { background: var(--spotify); }
+  .platform-icon.amazon-icon { background: var(--amazon); }
+  .platform-icon svg { width: 28px; height: 28px; fill: white; }
+  .platform-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .platform-info p { font-size: 0.82rem; color: var(--fg-muted); }
+  .platform-arrow { margin-left: auto; font-size: 1.2rem; color: var(--fg-muted); transition: transform 0.3s var(--ease-spring); }
+  .platform-card:hover .platform-arrow { transform: translateX(4px); }
+
+  /* EMBED */
+  .embed-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border); background: var(--card); }
+  .embed-wrap iframe { width: 100%; border: none; display: block; }
+
+  /* ABOUT PODCAST */
+  .about-podcast { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2.5rem; }
+  .about-text .sec-desc { margin-bottom: 1.5rem; }
+  .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .topic-tag { padding: 0.45rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600; border: 1.5px solid var(--rule); color: var(--fg-sec); transition: all 0.25s; }
+  .topic-tag:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+  /* EPISODE HIGHLIGHTS */
+  .sec-alt { background: var(--bg-alt); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 5rem 2rem; }
+  .sec-inner { max-width: var(--max-w); margin: 0 auto; }
+  .episodes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .episode-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 2rem; transition: all 0.4s var(--ease-spring); position: relative; }
+  .episode-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); border-radius: 18px 18px 0 0; transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out-expo); }
+  .episode-card:hover::before { transform: scaleX(1); }
+  .episode-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.2); }
+  .ep-num { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 0.8rem; }
+  .episode-card h3 { font-family: var(--serif); font-size: 1.2rem; font-weight: 400; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 0.6rem; }
+  .episode-card p { font-size: 0.85rem; color: var(--fg-sec); line-height: 1.65; margin-bottom: 1rem; }
+  .ep-meta { display: flex; align-items: center; gap: 1rem; font-size: 0.72rem; color: var(--fg-muted); }
+  .ep-meta span { display: flex; align-items: center; gap: 0.3rem; }
+  .ep-meta svg { width: 14px; height: 14px; stroke: var(--fg-muted); fill: none; stroke-width: 1.5; }
+
+  /* CTA BANNER */
+  .cta-banner { background: var(--bg-dark); padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(99,102,241,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(129,140,248,0.10) 0%, transparent 60%); pointer-events: none; }
+  .cta-banner-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+  .cta-banner h2 { font-family: var(--serif); color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.12; }
+  .cta-banner h2 em { font-style: italic; color: #818CF8; }
+  .cta-banner p { color: rgba(255,255,255,0.5); font-size: 1rem; line-height: 1.7; margin-bottom: 2.5rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-accent { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1.1rem 2.4rem; background: var(--accent-gradient); color: white; font-family: var(--sans); font-weight: 700; font-size: 0.95rem; border: none; border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.35s var(--ease-spring); }
+  .btn-accent:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(99,102,241,0.3); }
+  .btn-accent .arrow { display: inline-block; transition: transform 0.3s var(--ease-spring); }
+  .btn-accent:hover .arrow { transform: translateX(3px) translateY(-2px); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 1.1rem 2.4rem; background: transparent; color: white; font-family: var(--sans); font-weight: 600; font-size: 0.95rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 14px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+  .btn-ghost:hover { border-color: #818CF8; color: #818CF8; background: rgba(129,140,248,0.08); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 2rem; }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: var(--fg-sec); text-decoration: none; }
+  .footer-copy { font-size: 0.75rem; color: var(--fg-muted); }
+  .footer-links { display: flex; gap: 1.6rem; list-style: none; }
+  .footer-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* CSS ANIMATIONS */
+  .r { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .r.visible { opacity: 1; transform: translateY(0); }
+  .page-hero .r { opacity: 0; animation: heroIn 0.8s ease forwards; }
+  .page-hero .r:nth-child(1) { animation-delay: 0.1s; }
+  .page-hero .r:nth-child(2) { animation-delay: 0.3s; }
+  .page-hero .r:nth-child(3) { animation-delay: 0.5s; }
+  .page-hero .r:nth-child(4) { animation-delay: 0.7s; }
+  @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .listen-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .about-podcast { grid-template-columns: 1fr; gap: 2.5rem; }
+    .episodes-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .page-hero { padding: 8rem 1.5rem 4rem; }
+    .sec { padding: 4rem 1.5rem; }
+    .sec-alt { padding: 4rem 1.5rem; }
+    .episodes-grid { grid-template-columns: 1fr; }
+    .stats-row { gap: 2rem; }
+    .cta-banner { padding: 4rem 1.5rem; }
+    footer .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<div class="scroll-progress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span>CareForBrains</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+      <li><a href="stem.html">STEM</a></li>
+      <li><a href="ecard.html">E-Cards</a></li>
+      <li><a href="connect.html">Connect</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="podcast.html" class="active">Podcast</a></li>
+      <li><a href="volunteer.html" class="nav-cta">Join Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="page-hero-inner">
+    <div class="page-tag r"><span class="dot"></span> The CareForBrains Podcast</div>
+    <h1 class="r">Our <em>Podcast!</em></h1>
+    <p class="page-hero-sub r">Join us as we dive into conversations about mental health, share relatable stories, and explore ways to create a supportive community. With humor and insight, we aim to connect, inspire, and make mental health awareness a part of everyday life.</p>
+    <div class="stats-row r">
+      <div class="stat">
+        <div class="stat-num">3k+</div>
+        <div class="stat-label">Listeners</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Continents</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Platforms</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LISTEN -->
+<section class="sec">
+  <div class="sec-tag r"><span class="line"></span> / Listen Now</div>
+  <h2 class="sec-title r">Available on your <em>favorite</em> platform</h2>
+  <p class="sec-desc r">Stream every episode for free on Spotify and Amazon Music. New episodes drop regularly.</p>
+  <div class="listen-grid">
+    <div class="listen-left">
+      <a href="https://open.spotify.com/show/0WrqJCaflQJc1F1ypeDmHg?si=086b3553cba446f0" target="_blank" class="platform-card spotify r">
+        <div class="platform-icon spotify-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381C8.64 5.801 15.6 6.061 20.04 8.461c.54.3.72 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        </div>
+        <div class="platform-info">
+          <h3>Spotify</h3>
+          <p>Stream all episodes free</p>
+        </div>
+        <span class="platform-arrow">→</span>
+      </a>
+      <a href="https://music.amazon.com/podcasts/7c92666c-ee70-447a-b82d-45994a796eff/the-careforbrains-podcast" target="_blank" class="platform-card amazon r">
+        <div class="platform-icon amazon-icon">
+          <svg viewBox="0 0 24 24"><path d="M.045 18.02c.072-.116.187-.124.348-.064 2.729 1.047 5.627 1.576 8.696 1.576 2.047 0 4.135-.263 6.263-.8.418-.107.79-.182 1.117-.225.478-.063.68.173.607.71-.072.54-.225.907-.46 1.103-.235.195-.674.349-1.318.46-1.612.278-3.27.42-4.975.42-3.177 0-6.14-.585-8.89-1.756-.283-.122-.508-.28-.674-.47-.166-.19-.223-.39-.17-.597zm-.15-2.157c.142-.2.342-.28.6-.24.257.04.533.16.827.36 2.386 1.548 5.206 2.322 8.46 2.322 1.674 0 3.443-.232 5.308-.697.365-.092.626-.127.783-.107.157.02.289.097.397.232.107.135.152.3.135.495-.018.195-.107.395-.268.6-.16.205-.445.37-.855.495-1.9.58-3.757.87-5.573.87-3.55 0-6.59-.85-9.12-2.55-.258-.174-.375-.378-.353-.613.022-.234.136-.427.342-.577l-.683.41zM6.89 15.287c-.06.152-.03.297.092.435.12.14.3.233.54.282.73.138 1.474.207 2.233.207 1.603 0 3.297-.332 5.08-.997.16-.06.295-.08.405-.06.11.02.197.082.262.187s.073.237.026.396c-.047.16-.157.29-.33.39-1.826.914-3.682 1.37-5.567 1.37-.874 0-1.728-.097-2.562-.29-.833-.195-1.345-.55-1.536-1.065-.128-.338-.118-.637.032-.897.15-.26.407-.432.772-.517.075-.015.163.008.262.067.1.06.164.158.194.295l.097-.003z"/><path d="M13.384 2.673c.553-.153 1.124-.23 1.712-.23.595 0 1.113.09 1.554.27.44.18.764.422.97.727.207.305.31.646.31 1.023 0 .563-.188 1.058-.564 1.484-.376.426-.93.747-1.66.963l-.018.008c-.52.18-.884.385-1.092.615-.208.23-.312.556-.312.978v.166c0 .163-.067.3-.2.412-.134.112-.302.168-.504.168-.196 0-.364-.056-.504-.168-.14-.112-.21-.25-.21-.412V7.54c0-.644.188-1.16.564-1.548.376-.388.96-.694 1.752-.918.525-.15.906-.36 1.144-.63.238-.27.357-.583.357-.94 0-.32-.112-.58-.338-.778-.225-.198-.574-.297-1.046-.297-.38 0-.776.063-1.19.188-.415.125-.79.283-1.125.475-.168.095-.325.143-.47.143-.226 0-.398-.084-.515-.252-.117-.168-.14-.36-.068-.578.072-.217.228-.39.468-.518.482-.257.99-.452 1.524-.586zm-.226 10.192c0-.232.083-.43.248-.594.166-.163.37-.245.613-.245.244 0 .447.082.61.245.162.164.243.362.243.594 0 .226-.081.42-.243.584-.163.163-.366.245-.61.245-.244 0-.447-.082-.613-.245-.165-.163-.248-.358-.248-.584z"/></svg>
+        </div>
+        <div class="platform-info">
+          <h3>Amazon Music</h3>
+          <p>Listen on Alexa and more</p>
+        </div>
+        <span class="platform-arrow">→</span>
+      </a>
+    </div>
+    <div class="embed-wrap r">
+      <iframe src="https://open.spotify.com/embed/show/0WrqJCaflQJc1F1ypeDmHg?utm_source=generator&theme=0" height="352" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT THE PODCAST -->
+<div class="sec-alt">
+  <div class="sec-inner">
+    <div class="sec-tag r"><span class="line"></span> / About the Show</div>
+    <h2 class="sec-title r">Real conversations about <em>mental health</em></h2>
+    <div class="about-podcast">
+      <div class="about-text">
+        <p class="sec-desc r">The CareForBrains Podcast brings honest, unfiltered conversations about mental health to listeners across 4 continents. We talk with students, counselors, researchers, and advocates about the topics that matter most to young people today.</p>
+        <p class="sec-desc r">No scripts, no sugarcoating. Just real stories from real people navigating mental health in a world that does not always make it easy. Whether you are dealing with anxiety, looking for coping strategies, or want to understand neurodiversity, there is an episode for you.</p>
+        <div class="topic-tags r">
+          <span class="topic-tag">Anxiety</span>
+          <span class="topic-tag">Depression</span>
+          <span class="topic-tag">Student Life</span>
+          <span class="topic-tag">Self-Care</span>
+          <span class="topic-tag">Neurodiversity</span>
+          <span class="topic-tag">Coping Skills</span>
+          <span class="topic-tag">Relationships</span>
+          <span class="topic-tag">Advocacy</span>
+        </div>
+      </div>
+      <div class="r" style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div style="padding:2rem;background:var(--card);border:1px solid var(--card-border);border-radius:18px;text-align:center;">
+          <div style="font-family:var(--serif);font-size:4rem;font-weight:400;letter-spacing:-3px;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">3,000+</div>
+          <div style="font-size:0.85rem;color:var(--fg-sec);margin-top:0.5rem;">listeners and counting</div>
+        </div>
+        <div style="padding:2rem;background:var(--card);border:1px solid var(--card-border);border-radius:18px;text-align:center;">
+          <div style="font-family:var(--serif);font-size:4rem;font-weight:400;letter-spacing:-3px;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">4</div>
+          <div style="font-size:0.85rem;color:var(--fg-sec);margin-top:0.5rem;">continents reached</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EPISODE HIGHLIGHTS -->
+<section class="sec">
+  <div class="sec-tag r"><span class="line"></span> / Popular Episodes</div>
+  <h2 class="sec-title r">Fan <em>favorites</em></h2>
+  <p class="sec-desc r" style="margin-bottom:0;">Some of our most-listened episodes that resonated with people around the world.</p>
+  <div class="episodes-grid">
+    <div class="episode-card r">
+      <div class="ep-num">Episode 12</div>
+      <h3>Why We Need to Talk About Anxiety in Schools</h3>
+      <p>A candid look at how anxiety shows up in classrooms and what students wish their teachers understood.</p>
+      <div class="ep-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 38 min</span>
+        <span><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 847 plays</span>
+      </div>
+    </div>
+    <div class="episode-card r">
+      <div class="ep-num">Episode 8</div>
+      <h3>The Truth About Social Media and Your Brain</h3>
+      <p>We break down what the research actually says, no fear-mongering, just facts and practical advice.</p>
+      <div class="ep-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 42 min</span>
+        <span><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,204 plays</span>
+      </div>
+    </div>
+    <div class="episode-card r">
+      <div class="ep-num">Episode 15</div>
+      <h3>Student Leaders Share What Keeps Them Going</h3>
+      <p>Chapter presidents from 5 states open up about burnout, resilience, and why they keep showing up.</p>
+      <div class="ep-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 35 min</span>
+        <span><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 693 plays</span>
+      </div>
+    </div>
+    <div class="episode-card r">
+      <div class="ep-num">Episode 3</div>
+      <h3>What No One Tells You About Starting a Nonprofit at 16</h3>
+      <p>Our founders share the real story behind CareForBrains, the failures, the wins, and everything in between.</p>
+      <div class="ep-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 45 min</span>
+        <span><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 1,567 plays</span>
+      </div>
+    </div>
+    <div class="episode-card r">
+      <div class="ep-num">Episode 10</div>
+      <h3>Neurodiversity is Not a Deficit</h3>
+      <p>ADHD, autism, dyslexia. We talk about what it means to have a brain that works differently and why that is okay.</p>
+      <div class="ep-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 40 min</span>
+        <span><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 921 plays</span>
+      </div>
+    </div>
+    <div class="episode-card r">
+      <div class="ep-num">Episode 18</div>
+      <h3>How to Actually Help a Friend Who is Struggling</h3>
+      <p>Practical tips that go beyond "just be there for them." Real strategies from counselors and students.</p>
+      <div class="ep-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 33 min</span>
+        <span><svg viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><circle cx="12" cy="12" r="3"/></svg> 758 plays</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="cta-banner-inner r">
+    <h2>Ready to <em>tune in</em>?</h2>
+    <p>New episodes drop regularly. Subscribe on your favorite platform so you never miss a conversation.</p>
+    <div class="cta-actions">
+      <a href="https://open.spotify.com/show/0WrqJCaflQJc1F1ypeDmHg?si=086b3553cba446f0" target="_blank" class="btn-accent">Listen on Spotify <span class="arrow">↗</span></a>
+      <a href="https://music.amazon.com/podcasts/7c92666c-ee70-447a-b82d-45994a796eff/the-careforbrains-podcast" target="_blank" class="btn-ghost">Amazon Music</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">CareForBrains</a>
+    <div class="footer-copy">&copy; 2025 CareForBrains. Mental health for all.</div>
+    <ul class="footer-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="volunteer.html">Volunteer</a></li>
+      <li><a href="chapters.html">Chapters</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// Nav scroll hide
+let lastScroll = 0;
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  const curr = window.scrollY;
+  nav.style.transform = (curr > lastScroll && curr > 100) ? 'translateY(-100%)' : 'translateY(0)';
+  lastScroll = curr;
+});
+// Mobile nav
+document.getElementById('hamburger').addEventListener('click', () => {
+  const l = document.querySelector('.nav-links');
+  const open = l.style.display === 'flex';
+  l.style.display = open ? 'none' : 'flex';
+  if (!open) Object.assign(l.style, { flexDirection: 'column', position: 'absolute', top: '100%', left: '0', right: '0', background: 'rgba(250,252,252,0.97)', padding: '1.5rem 2rem', gap: '0.5rem', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--rule)' });
+});
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.r').forEach(el => { if (!el.closest('.page-hero')) observer.observe(el); });
+// Scroll progress
+const progressBar = document.querySelector('.scroll-progress');
+if (progressBar) {
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(() => { const h = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (window.scrollY / h * 100) + '%'; ticking = false; }); ticking = true; }
+  });
+}
+</script>
+</body>
+</html>
