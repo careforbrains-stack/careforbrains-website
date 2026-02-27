@@ -603,7 +603,6 @@
   var menuSrc = document.getElementById('mobileMenu');
   var nl = document.querySelector('.nav-links');
   if(!ham||!menuSrc) return;
-  // Remove nav-links from DOM on mobile
   if(nl && nl.parentNode && window.innerWidth<=900) nl.parentNode.removeChild(nl);
   window.addEventListener('resize', function(){
     if(window.innerWidth<=900){
@@ -614,40 +613,46 @@
     }
   });
   var overlay = null;
+  var savedHtmlClass = '';
   function openMenu(){
     if(overlay) return;
-    // Create a brand new div — no CSS classes, pure inline styles
+    // 1. STOP GSAP ticker + Lenis so they can't fight our styles
+    try{if(typeof gsap!=='undefined')gsap.ticker.sleep();}catch(e){}
+    try{if(typeof lenis!=='undefined')lenis.stop();}catch(e){}
+    // 2. Save and clear html className (Lenis keeps modifying it)
+    savedHtmlClass = document.documentElement.className;
+    document.documentElement.className = '';
+    // 3. Hide body completely
+    document.body.style.setProperty('display','none','important');
+    // 4. Set html element styles — dark background, no scroll, full viewport
+    var hs = document.documentElement.style;
+    hs.setProperty('background','#080C18','important');
+    hs.setProperty('background-color','#080C18','important');
+    hs.setProperty('overflow','hidden','important');
+    hs.setProperty('height','100%','important');
+    hs.setProperty('margin','0','important');
+    hs.setProperty('padding','0','important');
+    hs.setProperty('transform','none','important');
+    hs.setProperty('-webkit-transform','none','important');
+    hs.setProperty('will-change','auto','important');
+    // 5. Create overlay — NO position:fixed, just a regular block filling html
     overlay = document.createElement('div');
-    overlay.id = 'mm-overlay';
     overlay.innerHTML = menuSrc.innerHTML;
-    // Apply every style with !important via setProperty
     var s = overlay.style;
     s.setProperty('display','flex','important');
     s.setProperty('flex-direction','column','important');
-    s.setProperty('position','fixed','important');
-    s.setProperty('top','0','important');
-    s.setProperty('left','0','important');
-    s.setProperty('right','0','important');
-    s.setProperty('bottom','0','important');
-    s.setProperty('width','100vw','important');
-    s.setProperty('height','100vh','important');
-    s.setProperty('z-index','2147483647','important');
+    s.setProperty('min-height','100vh','important');
+    s.setProperty('min-height','100dvh','important');
+    s.setProperty('width','100%','important');
     s.setProperty('background','#080C18','important');
     s.setProperty('background-color','#080C18','important');
     s.setProperty('overflow-y','auto','important');
     s.setProperty('margin','0','important');
     s.setProperty('padding','0','important');
-    s.setProperty('opacity','1','important');
-    s.setProperty('visibility','visible','important');
-    s.setProperty('transform','none','important');
-    s.setProperty('filter','none','important');
-    s.setProperty('-webkit-transform','none','important');
+    s.setProperty('color','white','important');
     s.setProperty('box-sizing','border-box','important');
-    // Append to <html>, hide <body>
     document.documentElement.appendChild(overlay);
-    document.body.style.setProperty('display','none','important');
-    document.documentElement.style.setProperty('overflow','hidden','important');
-    // Wire up close button
+    // 6. Wire up close
     var closeBtn = overlay.querySelector('.mobile-menu-close');
     if(closeBtn) closeBtn.addEventListener('click', closeMenu);
     overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
@@ -656,8 +661,24 @@
     if(!overlay) return;
     overlay.remove();
     overlay = null;
+    // Restore body
     document.body.style.removeProperty('display');
-    document.documentElement.style.removeProperty('overflow');
+    // Restore html styles
+    var hs = document.documentElement.style;
+    hs.removeProperty('background');
+    hs.removeProperty('background-color');
+    hs.removeProperty('overflow');
+    hs.removeProperty('height');
+    hs.removeProperty('margin');
+    hs.removeProperty('padding');
+    hs.removeProperty('transform');
+    hs.removeProperty('-webkit-transform');
+    hs.removeProperty('will-change');
+    // Restore html className
+    document.documentElement.className = savedHtmlClass;
+    // Restart GSAP + Lenis
+    try{if(typeof gsap!=='undefined')gsap.ticker.wake();}catch(e){}
+    try{if(typeof lenis!=='undefined')lenis.start();}catch(e){}
   }
   ham.addEventListener('click', openMenu);
 })();
