@@ -647,31 +647,25 @@
     }
   });
   function openMenu(){
-    // Hide EVERY other direct child of body
-    var kids = document.body.children;
-    for(var i=0;i<kids.length;i++){
-      if(kids[i]!==menu) kids[i].setAttribute('data-mm-hidden',kids[i].style.display||'');
-      if(kids[i]!==menu) kids[i].style.setProperty('display','none','important');
-    }
-    // Force mobile menu visible with inline styles (bypasses all CSS)
+    // Move menu out of <body> to <html> so no GSAP/Lenis transforms can interfere
+    document.documentElement.appendChild(menu);
+    // Hide entire body
+    document.body.style.setProperty('display','none','important');
+    // Show menu with inline styles
     menu.style.cssText='display:flex !important;flex-direction:column;position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;z-index:2147483647;background-color:#080C18;overflow-y:auto;margin:0;padding:0;';
-    document.body.style.overflow='hidden';
+    // Kill transforms on html that Lenis/GSAP might have added
     document.documentElement.style.overflow='hidden';
+    document.documentElement.style.transform='none';
   }
   function closeMenu(){
-    // Restore all hidden children
-    var kids = document.body.children;
-    for(var i=0;i<kids.length;i++){
-      if(kids[i]!==menu && kids[i].hasAttribute('data-mm-hidden')){
-        var prev=kids[i].getAttribute('data-mm-hidden');
-        if(prev) kids[i].style.display=prev; else kids[i].style.removeProperty('display');
-        kids[i].removeAttribute('data-mm-hidden');
-      }
-    }
-    // Hide menu
+    // Restore body
+    document.body.style.removeProperty('display');
+    // Move menu back into body
+    document.body.appendChild(menu);
+    // Clear inline styles
     menu.style.cssText='';
-    document.body.style.overflow='';
     document.documentElement.style.overflow='';
+    document.documentElement.style.transform='';
   }
   ham.addEventListener('click', openMenu);
   if(closeBtn) closeBtn.addEventListener('click', closeMenu);
