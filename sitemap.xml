@@ -7,55 +7,55 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.careforbrains.org/about.html</loc>
+    <loc>https://www.careforbrains.org/about</loc>
     <lastmod>2026-02-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.careforbrains.org/volunteer.html</loc>
+    <loc>https://www.careforbrains.org/volunteer</loc>
     <lastmod>2026-02-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.careforbrains.org/chapters.html</loc>
+    <loc>https://www.careforbrains.org/chapters</loc>
     <lastmod>2026-02-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.careforbrains.org/stem.html</loc>
+    <loc>https://www.careforbrains.org/stem</loc>
     <lastmod>2026-02-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.careforbrains.org/ecard.html</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.careforbrains.org/blog.html</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.careforbrains.org/podcast.html</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.careforbrains.org/assessment.html</loc>
+    <loc>https://www.careforbrains.org/ecard</loc>
     <lastmod>2026-02-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.careforbrains.org/connect.html</loc>
+    <loc>https://www.careforbrains.org/blog</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.careforbrains.org/podcast</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.careforbrains.org/assessment</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.careforbrains.org/connect</loc>
     <lastmod>2026-02-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
